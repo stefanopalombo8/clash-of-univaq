@@ -17,7 +17,7 @@ public class MyClashOfUnivaqApplication extends Application {
 	public void start(Stage stage) throws Exception {
 		//TEST
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/viste/homepage.fxml"));
-		Parent login = loader.load();
+		Parent login = loader.load(); //invoca il costruttore
 		Scene scene = new Scene(login);
 		stage.setScene(scene);
 		stage.show();
