@@ -4,6 +4,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import it.univaq.disim.oop.myclashofunivaq.business.GiocatoreUtenteService;
+import it.univaq.disim.oop.myclashofunivaq.business.impl.GiocatoreUtenteServiceImpl;
+import it.univaq.disim.oop.myclashofunivaq.business.impl.NicknameNonValido;
+import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreUtente;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -31,13 +34,14 @@ public class HomepageController implements Initializable {
 	@FXML
 	private Button giocaControCPU;
 	
+	private GiocatoreUtente giocatore;
 	private GiocatoreUtenteService giocatoreUtenteService;
 	
 	private static final String stringaConferma = "nickname valido, scegli una modalità";
 
 	
 	public HomepageController() {
-		//giocatoreUtenteService = implementazione
+		giocatoreUtenteService = new GiocatoreUtenteServiceImpl();
 	}
 	
 	@Override
@@ -51,8 +55,12 @@ public class HomepageController implements Initializable {
 	
 	@FXML
 	public void accettaNicknameAction(ActionEvent event) {
-		//uso del service
-			
+		try {
+			giocatore = giocatoreUtenteService.convalidaNickName(nickname.getText());
+			this.confermaNickname.setText(stringaConferma);
+		} catch (NicknameNonValido e) {
+			this.confermaNickname.setText(e.getMessage());  //gestione eccezione a livello utente
+		}
 	}
 	
 	private void disableGamemodButton(Button bottone) {
