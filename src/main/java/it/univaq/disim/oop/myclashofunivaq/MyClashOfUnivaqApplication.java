@@ -1,5 +1,6 @@
 package it.univaq.disim.oop.myclashofunivaq;
 
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,13 +16,13 @@ public class MyClashOfUnivaqApplication extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		//TEST
+		// TEST
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/viste/homepage.fxml"));
-		Parent login = loader.load(); //invoca il costruttore
+		Parent login = loader.load(); // invoca il costruttore
 		Scene scene = new Scene(login);
 		stage.setScene(scene);
 		stage.show();
-		
+
 	}
 
 }
