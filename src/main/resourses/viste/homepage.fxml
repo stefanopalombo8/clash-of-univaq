@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="440.0" prefWidth="682.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univaq.disim.oop.myclashofunivaq.controller.HomepageController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="653.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univaq.disim.oop.myclashofunivaq.controller.HomepageController">
    <children>
       <Text layoutX="155.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CLASH OF UNIVAQ" textAlignment="CENTER" wrappingWidth="347.4700622558594">
          <font>
@@ -24,7 +24,7 @@
          </children>
       </HBox>
       <Button fx:id="recuperaPartiteSalvate" layoutX="251.0" layoutY="306.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="157.0" text="PARTITE SALVATE" />
-      <Button fx:id="giocaControGiocatore" layoutX="253.0" layoutY="346.0" mnemonicParsing="false" text="GIOCA contro GIOCATORE" />
+      <Button fx:id="giocaControGiocatore" layoutX="253.0" layoutY="346.0" mnemonicParsing="false" onAction="#giocaControGiocatoreAction" text="GIOCA contro GIOCATORE" />
       <ImageView fitHeight="118.0" fitWidth="124.0" layoutX="272.0" layoutY="55.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@images/logo.jpg" />
