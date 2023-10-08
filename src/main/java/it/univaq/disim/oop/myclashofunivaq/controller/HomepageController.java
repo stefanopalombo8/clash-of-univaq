@@ -24,9 +24,6 @@ import javafx.scene.transform.Translate;
 public class HomepageController implements Initializable {
 	
 	@FXML
-	private AnchorPane anchorPane;
-	
-	@FXML
 	private TextField nickname;
 	
 	@FXML

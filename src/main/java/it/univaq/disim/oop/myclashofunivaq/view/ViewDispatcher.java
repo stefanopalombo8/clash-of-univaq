@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class ViewDispatcher {
+	
 	private static final String cartellaViste = "/viste/";
 	private static final String tipoFile = ".fxml";
 	
@@ -30,6 +31,12 @@ public class ViewDispatcher {
 		Parent parent = loader.load();
 		Scene scena = new Scene(parent);
 		stage.setScene(scena);
+	}
+	
+	public <T> void caricaVista(String nome, T data) throws IOException {
+		caricaVista(nome);
+		InizializzaDati<T> inizializzatore = loader.getController();
+		inizializzatore.inizializza(data);
 	}
 	
 	private void inizializzaLoader(String nomeVista) throws IOException {
