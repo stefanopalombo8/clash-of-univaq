@@ -79,7 +79,7 @@ public class HomepageController implements Initializable {
 	
 	@FXML
 	public void giocaControGiocatoreAction(ActionEvent event) throws IOException {
-		
+		dispatcher.caricaVista("NicknameGiocatore2", this.giocatore);
 		
 	}
 	
