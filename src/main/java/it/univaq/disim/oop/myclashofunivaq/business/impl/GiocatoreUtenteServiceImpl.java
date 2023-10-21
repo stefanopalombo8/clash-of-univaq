@@ -1,5 +1,7 @@
 package it.univaq.disim.oop.myclashofunivaq.business.impl;
 
+import java.util.List;
+
 import it.univaq.disim.oop.myclashofunivaq.business.GiocatoreUtenteService;
 import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreUtente;
 

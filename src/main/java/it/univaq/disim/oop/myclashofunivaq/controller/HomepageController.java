@@ -42,13 +42,13 @@ public class HomepageController implements Initializable {
 	private Button giocaControCPU;
 	
 	private GiocatoreUtente giocatore;
+	
 	private GiocatoreUtenteService giocatoreUtenteService;
 	
-	private static final String stringaConferma = "nickname valido, scegli una modalità";
+	private static final String stringaConferma = "nickname valido, clicca AVANTI";
 	
 	private ViewDispatcher dispatcher;
 
-	
 	public HomepageController() {
 		giocatoreUtenteService = new GiocatoreUtenteServiceImpl();
 		dispatcher = ViewDispatcher.getInstance();
@@ -80,7 +80,6 @@ public class HomepageController implements Initializable {
 	@FXML
 	public void giocaControGiocatoreAction(ActionEvent event) throws IOException {
 		dispatcher.caricaVista("NicknameGiocatore2", this.giocatore);
-		
 	}
 	
 }
