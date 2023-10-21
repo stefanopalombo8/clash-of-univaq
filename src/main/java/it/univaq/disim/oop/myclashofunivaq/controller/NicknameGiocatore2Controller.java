@@ -4,8 +4,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import it.univaq.disim.oop.myclashofunivaq.business.GiocatoreUtenteService;
+import it.univaq.disim.oop.myclashofunivaq.business.PartitaService;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.GiocatoreUtenteServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.NicknameNonValido;
+import it.univaq.disim.oop.myclashofunivaq.business.impl.PartitaServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreUtente;
 import it.univaq.disim.oop.myclashofunivaq.view.InizializzaDati;
 import it.univaq.disim.oop.myclashofunivaq.view.ViewDispatcher;
@@ -33,18 +35,16 @@ public class NicknameGiocatore2Controller implements Initializable, InizializzaD
 	@FXML
 	private Button avanti;
 	
+	private PartitaService partitaService;
 	private GiocatoreUtenteService giocatoreUtenteService;
 	private ViewDispatcher dispatcher;
-	
-	private GiocatoreUtente giocatore1;
-	private GiocatoreUtente giocatore2;
 	
 	private static final String stringaConferma = "nickname valido vai avanti";
 	
 	public NicknameGiocatore2Controller() {
-		this.giocatore1 = null;
 		giocatoreUtenteService = new GiocatoreUtenteServiceImpl();
 		dispatcher = ViewDispatcher.getInstance();
+		partitaService = new PartitaServiceImpl();
 	}
 	
 	@Override
@@ -60,7 +60,8 @@ public class NicknameGiocatore2Controller implements Initializable, InizializzaD
 	@FXML
 	public void accettaNicknameAction(ActionEvent event) {
 		try {
-			giocatore2 = giocatoreUtenteService.convalidaNickName(nicknameGiocatore2.getText());
+			GiocatoreUtente giocatore2 = giocatoreUtenteService.convalidaNickName(nicknameGiocatore2.getText());
+			partitaService.aggiungiGiocatore(giocatore2);
 			this.confermaNickname.setText(stringaConferma);
 		} catch (NicknameNonValido e) {
 			this.confermaNickname.setText(e.getMessage());  //gestione eccezione a livello utente

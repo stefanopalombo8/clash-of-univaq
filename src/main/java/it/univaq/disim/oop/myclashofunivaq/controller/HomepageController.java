@@ -7,8 +7,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import it.univaq.disim.oop.myclashofunivaq.business.GiocatoreUtenteService;
+import it.univaq.disim.oop.myclashofunivaq.business.PartitaService;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.GiocatoreUtenteServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.NicknameNonValido;
+import it.univaq.disim.oop.myclashofunivaq.business.impl.PartitaServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreUtente;
 import it.univaq.disim.oop.myclashofunivaq.view.ViewDispatcher;
 import javafx.event.ActionEvent;
@@ -41,7 +43,7 @@ public class HomepageController implements Initializable {
 	@FXML
 	private Button giocaControCPU;
 	
-	private GiocatoreUtente giocatore;
+	private PartitaService partitaService;
 	
 	private GiocatoreUtenteService giocatoreUtenteService;
 	
@@ -52,6 +54,7 @@ public class HomepageController implements Initializable {
 	public HomepageController() {
 		giocatoreUtenteService = new GiocatoreUtenteServiceImpl();
 		dispatcher = ViewDispatcher.getInstance();
+		partitaService = new PartitaServiceImpl();
 	}
 	
 	@Override
@@ -66,7 +69,8 @@ public class HomepageController implements Initializable {
 	@FXML
 	public void accettaNicknameAction(ActionEvent event) {
 		try {
-			giocatore = giocatoreUtenteService.convalidaNickName(nickname.getText());
+			GiocatoreUtente giocatore = giocatoreUtenteService.convalidaNickName(nickname.getText());
+			partitaService.aggiungiGiocatore(giocatore);
 			this.confermaNickname.setText(stringaConferma);
 		} catch (NicknameNonValido e) {
 			this.confermaNickname.setText(e.getMessage());  //gestione eccezione a livello utente
@@ -79,7 +83,7 @@ public class HomepageController implements Initializable {
 	
 	@FXML
 	public void giocaControGiocatoreAction(ActionEvent event) throws IOException {
-		dispatcher.caricaVista("NicknameGiocatore2", this.giocatore);
+		dispatcher.caricaVista("NicknameGiocatore2");
 	}
 	
 }

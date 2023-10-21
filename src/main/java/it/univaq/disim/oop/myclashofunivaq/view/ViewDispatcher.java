@@ -26,7 +26,7 @@ public class ViewDispatcher {
 		stage.show();
 	}
 	
-	private void caricaVista(String nome) throws IOException {
+	public void caricaVista(String nome) throws IOException {
 		inizializzaLoader(nome);
 		Parent parent = loader.load();
 		Scene scena = new Scene(parent);

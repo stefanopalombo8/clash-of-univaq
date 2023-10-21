@@ -12,13 +12,14 @@ public class PartitaServiceImpl implements PartitaService {
 	
 	@Override
 	public List<Giocatore> giocatoriPartita() {
-		
-		return null;
+		List<Giocatore> listaToReturn = new ArrayList<>();
+		listaToReturn.addAll(giocatoriAggiunti);
+		return listaToReturn;
 	}
 
 	@Override
 	public void aggiungiGiocatore(Giocatore giocatore) {
-		// TODO Auto-generated method stub
+		giocatoriAggiunti.add(giocatore);
 		
 	}
 }
