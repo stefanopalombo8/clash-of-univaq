@@ -2,12 +2,16 @@ package it.univaq.disim.oop.myclashofunivaq.configuration;
 
 import java.io.FileInputStream;
 
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
+import java.util.HashSet;
 
+import it.univaq.disim.oop.myclashofunivaq.domain.MossaSpeciale;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.Tank;
 import it.univaq.disim.oop.myclashofunivaq.domain.nomipersonaggi.TankNomi;
@@ -32,6 +36,8 @@ public class Factory implements PersonaggioFactory {
 		
 		String path = costruisciPath("personaggi.properties");
 		
+		Set<MossaSpeciale> mosseSpeciali = ImplementazioniMosse.getMosseSpeciali();
+		
 		try(FileInputStream fis = new FileInputStream(path)) {
 			final Properties props = new Properties();
 			props.load(fis);
@@ -47,7 +53,13 @@ public class Factory implements PersonaggioFactory {
 							case "danno":
 								personaggioEmpty.setDanno(Integer.valueOf(props.getProperty(riga)));
 							case "mossaSpeciale":
+								String nomeMossaPersonaggio = props.getProperty(riga);
 								
+								MossaSpeciale mossaImpl = mosseSpeciali.stream().filter(
+										mossa -> mossa.getNome().equals(nomeMossaPersonaggio)).findAny()
+													.orElseThrow(() -> new RuntimeException("error"));
+								
+								personaggioEmpty.setMossaSpeciale(mossaImpl);
 							}
 							
 						}
@@ -102,6 +114,23 @@ public class Factory implements PersonaggioFactory {
 	private String costruisciPath(String fileName) { 
 		String pathCompleto = getClass().getResource(cartellaConfigurazione + fileName).toExternalForm();
 		return pathCompleto.substring(pathCompleto.indexOf("C"));
+	}
+	
+	private static class ImplementazioniMosse {
+		private static Set<MossaSpeciale> mosseSpeciali = new HashSet<>();
+		
+		static {
+			MossaSpeciale mossa1 = new MossaSpeciale("ricaricaEnergia", 
+					(mossa) -> {
+						//System.out.println("hai attivato " + mossa.getNome());
+						mossa.getPersonaggioTarget().setVita(100);
+					});
+			mosseSpeciali.add(mossa1);
+		}
+		
+		public static Set<MossaSpeciale> getMosseSpeciali() {
+			return mosseSpeciali;
+		}
 	}
 	
 	

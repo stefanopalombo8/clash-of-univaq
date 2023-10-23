@@ -16,12 +16,10 @@ import it.univaq.disim.oop.myclashofunivaq.view.ViewDispatcher;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 
 public class HomepageController implements Initializable {
 	
@@ -43,9 +41,9 @@ public class HomepageController implements Initializable {
 	@FXML
 	private Button giocaControCPU;
 	
-	private PartitaService partitaService;
+	private final PartitaService partitaService;
 	
-	private GiocatoreUtenteService giocatoreUtenteService;
+	private final GiocatoreUtenteService giocatoreUtenteService;
 	
 	private static final String stringaConferma = "nickname valido, clicca AVANTI";
 	
@@ -59,9 +57,9 @@ public class HomepageController implements Initializable {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		disableGamemodButton(recuperaPartiteSalvate);
-		disableGamemodButton(giocaControGiocatore);
-		disableGamemodButton(giocaControCPU);
+		disabilitaGamemod(recuperaPartiteSalvate);
+		disabilitaGamemod(giocaControGiocatore);
+		disabilitaGamemod(giocaControCPU);
 		
 		accettaNickname.disableProperty().bind(confermaNickname.textProperty().isEqualTo(stringaConferma));
 	}
@@ -72,12 +70,14 @@ public class HomepageController implements Initializable {
 			GiocatoreUtente giocatore = giocatoreUtenteService.convalidaNickName(nickname.getText());
 			partitaService.aggiungiGiocatore(giocatore);
 			this.confermaNickname.setText(stringaConferma);
+			this.confermaNickname.setAlignment(Pos.CENTER);
+			
 		} catch (NicknameNonValido e) {
 			this.confermaNickname.setText(e.getMessage());  //gestione eccezione a livello utente
 		}
 	}
 	
-	private void disableGamemodButton(Button bottone) {
+	private void disabilitaGamemod(Button bottone) {
 		bottone.disableProperty().bind(confermaNickname.textProperty().isNotEqualTo(stringaConferma));
 	}
 	

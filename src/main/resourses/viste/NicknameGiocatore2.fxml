@@ -9,9 +9,8 @@
    <children>
       <TextField fx:id="nicknameGiocatore2" layoutX="225.0" layoutY="235.0" promptText="nickname" />
       <Button fx:id="accettaNickname" layoutX="398.0" layoutY="235.0" mnemonicParsing="false" onAction="#accettaNicknameAction" text="ACCETTA" />
-      <Label layoutX="199.0" layoutY="191.0" text="Benevenuto giocatore 2, inserisci il tuo nickname" />
-      <Button fx:id="avanti" layoutX="271.0" layoutY="314.0" mnemonicParsing="false" text="AVANTI" />
-      <Label fx:id="giocatore1Label" layoutX="225.0" layoutY="123.0" prefHeight="17.0" prefWidth="206.0" />
-      <Label fx:id="confermaNickname" layoutX="240.0" layoutY="275.0" prefHeight="17.0" prefWidth="187.0" />
+      <Label layoutX="180.0" layoutY="200.0" text="Benevenuto giocatore 2, inserisci il tuo nickname" />
+      <Button fx:id="avanti" layoutX="271.0" layoutY="314.0" mnemonicParsing="false" onAction="#avantiAction" text="AVANTI" />
+      <Label fx:id="confermaNickname" layoutX="160.0" layoutY="276.0" prefHeight="17.0" prefWidth="279.0" />
    </children>
 </AnchorPane>
