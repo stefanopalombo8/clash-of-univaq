@@ -1,6 +1,7 @@
 package it.univaq.disim.oop.myclashofunivaq.controller;
 
 import java.io.IOException;
+
 import java.net.URL;
 
 
@@ -12,11 +13,11 @@ import it.univaq.disim.oop.myclashofunivaq.business.impl.GiocatoreUtenteServiceI
 import it.univaq.disim.oop.myclashofunivaq.business.impl.NicknameNonValido;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.PartitaServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreUtente;
+import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
 import it.univaq.disim.oop.myclashofunivaq.view.ViewDispatcher;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -25,9 +26,6 @@ public class HomepageController implements Initializable {
 	
 	@FXML
 	private TextField nickname;
-	
-	@FXML
-	private Button accettaNickname;
 	
 	@FXML
 	private Label confermaNickname;
@@ -45,8 +43,6 @@ public class HomepageController implements Initializable {
 	
 	private final GiocatoreUtenteService giocatoreUtenteService;
 	
-	private static final String stringaConferma = "nickname valido, clicca AVANTI";
-	
 	private ViewDispatcher dispatcher;
 
 	public HomepageController() {
@@ -60,30 +56,29 @@ public class HomepageController implements Initializable {
 		disabilitaGamemod(recuperaPartiteSalvate);
 		disabilitaGamemod(giocaControGiocatore);
 		disabilitaGamemod(giocaControCPU);
-		
-		accettaNickname.disableProperty().bind(confermaNickname.textProperty().isEqualTo(stringaConferma));
 	}
 	
-	@FXML
-	public void accettaNicknameAction(ActionEvent event) {
+	public boolean accettaNicknameAction(Partita partita) {
 		try {
-			GiocatoreUtente giocatore = giocatoreUtenteService.convalidaNickName(nickname.getText());
-			partitaService.aggiungiGiocatore(giocatore);
-			this.confermaNickname.setText(stringaConferma);
-			this.confermaNickname.setAlignment(Pos.CENTER);
+			GiocatoreUtente giocatore = giocatoreUtenteService.convalidaNickName(nickname.getText(), partita);
+			partitaService.aggiungiGiocatore(giocatore, partita);
 			
 		} catch (NicknameNonValido e) {
 			this.confermaNickname.setText(e.getMessage());  //gestione eccezione a livello utente
+			return false;
 		}
+		return true;
 	}
 	
 	private void disabilitaGamemod(Button bottone) {
-		bottone.disableProperty().bind(confermaNickname.textProperty().isNotEqualTo(stringaConferma));
+		bottone.disableProperty().bind(nickname.textProperty().isEmpty());
 	}
 	
 	@FXML
 	public void giocaControGiocatoreAction(ActionEvent event) throws IOException {
-		dispatcher.caricaVista("NicknameGiocatore2");
+		Partita partita = partitaService.creaPartita();
+		if(this.accettaNicknameAction(partita))
+			dispatcher.caricaVista("NicknameGiocatore2", partita);
 	}
 	
 }

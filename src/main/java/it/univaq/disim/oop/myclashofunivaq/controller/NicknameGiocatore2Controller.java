@@ -1,6 +1,7 @@
 package it.univaq.disim.oop.myclashofunivaq.controller;
 
 import java.net.URL;
+
 import java.util.ResourceBundle;
 
 import it.univaq.disim.oop.myclashofunivaq.business.GiocatoreUtenteService;
@@ -9,6 +10,7 @@ import it.univaq.disim.oop.myclashofunivaq.business.impl.GiocatoreUtenteServiceI
 import it.univaq.disim.oop.myclashofunivaq.business.impl.NicknameNonValido;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.PartitaServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreUtente;
+import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
 import it.univaq.disim.oop.myclashofunivaq.view.InizializzaDati;
 import it.univaq.disim.oop.myclashofunivaq.view.ViewDispatcher;
 import javafx.event.ActionEvent;
@@ -19,16 +21,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-public class NicknameGiocatore2Controller implements Initializable, InizializzaDati<GiocatoreUtente> {
+public class NicknameGiocatore2Controller implements Initializable, InizializzaDati<Partita>{
 	
 	@FXML
-	private Label giocatore1Label;
-	
-	@FXML
-	private TextField nicknameGiocatore2;
-	
-	@FXML
-	private Button accettaNickname;
+	private TextField nickname;
 	
 	@FXML
 	private Label confermaNickname;
@@ -40,7 +36,7 @@ public class NicknameGiocatore2Controller implements Initializable, InizializzaD
 	private final GiocatoreUtenteService giocatoreUtenteService;
 	private ViewDispatcher dispatcher;
 	
-	private static final String stringaConferma = "nickname valido vai avanti";
+	private Partita partita;
 	
 	public NicknameGiocatore2Controller() {
 		giocatoreUtenteService = new GiocatoreUtenteServiceImpl();
@@ -50,22 +46,19 @@ public class NicknameGiocatore2Controller implements Initializable, InizializzaD
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+		avanti.disableProperty().bind(nickname.textProperty().isEmpty());
 	}
 	
 	@Override
-	public void inizializza(GiocatoreUtente giocatore1) {
-		this.giocatore1Label.setText(giocatore1.getNickname());
+	public void inizializza(Partita partita) {
+		this.partita = partita;
 	}
 	
-	@FXML
-	public void accettaNicknameAction(ActionEvent event) {
+	public void accettaNickname(Partita partita) {
 		try {
-			GiocatoreUtente giocatore2 = giocatoreUtenteService.convalidaNickName(nicknameGiocatore2.getText());
-			partitaService.aggiungiGiocatore(giocatore2);
-			this.confermaNickname.setText(stringaConferma);
-			this.confermaNickname.setAlignment(Pos.CENTER);
-			this.accettaNickname.setDisable(true);
+			GiocatoreUtente giocatore2 = giocatoreUtenteService.convalidaNickName(nickname.getText(), partita);
+			partitaService.aggiungiGiocatore(giocatore2, partita);
+			
 		} catch (NicknameNonValido e) {
 			this.confermaNickname.setText(e.getMessage());  //gestione eccezione a livello utente
 		}
@@ -73,6 +66,8 @@ public class NicknameGiocatore2Controller implements Initializable, InizializzaD
 	
 	@FXML
 	public void avantiAction(ActionEvent event) {
-		// prossima vista scelta deck
+		this.accettaNickname(partita);
+		partitaService.giocatoriPartita(partita).stream().forEach((g) -> System.out.println(g.getNickname()));
+		//dispatcher.caricaVista(...)
 	}
 }

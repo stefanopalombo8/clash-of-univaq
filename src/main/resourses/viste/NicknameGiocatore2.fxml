@@ -7,8 +7,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univaq.disim.oop.myclashofunivaq.controller.NicknameGiocatore2Controller">
    <children>
-      <TextField fx:id="nicknameGiocatore2" layoutX="225.0" layoutY="235.0" promptText="nickname" />
-      <Button fx:id="accettaNickname" layoutX="398.0" layoutY="235.0" mnemonicParsing="false" onAction="#accettaNicknameAction" text="ACCETTA" />
+      <TextField fx:id="nickname" layoutX="225.0" layoutY="235.0" promptText="nickname" />
       <Label layoutX="180.0" layoutY="200.0" text="Benevenuto giocatore 2, inserisci il tuo nickname" />
       <Button fx:id="avanti" layoutX="271.0" layoutY="314.0" mnemonicParsing="false" onAction="#avantiAction" text="AVANTI" />
       <Label fx:id="confermaNickname" layoutX="160.0" layoutY="276.0" prefHeight="17.0" prefWidth="279.0" />
