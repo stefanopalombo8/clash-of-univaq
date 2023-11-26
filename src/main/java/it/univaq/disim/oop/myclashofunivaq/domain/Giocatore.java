@@ -15,4 +15,11 @@ public abstract class Giocatore {
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null) return false;
+		Giocatore giocatore = (Giocatore) obj;
+		return this.getNickname().equals(giocatore.getNickname());
+	}
 }
