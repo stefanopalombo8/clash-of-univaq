@@ -3,35 +3,15 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="653.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univaq.disim.oop.myclashofunivaq.controller.HomepageController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univaq.disim.oop.myclashofunivaq.controller.HomepageController">
    <children>
-      <Text layoutX="155.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CLASH OF UNIVAQ" textAlignment="CENTER" wrappingWidth="347.4700622558594">
-         <font>
-            <Font size="36.0" />
-         </font>
-      </Text>
-      <Button fx:id="giocaControCPU" layoutX="254.0" layoutY="362.0" mnemonicParsing="false" text="GIOCA contro COMPUTER" />
-      <HBox layoutY="421.0" prefHeight="17.0" prefWidth="682.0">
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="REALIZED BY SINGLETON" />
-         </children>
-      </HBox>
-      <Button fx:id="recuperaPartiteSalvate" layoutX="252.0" layoutY="293.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="157.0" text="PARTITE SALVATE" />
-      <Button fx:id="giocaControGiocatore" layoutX="252.0" layoutY="328.0" mnemonicParsing="false" onAction="#giocaControGiocatoreAction" text="GIOCA contro GIOCATORE" />
-      <ImageView fitHeight="118.0" fitWidth="124.0" layoutX="272.0" layoutY="55.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@images/logo.jpg" />
-         </image>
-      </ImageView>
-      <TextField fx:id="nickname" layoutX="257.0" layoutY="219.0" promptText="nickname nel gioco" />
-      <Label layoutX="193.0" layoutY="185.0" prefHeight="17.0" prefWidth="296.0" text="BENVENUTO PLAYER, INSERISCI IL TUO NICKNAME" />
-      <Label fx:id="confermaNickname" alignment="CENTER" layoutX="237.0" layoutY="257.0" prefHeight="17.0" prefWidth="187.0" textAlignment="CENTER" />
+      <Button fx:id="giocaControCPU" layoutX="222.0" layoutY="241.0" mnemonicParsing="false" text="GIOCA contro COMPUTER" />
+      <Button fx:id="giocaControGiocatore" layoutX="221.0" layoutY="283.0" mnemonicParsing="false" onAction="#giocaControGiocatoreAction" text="GIOCA contro GIOCATORE" />
+      <Button fx:id="recuperaPartiteSalvate" layoutX="221.0" layoutY="318.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="157.0" text="PARTITE SALVATE" />
+      <TextField fx:id="nickname" layoutX="225.0" layoutY="161.0" promptText="nickname nel gioco" />
+      <Label layoutX="182.0" layoutY="135.0" prefHeight="17.0" prefWidth="296.0" text="BENVENUTO PLAYER, INSERISCI IL TUO NICKNAME" />
+      <Label fx:id="confermaNickname" alignment="CENTER" layoutX="206.0" layoutY="200.0" prefHeight="17.0" prefWidth="187.0" textAlignment="CENTER" />
    </children>
 </AnchorPane>

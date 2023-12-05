@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <bottom>
+      <HBox prefHeight="11.0" prefWidth="1000.0" style="-fx-background-color: black;" BorderPane.alignment="CENTER">
+         <children>
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="REALIZED BY SINGLETON" wrappingWidth="247.38412475585938">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font></Text>
+         </children>
+      </HBox>
+   </bottom>
+   <top>
+      <AnchorPane prefHeight="65.0" prefWidth="1000.0" style="-fx-background-color: #4CC552#4CC552;" BorderPane.alignment="CENTER">
+         <children>
+            <Text layoutX="91.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CLASH OF UNIVAQ" textAlignment="CENTER" wrappingWidth="364.1367492675781">
+               <font>
+                  <Font name="Arial Bold Italic" size="36.0" />
+               </font>
+            </Text>
+            <ImageView fitHeight="62.0" fitWidth="61.0" layoutX="14.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/logo.jpg" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+   </top>
+   <left>
+      <VBox prefHeight="450.0" prefWidth="164.0" BorderPane.alignment="CENTER" />
+   </left>
+   <right>
+      <VBox prefHeight="450.0" prefWidth="159.0" BorderPane.alignment="CENTER" />
+   </right>
+</BorderPane>
