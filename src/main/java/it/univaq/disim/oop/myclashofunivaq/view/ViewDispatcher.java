@@ -22,41 +22,53 @@ public class ViewDispatcher {
 		return instance;
 	}
 	
-	public void homepageView(Stage stage) throws IOException {
+	public void homepageView(Stage stage) {
 		this.stage = stage;
-		caricaVista("applicationLayout");
-		caricaVista("homepage");
-
+		try {
+			caricaVista("applicationLayout");
+			caricaVista("homepage");
+		} catch (ViewException e) {
+			e.printStackTrace();
+		}
+		
 		stage.show();
 	}
 
-	public void caricaVista(String nome) throws IOException {
+	public void caricaVista(String nome) throws ViewException {
 		inizializzaLoader(nome);
 		Scene scena = null;
+		Parent parent;
+		
+		try {
+			parent = loader.load();
+		} catch (IOException e) {
+			throw new ViewException(e.getMessage());
+		}
+		
 		if(layout == null) {
-			layout = loader.load();
+			layout = (BorderPane) parent;
 			scena = new Scene(layout);
 		}
-		else {
-			Parent parent = loader.load();
+		else 
 			layout.setCenter(parent);
-		}
-
+		
 		if(scena != null)
 			stage.setScene(scena);
 		else
 			stage.setScene(stage.getScene());
 
 	}
+	
 
-	public <T> void caricaVista(String nome, T data) throws IOException {
+	public <T> void caricaVista(String nome, T data) throws ViewException {
 		caricaVista(nome);
 		InizializzaDati<T> inizializzatore = loader.getController();
 		inizializzatore.inizializza(data);
 	}
 
-	private void inizializzaLoader(String nomeVista) throws IOException {
+	private void inizializzaLoader(String nomeVista) {
 		loader = new FXMLLoader(getClass().getResource(cartellaViste + nomeVista + tipoFile));
+		
 	}
 
 }

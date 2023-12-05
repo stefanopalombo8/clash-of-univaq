@@ -1,10 +1,6 @@
 package it.univaq.disim.oop.myclashofunivaq.controller;
 
-import java.io.IOException;
-
 import java.net.URL;
-
-
 import java.util.ResourceBundle;
 
 import it.univaq.disim.oop.myclashofunivaq.business.GiocatoreUtenteService;
@@ -15,6 +11,7 @@ import it.univaq.disim.oop.myclashofunivaq.business.impl.PartitaServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreUtente;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
 import it.univaq.disim.oop.myclashofunivaq.view.ViewDispatcher;
+import it.univaq.disim.oop.myclashofunivaq.view.ViewException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -80,10 +77,14 @@ public class HomepageController implements Initializable {
 	
 	
 	@FXML
-	public void giocaControGiocatoreAction(ActionEvent event) throws IOException {
+	public void giocaControGiocatoreAction(ActionEvent event) {
 		Partita partita = partitaService.creaPartita();
 		if(this.accettaNickname(partita))
-			dispatcher.caricaVista("NicknameGiocatore2", partita);
+			try {
+				dispatcher.caricaVista("NicknameGiocatore2", partita);
+			} catch (ViewException e) {
+				e.printStackTrace();
+			}
 	}
 	
 }
