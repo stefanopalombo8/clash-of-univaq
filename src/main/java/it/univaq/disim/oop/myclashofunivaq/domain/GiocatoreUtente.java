@@ -6,5 +6,13 @@ public class GiocatoreUtente extends Giocatore {
 		super(nickname);
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null) return false;
+		Giocatore giocatore = (Giocatore) obj;
+		System.out.println("giocatore corrente " + this.getNickname() + " giocatore casted: " + giocatore.getNickname());
+		return this.getNickname().equals(giocatore.getNickname());
+	}
+	
 	
 }

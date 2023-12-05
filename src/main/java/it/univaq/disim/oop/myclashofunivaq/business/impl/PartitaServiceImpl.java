@@ -1,10 +1,10 @@
 package it.univaq.disim.oop.myclashofunivaq.business.impl;
 
-import java.util.ArrayList;
-
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+
 import it.univaq.disim.oop.myclashofunivaq.business.PartitaService;
 import it.univaq.disim.oop.myclashofunivaq.domain.Giocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
@@ -15,18 +15,26 @@ public class PartitaServiceImpl implements PartitaService {
 	private static Integer ID = 0;
 	
 	@Override
-	public List<Giocatore> giocatoriPartita(Partita partita) {
-		Partita partitaCorrente = this.trovaPartitaByID(partita.getID());
+	public Set<Giocatore> findAllGiocatori() {
+		Set<Giocatore> setToReturn = new HashSet<>();
 		
-		List<Giocatore> listaToReturn = new ArrayList<>(partitaCorrente.getGiocatori());
+		for(Integer key : partite.keySet()) {
+			for(Giocatore giocatore : partite.get(key).getGiocatori())
+				setToReturn.add(giocatore);
+		}
 		
-		return listaToReturn;
+		return setToReturn;
 	}
-
+	
+	
 	@Override
-	public void aggiungiGiocatore(Giocatore giocatore, Partita partita) {
+	public boolean aggiungiGiocatore(Giocatore giocatore, Partita partita) {
+		if(!partita.getGiocatori().add(giocatore)) 
+			throw new NicknameNonValido("ERRORE NICKNAME GIÀ UTILIZZATO");
 		
-		partita.getGiocatori().add(giocatore);
+		return true;
+		
+			
 	}
 	
 	@Override

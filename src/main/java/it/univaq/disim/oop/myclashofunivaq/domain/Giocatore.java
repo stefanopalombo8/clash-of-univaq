@@ -1,5 +1,7 @@
 package it.univaq.disim.oop.myclashofunivaq.domain;
 
+import java.util.Objects;
+
 public abstract class Giocatore {
 
 	private String nickname;
@@ -22,4 +24,10 @@ public abstract class Giocatore {
 		Giocatore giocatore = (Giocatore) obj;
 		return this.getNickname().equals(giocatore.getNickname());
 	}
+	
+	@Override
+	public int hashCode() {
+	    return Objects.hash(nickname);
+	}
+	
 }

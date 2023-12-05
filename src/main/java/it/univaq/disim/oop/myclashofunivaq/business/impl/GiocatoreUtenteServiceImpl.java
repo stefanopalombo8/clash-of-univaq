@@ -3,7 +3,6 @@ package it.univaq.disim.oop.myclashofunivaq.business.impl;
 import it.univaq.disim.oop.myclashofunivaq.business.GiocatoreUtenteService;
 import it.univaq.disim.oop.myclashofunivaq.business.PartitaService;
 import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreUtente;
-import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
 
 public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
 	
@@ -14,14 +13,19 @@ public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
 	}
 
 	@Override
-	public GiocatoreUtente convalidaNickName(String nickname, Partita partita) throws NicknameNonValido {
-		boolean match = partitaService.giocatoriPartita(partita).stream()
-				.anyMatch(n -> n.getNickname().equals(nickname));
+	public GiocatoreUtente convalidaNickName(String nickname) {
 		
-		//giusto un po' di logica di convalidazione non necessaria
-		if (nickname.equals("") || nickname.length() < 3 || !nickname.matches(".*\\d$")) {
+		/* se viene inserito un nickname già presente nel sistema
+		 * 
+		 */
+		GiocatoreUtente giocatoreMemory = (GiocatoreUtente) partitaService.findAllGiocatori().stream().findAny().filter(
+				(g) -> g.getNickname().equals(nickname)).orElse(null);
+		
+		if(giocatoreMemory != null)
+			return giocatoreMemory;
+		else if (nickname.equals("") || nickname.length() < 3 || !nickname.matches(".*\\d$"))
 			throw new NicknameNonValido("ERRORE NICKNAME NON VALIDO");
-		}
+		
 			
 		return new GiocatoreUtente(nickname);
 	}

@@ -1,6 +1,7 @@
 package it.univaq.disim.oop.myclashofunivaq.domain;
 
 import java.util.Set;
+
 import java.util.HashSet;
 
 public class Partita {
