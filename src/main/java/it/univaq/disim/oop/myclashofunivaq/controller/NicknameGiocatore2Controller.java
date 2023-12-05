@@ -16,7 +16,6 @@ import it.univaq.disim.oop.myclashofunivaq.view.ViewDispatcher;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -54,20 +53,15 @@ public class NicknameGiocatore2Controller implements Initializable, InizializzaD
 		this.partita = partita;
 	}
 	
-	public void accettaNickname(Partita partita) {
+	@FXML
+	public void avantiAction(ActionEvent event) {
 		try {
-			GiocatoreUtente giocatore2 = giocatoreUtenteService.convalidaNickName(nickname.getText(), partita);
-			partitaService.aggiungiGiocatore(giocatore2, partita);
-			
+			GiocatoreUtente giocatore2 = giocatoreUtenteService.convalidaNickName(nickname.getText());
+			if(partitaService.aggiungiGiocatore(giocatore2, partita));
+				//dispatcher.caricaVista("");
 		} catch (NicknameNonValido e) {
 			this.confermaNickname.setText(e.getMessage());  //gestione eccezione a livello utente
 		}
-	}
-	
-	@FXML
-	public void avantiAction(ActionEvent event) {
-		this.accettaNickname(partita);
-		partitaService.giocatoriPartita(partita).stream().forEach((g) -> System.out.println(g.getNickname()));
-		//dispatcher.caricaVista(...)
+		
 	}
 }

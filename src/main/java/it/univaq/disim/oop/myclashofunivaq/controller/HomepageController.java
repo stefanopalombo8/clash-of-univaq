@@ -58,26 +58,31 @@ public class HomepageController implements Initializable {
 		disabilitaGamemod(giocaControCPU);
 	}
 	
-	public boolean accettaNicknameAction(Partita partita) {
+	private void disabilitaGamemod(Button bottone) {
+		bottone.disableProperty().bind(nickname.textProperty().isEmpty());
+	}
+	
+	/* qua mi serve il metodo perchè questo procedimento viene fatto per ogni bottone partita
+	 * quindi per non riscriverlo 3 volte
+	 */
+	
+	public boolean accettaNickname(Partita partita) {
 		try {
-			GiocatoreUtente giocatore = giocatoreUtenteService.convalidaNickName(nickname.getText(), partita);
-			partitaService.aggiungiGiocatore(giocatore, partita);
+			GiocatoreUtente giocatore = giocatoreUtenteService.convalidaNickName(nickname.getText());
+			return partitaService.aggiungiGiocatore(giocatore, partita);
 			
 		} catch (NicknameNonValido e) {
 			this.confermaNickname.setText(e.getMessage());  //gestione eccezione a livello utente
 			return false;
 		}
-		return true;
+		
 	}
 	
-	private void disabilitaGamemod(Button bottone) {
-		bottone.disableProperty().bind(nickname.textProperty().isEmpty());
-	}
 	
 	@FXML
 	public void giocaControGiocatoreAction(ActionEvent event) throws IOException {
 		Partita partita = partitaService.creaPartita();
-		if(this.accettaNicknameAction(partita))
+		if(this.accettaNickname(partita))
 			dispatcher.caricaVista("NicknameGiocatore2", partita);
 	}
 	
