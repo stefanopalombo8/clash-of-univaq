@@ -1,7 +1,6 @@
 package it.univaq.disim.oop.myclashofunivaq.domain;
 
 public abstract class Personaggio extends Carta implements Cloneable {
-	private String nome;
 	private int vita;
 	private int armatura;
 	private int danno;
@@ -9,15 +8,7 @@ public abstract class Personaggio extends Carta implements Cloneable {
 	private MossaSpeciale mossaSpeciale;
 	
 	public Personaggio(String nome) {
-		this.nome = nome;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
+		super(nome);
 	}
 
 	public int getVita() {
