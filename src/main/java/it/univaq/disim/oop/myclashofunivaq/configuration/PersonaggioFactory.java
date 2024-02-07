@@ -1,8 +1,12 @@
 package it.univaq.disim.oop.myclashofunivaq.configuration;
 
+import java.util.Set;
+
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
 
 public interface PersonaggioFactory {
-	<T extends Personaggio> T creaPersonaggio(T personaggioEmpty);
+	
+	Set<Personaggio> findAllPersonaggi();
+	default <T extends Personaggio> void modellaPersonaggio(T personaggioEmpty) {};
 
 }

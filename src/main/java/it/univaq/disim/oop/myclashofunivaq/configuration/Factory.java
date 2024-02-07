@@ -28,15 +28,20 @@ public class Factory implements PersonaggioFactory {
 	}
 	
 	@Override
-	public <T extends Personaggio> T creaPersonaggio(T personaggioEmpty) {
+	public Set<Personaggio> findAllPersonaggi() {
+		return ImplementazionePersonaggi.getPersonaggi();
+	}
+	
+	@Override
+	public <T extends Personaggio> void modellaPersonaggio(T personaggioEmpty) {
 		if(personaggioEmpty == null)
 			throw new IllegalArgumentException();
-		
+	
 		String keyDaCercare = costruisciChiave(personaggioEmpty);
 		
 		String path = costruisciPath("personaggi.properties");
 		
-		Set<MossaSpeciale> mosseSpeciali = ImplementazioniMosse.getMosseSpeciali();
+		Set<MossaSpeciale> mosseSpeciali = ImplementazioneMosse.getMosseSpeciali();
 		
 		try(FileInputStream fis = new FileInputStream(path)) {
 			final Properties props = new Properties();
@@ -73,7 +78,6 @@ public class Factory implements PersonaggioFactory {
 			e.printStackTrace();
 		}
 		
-		return personaggioEmpty;
 	}
 
 	private static <T extends Personaggio> String costruisciChiave(T personaggio) {
@@ -116,7 +120,7 @@ public class Factory implements PersonaggioFactory {
 		return pathCompleto.substring(pathCompleto.indexOf("C"));
 	}
 	
-	private static class ImplementazioniMosse {
+	private static class ImplementazioneMosse {
 		private static Set<MossaSpeciale> mosseSpeciali = new HashSet<>();
 		
 		static {
@@ -128,10 +132,25 @@ public class Factory implements PersonaggioFactory {
 			mosseSpeciali.add(mossa1);
 		}
 		
-		public static Set<MossaSpeciale> getMosseSpeciali() {
+		private static Set<MossaSpeciale> getMosseSpeciali() {
 			return mosseSpeciali;
 		}
 	}
 	
-	
+	private static class ImplementazionePersonaggi {
+		private static Set<Personaggio> personaggi;
+		private static PersonaggioFactory personaggioFactory = instance;
+		
+		static {
+			Tank gigante = new Tank("GIGANTE");
+			personaggioFactory.modellaPersonaggio(gigante);
+			personaggi.add(gigante);
+		}
+		
+		private static Set<Personaggio> getPersonaggi() {
+			return personaggi;
+		}
+
+	}
+		
 }
