@@ -13,6 +13,7 @@ import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreUtente;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
 import it.univaq.disim.oop.myclashofunivaq.view.InizializzaDati;
 import it.univaq.disim.oop.myclashofunivaq.view.ViewDispatcher;
+import it.univaq.disim.oop.myclashofunivaq.view.ViewException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -54,11 +55,11 @@ public class NicknameGiocatore2Controller implements Initializable, InizializzaD
 	}
 	
 	@FXML
-	public void avantiAction(ActionEvent event) {
+	public void avantiAction(ActionEvent event) throws ViewException {
 		try {
 			GiocatoreUtente giocatore2 = giocatoreUtenteService.convalidaNickName(nickname.getText());
-			if(partitaService.aggiungiGiocatore(giocatore2, partita));
-				//dispatcher.caricaVista("");
+			if(partitaService.aggiungiGiocatore(giocatore2, partita))
+				dispatcher.caricaVista("sceltaMazzo", partita);
 		} catch (NicknameNonValido e) {
 			this.confermaNickname.setText(e.getMessage());  //gestione eccezione a livello utente
 		}
