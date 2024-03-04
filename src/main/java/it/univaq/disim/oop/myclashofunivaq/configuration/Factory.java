@@ -14,6 +14,7 @@ import it.univaq.disim.oop.myclashofunivaq.domain.MossaSpeciale;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.Tank;
 import it.univaq.disim.oop.myclashofunivaq.domain.nomipersonaggi.TankNomi;
+import javafx.scene.image.Image;
 
 public class Factory implements CartaFactory {
 	
@@ -83,6 +84,10 @@ public class Factory implements CartaFactory {
 									
 									personaggio.setMossaSpeciale(mossaImpl);
 									break;
+								case "immagine":
+									Image immagine = new Image(costruisciPath(props.getProperty(riga)));
+									
+									personaggio.setImmagineCarta(immagine);
 								}
 							}
 
