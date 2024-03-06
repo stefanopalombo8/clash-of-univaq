@@ -1,5 +1,7 @@
 package it.univaq.disim.oop.myclashofunivaq.domain;
 
+import java.util.List;
+
 public class Mazzo {
 	
 	private Carta[] carte;
@@ -16,7 +18,16 @@ public class Mazzo {
 		this.carte = carte;
 	}
 	
-	public boolean inserisci_carta(Carta carta) {
+	public boolean inserisci_carte(List<Carta> lista) {
+		for(Carta carta : lista) {
+			if(!this.inserisci_carta(carta))
+				return false;
+		}
+		
+		return true;
+	}
+	
+	private boolean inserisci_carta(Carta carta) {
 		if(carta == null) 
 			return false;
 		
