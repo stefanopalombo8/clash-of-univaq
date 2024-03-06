@@ -5,6 +5,7 @@ import java.util.Objects;
 public abstract class Giocatore {
 
 	private String nickname;
+	private Mazzo mazzo;
 
 	public Giocatore (String nickname) {
 		this.nickname = nickname;
@@ -28,6 +29,14 @@ public abstract class Giocatore {
 	@Override
 	public int hashCode() {
 	    return Objects.hash(nickname);
+	}
+
+	public Mazzo getMazzo() {
+		return mazzo;
+	}
+
+	public void setMazzo(Mazzo mazzo) {
+		this.mazzo = mazzo;
 	}
 	
 }
