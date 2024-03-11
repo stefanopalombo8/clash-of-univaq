@@ -1,6 +1,7 @@
 package it.univaq.disim.oop.myclashofunivaq.business;
 
 
+import java.util.List;
 import java.util.Set;
 
 import it.univaq.disim.oop.myclashofunivaq.domain.Giocatore;
@@ -14,6 +15,7 @@ public interface PartitaService {
 	boolean aggiungiGiocatore(Giocatore giocatore, Partita partita);
 	
 	Set<Giocatore> findAllGiocatori();
+	Giocatore[] findAllGiocatori(Partita partita);
 	
 	
 	

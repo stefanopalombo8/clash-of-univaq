@@ -1,7 +1,9 @@
 package it.univaq.disim.oop.myclashofunivaq.business.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,6 +26,19 @@ public class PartitaServiceImpl implements PartitaService {
 		}
 		
 		return setToReturn;
+	}
+	
+	@Override
+	public Giocatore[] findAllGiocatori(Partita partita) {
+		Giocatore[] giocatoriPartita = new Giocatore[2];
+		int i = 0;
+		
+		for(Giocatore giocatore : partite.get(partita.getID()).getGiocatori()) {
+			giocatoriPartita[i] = giocatore;
+			i++;
+		}
+			
+		return giocatoriPartita;
 	}
 	
 	
