@@ -11,17 +11,19 @@ public class ViewDispatcher {
 
 	private static final String cartellaViste = "/viste/";
 	private static final String tipoFile = ".fxml";
+	private static final String menuSx = "vbox_sx";
+	private static final String menuDx = "vbox_dx";
 
 	private static ViewDispatcher instance = new ViewDispatcher();
 	private Stage stage; // centralizzazione dello stage
 
 	private FXMLLoader loader;
 	private BorderPane layout;
-	
+
 	public static ViewDispatcher getInstance() {
 		return instance;
 	}
-	
+
 	public void homepageView(Stage stage) {
 		this.stage = stage;
 		try {
@@ -30,35 +32,42 @@ public class ViewDispatcher {
 		} catch (ViewException e) {
 			e.printStackTrace();
 		}
-		
+
 		stage.show();
 	}
 
 	public void caricaVista(String nome) throws ViewException {
 		inizializzaLoader(nome);
 		Scene scena = null;
-		Parent parent;
-		
+		Parent parent = null;
+
 		try {
 			parent = loader.load();
 		} catch (IOException e) {
 			throw new ViewException(e.getMessage());
 		}
-		
-		if(layout == null) {
+
+		if (layout == null) {
 			layout = (BorderPane) parent;
 			scena = new Scene(layout);
-		}
-		else 
-			layout.setCenter(parent);
-		
-		if(scena != null)
 			stage.setScene(scena);
-		else
-			stage.setScene(stage.getScene());
+			return;
+		} else if (nome.equals(menuSx)) {
+			layout.setLeft(parent);
+		} else if (nome.equals(menuDx)) {
+			layout.setRight(parent);
+		} else {
+			layout.setCenter(parent);
+			if (nome.equals("gioco")) {
+				caricaVista(menuSx);
+				caricaVista(menuDx);
+			}
+
+		}
+
+		stage.setScene(stage.getScene());
 
 	}
-	
 
 	public <T> void caricaVista(String nome, T data) throws ViewException {
 		caricaVista(nome);
@@ -68,7 +77,6 @@ public class ViewDispatcher {
 
 	private void inizializzaLoader(String nomeVista) {
 		loader = new FXMLLoader(getClass().getResource(cartellaViste + nomeVista + tipoFile));
-		
 	}
 
 }
