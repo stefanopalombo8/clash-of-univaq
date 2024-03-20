@@ -11,8 +11,6 @@ public class ViewDispatcher {
 
 	private static final String cartellaViste = "/viste/";
 	private static final String tipoFile = ".fxml";
-	private static final String menuSx = "vbox_sx";
-	private static final String menuDx = "vbox_dx";
 
 	private static ViewDispatcher instance = new ViewDispatcher();
 	private Stage stage; // centralizzazione dello stage
@@ -52,17 +50,8 @@ public class ViewDispatcher {
 			scena = new Scene(layout);
 			stage.setScene(scena);
 			return;
-		} else if (nome.equals(menuSx)) {
-			layout.setLeft(parent);
-		} else if (nome.equals(menuDx)) {
-			layout.setRight(parent);
 		} else {
 			layout.setCenter(parent);
-			if (nome.equals("gioco")) {
-				caricaVista(menuSx);
-				caricaVista(menuDx);
-			}
-
 		}
 
 		stage.setScene(stage.getScene());
