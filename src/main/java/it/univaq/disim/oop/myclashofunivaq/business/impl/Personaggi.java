@@ -18,7 +18,11 @@ public class Personaggi implements PersonaggioService {
 	static {
 		Tank gigante = new Tank("GIGANTE");
 		personaggioFactory.modellaCarta(gigante);
-		personaggi.add(gigante);
+		personaggi.add(gigante); 
+		
+		Tank golem = new Tank("GOLEM");
+		personaggioFactory.modellaCarta(golem);
+		personaggi.add(golem);
 	}
 
 	@Override
