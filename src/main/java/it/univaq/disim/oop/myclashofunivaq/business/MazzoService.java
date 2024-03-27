@@ -10,6 +10,7 @@ public interface MazzoService {
 	Mazzo creaMazzo(List<Carta> carteScelte);
 	boolean controllaMazzo(Mazzo mazzo);
 	void aggiungiMazzo(Mazzo mazzo, Giocatore giocatore);
+	Mazzo trovaMazzo(Giocatore giocatore);
 	
 	
 }

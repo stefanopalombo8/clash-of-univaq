@@ -48,6 +48,11 @@ public class MazzoServiceImpl implements MazzoService {
 		
 		return false;
 	}
+
+	@Override
+	public Mazzo trovaMazzo(Giocatore giocatore) {
+		return giocatore.getMazzo();
+	}
 	
 	
 	
