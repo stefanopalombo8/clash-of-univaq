@@ -5,11 +5,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="627.0" prefWidth="1056.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <bottom>
       <HBox prefHeight="11.0" prefWidth="1000.0" style="-fx-background-color: black;" BorderPane.alignment="CENTER">
          <children>
@@ -21,9 +20,9 @@
       </HBox>
    </bottom>
    <top>
-      <AnchorPane prefHeight="65.0" prefWidth="1000.0" style="-fx-background-color: #4CC552#4CC552;" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="65.0" prefWidth="1000.0" style="-fx-background-color: black;" BorderPane.alignment="CENTER">
          <children>
-            <Text layoutX="91.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CLASH OF UNIVAQ" textAlignment="CENTER" wrappingWidth="364.1367492675781">
+            <Text fill="WHITE" layoutX="91.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CLASH OF UNIVAQ" textAlignment="CENTER" wrappingWidth="364.1367492675781">
                <font>
                   <Font name="Arial Bold Italic" size="36.0" />
                </font>
@@ -36,10 +35,4 @@
          </children>
       </AnchorPane>
    </top>
-   <left>
-      <VBox prefHeight="450.0" prefWidth="164.0" BorderPane.alignment="CENTER" />
-   </left>
-   <right>
-      <VBox prefHeight="450.0" prefWidth="159.0" BorderPane.alignment="CENTER" />
-   </right>
 </BorderPane>
