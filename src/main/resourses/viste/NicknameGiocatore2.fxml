@@ -5,7 +5,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univaq.disim.oop.myclashofunivaq.controller.NicknameGiocatore2Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univaq.disim.oop.myclashofunivaq.controller.NicknameGiocatore2Controller">
    <children>
       <TextField fx:id="nickname" layoutX="234.0" layoutY="187.0" promptText="nickname" />
       <Label layoutX="180.0" layoutY="155.0" text="Benevenuto giocatore 2, inserisci il tuo nickname" />
