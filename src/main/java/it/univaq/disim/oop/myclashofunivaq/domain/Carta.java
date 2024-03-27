@@ -3,6 +3,7 @@ package it.univaq.disim.oop.myclashofunivaq.domain;
 import javafx.scene.image.Image;
 
 public abstract class Carta {
+	
 	private String nome;
 	private int costoSchieramento;
 	private Image immagineCarta;
@@ -27,6 +28,11 @@ public abstract class Carta {
 	}
 	public void setImmagineCarta(Image immagineCarta) {
 		this.immagineCarta = immagineCarta;
+	}
+	
+	@Override
+	public String toString() {
+		return "Carta [nome=" + nome + "]";
 	}
 	
 

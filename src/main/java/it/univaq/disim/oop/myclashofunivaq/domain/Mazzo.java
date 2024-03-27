@@ -1,9 +1,10 @@
 package it.univaq.disim.oop.myclashofunivaq.domain;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Mazzo {
-	
+
 	private Carta[] carte;
 	
 	public Mazzo() {
@@ -41,5 +42,9 @@ public class Mazzo {
 		return false;
 	}
 	
+	@Override
+	public String toString() {
+		return "Mazzo [carte=" + Arrays.toString(carte) + "]";
+	}
 	
 }
