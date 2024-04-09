@@ -4,9 +4,9 @@ public class Turno {
 	private Integer numero;
 	private int timer;
 	private Giocatore giocatore;
-	private int elisirGiocatore;
+	private double elisirGiocatore;
 	//private List<MossaGiocatore> mosseGiocatore;
-	
+
 	public Turno(Giocatore giocatore) {
 		this.giocatore = giocatore;
 	}
@@ -35,11 +35,11 @@ public class Turno {
 		this.giocatore = giocatore;
 	}
 
-	public int getElisirGiocatore() {
+	public double getElisirGiocatore() {
 		return elisirGiocatore;
 	}
 
-	public void setElisirGiocatore(int elisirGiocatore) {
+	public void setElisirGiocatore(double elisirGiocatore) {
 		this.elisirGiocatore = elisirGiocatore;
 	}
 	  
