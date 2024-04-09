@@ -1,11 +1,10 @@
 package it.univaq.disim.oop.myclashofunivaq.business;
 
-
-import java.util.List;
 import java.util.Set;
 
 import it.univaq.disim.oop.myclashofunivaq.domain.Giocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
+import it.univaq.disim.oop.myclashofunivaq.domain.Turno;
 
 public interface PartitaService {
 	Partita creaPartita();
@@ -17,6 +16,6 @@ public interface PartitaService {
 	Set<Giocatore> findAllGiocatori();
 	Giocatore[] findAllGiocatori(Partita partita);
 	
-	
+	boolean salvaTurnoPartita(Turno turno, Partita partita);
 	
 }

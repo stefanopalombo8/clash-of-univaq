@@ -10,6 +10,7 @@ import java.util.Set;
 import it.univaq.disim.oop.myclashofunivaq.business.PartitaService;
 import it.univaq.disim.oop.myclashofunivaq.domain.Giocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
+import it.univaq.disim.oop.myclashofunivaq.domain.Turno;
 
 public class PartitaServiceImpl implements PartitaService {
 	
@@ -64,6 +65,11 @@ public class PartitaServiceImpl implements PartitaService {
 	@Override
 	public Partita trovaPartitaByID(Integer ID) {
 		return (partite.get(ID)) != null ? partite.get(ID) : null;
+	}
+
+	@Override
+	public boolean salvaTurnoPartita(Turno turno, Partita partita) {
+		return partita.getTurni().add(turno);
 	}
 
 }
