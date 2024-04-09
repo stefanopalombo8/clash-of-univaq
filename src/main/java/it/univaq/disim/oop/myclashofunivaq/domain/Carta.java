@@ -2,7 +2,7 @@ package it.univaq.disim.oop.myclashofunivaq.domain;
 
 import javafx.scene.image.Image;
 
-public abstract class Carta {
+public abstract class Carta implements Cloneable{
 	
 	private String nome;
 	private int costoSchieramento;
@@ -33,6 +33,11 @@ public abstract class Carta {
 	@Override
 	public String toString() {
 		return "Carta [nome=" + nome + "]";
+	}
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return (Carta) super.clone();
 	}
 	
 

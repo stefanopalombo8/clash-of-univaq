@@ -1,11 +1,14 @@
 package it.univaq.disim.oop.myclashofunivaq.domain;
 
-public abstract class Personaggio extends Carta implements Cloneable {
+import it.univaq.disim.oop.myclashofunivaq.domain.nomipersonaggi.Posizionamento;
+
+public abstract class Personaggio extends Carta {
 	private int vita;
 	private int armatura;
 	private int danno;
 	private int mana;
 	private MossaSpeciale mossaSpeciale;
+	private Posizionamento posizionamento;
 	
 	public Personaggio(String nome) {
 		super(nome);
@@ -51,9 +54,5 @@ public abstract class Personaggio extends Carta implements Cloneable {
 		this.mossaSpeciale = mossaSpeciale;
 	}
 	
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		return (Personaggio) super.clone();
-	}
 
 }
