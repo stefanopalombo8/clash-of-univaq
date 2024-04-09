@@ -12,5 +12,8 @@ public interface MazzoService {
 	void aggiungiMazzo(Mazzo mazzo, Giocatore giocatore);
 	Mazzo trovaMazzo(Giocatore giocatore);
 	
+	Carta[] mostraCarteMano(Mazzo mazzo);
+	Carta mostraProssimaCarta(Mazzo mazzo);
+	
 	
 }

@@ -1,5 +1,7 @@
 package it.univaq.disim.oop.myclashofunivaq.business.impl;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,6 +17,10 @@ public class MazzoServiceImpl implements MazzoService {
 	
 	private int num_categorie_minime = 5;
 	private final CartaFactory cartaFactory = Factory.getInstance();
+	
+	private final int numCarteInMano = 4;
+	
+	private int index = 0;
 	
 	@Override
 	public Mazzo creaMazzo(List<Carta> carteScelte) {
@@ -52,6 +58,27 @@ public class MazzoServiceImpl implements MazzoService {
 	@Override
 	public Mazzo trovaMazzo(Giocatore giocatore) {
 		return giocatore.getMazzo();
+	}
+
+	@Override
+	public Carta[] mostraCarteMano(Mazzo mazzo) {
+		Carta[] carteMano = new Carta[numCarteInMano];
+		
+		index = 0;
+		
+		Collections.shuffle(Arrays.asList(mazzo.getCarte())); // mischia le carte a caso
+		
+		for(; index < numCarteInMano; index++) {
+			carteMano[index] = mazzo.getCarte()[index];
+		}
+		
+		
+		return carteMano;
+	}
+
+	@Override
+	public Carta mostraProssimaCarta(Mazzo mazzo) {
+		return mazzo.getCarte()[index++ % mazzo.getCarte().length];
 	}
 	
 	
