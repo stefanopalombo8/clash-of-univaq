@@ -1,14 +1,12 @@
 package it.univaq.disim.oop.myclashofunivaq.domain;
 
-import it.univaq.disim.oop.myclashofunivaq.domain.nomipersonaggi.Posizionamento;
-
 public abstract class Personaggio extends Carta {
 	private int vita;
 	private int armatura;
 	private int danno;
 	private int mana;
 	private MossaSpeciale mossaSpeciale;
-	private Posizionamento posizionamento;
+	private PosizionamentoPersonaggio posizionamento;
 	
 	public Personaggio(String nome) {
 		super(nome);
@@ -52,6 +50,16 @@ public abstract class Personaggio extends Carta {
 
 	public void setMossaSpeciale(MossaSpeciale mossaSpeciale) {
 		this.mossaSpeciale = mossaSpeciale;
+	}
+
+	public PosizionamentoPersonaggio getPosizionamento() {
+		return posizionamento;
+	}
+
+	public void setPosizionamento(PosizionamentoPersonaggio posizionamento) {
+		this.posizionamento = posizionamento;
+		if(posizionamento.toString().equals(PosizionamentoPersonaggio.DIFESA.toString()))
+			this.armatura *= 2;
 	}
 	
 
