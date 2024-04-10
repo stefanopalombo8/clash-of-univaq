@@ -196,6 +196,43 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 					event.setDropCompleted(success);
 					event.consume();
 					
+					if(cartaSchierata instanceof Personaggio) {
+						
+						
+						Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+						alert.setTitle("SCELTA POSIZIONE CARTA");
+						alert.setHeaderText(null);
+						alert.setContentText("ATTACCO o DIFESA");
+						
+						System.out.println(cartaSchierata.toString());
+						
+						ButtonType bottoneSceltaAttacco = new ButtonType(PosizionamentoPersonaggio.ATTACCO.toString());
+						ButtonType bottoneSceltaDifesa = new ButtonType(PosizionamentoPersonaggio.DIFESA.toString());
+						
+						alert.getButtonTypes().setAll(bottoneSceltaAttacco, bottoneSceltaDifesa);
+						
+						boolean[] flag = {false};
+						PosizionamentoPersonaggio posizionamentoScelto = null;
+
+						alert.showAndWait().ifPresent(response -> {
+							if (response == bottoneSceltaDifesa)
+								flag[0] = true;
+							
+						});
+						
+						if(flag[0]) {
+							posizionamentoScelto = PosizionamentoPersonaggio.DIFESA;
+							newImageView.setRotate(270);
+						}
+						else
+							posizionamentoScelto = PosizionamentoPersonaggio.ATTACCO;
+							
+						
+						giocatoreService.effettuaSchieramentoPersonaggio((Personaggio) cartaSchierata, utility.ricercaStradaSchieramento(grid), 
+								posizionamentoScelto);
+					}
+
+					
 
 				});
 
