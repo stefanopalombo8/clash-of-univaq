@@ -1,14 +1,14 @@
 package it.univaq.disim.oop.myclashofunivaq.domain;
 
 import java.util.Set;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 public class Partita {
 	private Integer ID;
 	private Set<Giocatore> giocatori = new HashSet<>();
-	
-	private List<Turno> turni;
+	private List<Turno> turni = new ArrayList<>();
 	
 	public Integer getID() {
 		return ID;
