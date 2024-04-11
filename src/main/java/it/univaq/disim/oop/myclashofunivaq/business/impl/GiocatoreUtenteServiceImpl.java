@@ -2,6 +2,7 @@ package it.univaq.disim.oop.myclashofunivaq.business.impl;
 
 import it.univaq.disim.oop.myclashofunivaq.business.GiocatoreUtenteService;
 import it.univaq.disim.oop.myclashofunivaq.business.PartitaService;
+import it.univaq.disim.oop.myclashofunivaq.business.PersonaggioService;
 import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.GridPaneGioco;
 import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
 import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreUtente;
@@ -12,10 +13,12 @@ import it.univaq.disim.oop.myclashofunivaq.domain.Schieramento;
 
 public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
 	
-	private PartitaService partitaService;
+	private final PartitaService partitaService;
+	private final PersonaggioService personaggioService;
 	
 	public GiocatoreUtenteServiceImpl() {
 		partitaService = new PartitaServiceImpl();
+		personaggioService = new PersonaggioServiceImpl();
 	}
 
 	@Override
@@ -42,7 +45,7 @@ public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
 		schieramento.setCartaSchierata(personaggio);
 		schieramento.setStrada(strada);
 		
-		personaggio.setPosizionamento(posizionamento);
+		personaggioService.sceltaPosizionamento(personaggio, posizionamento);
 		
 		return schieramento;
 	}

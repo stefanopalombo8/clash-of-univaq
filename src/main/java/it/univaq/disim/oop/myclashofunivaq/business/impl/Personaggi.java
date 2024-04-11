@@ -2,15 +2,16 @@ package it.univaq.disim.oop.myclashofunivaq.business.impl;
 
 import java.util.HashSet;
 
+
 import java.util.Set;
 
-import it.univaq.disim.oop.myclashofunivaq.business.PersonaggioService;
+import it.univaq.disim.oop.myclashofunivaq.business.CartaService;
 import it.univaq.disim.oop.myclashofunivaq.configuration.CartaFactory;
 import it.univaq.disim.oop.myclashofunivaq.configuration.Factory;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.Tank;
 
-public class Personaggi implements PersonaggioService {
+public class Personaggi implements CartaService {
 	
 	private static Set<Personaggio> personaggi = new HashSet<>();
 	private static CartaFactory personaggioFactory = Factory.getInstance();

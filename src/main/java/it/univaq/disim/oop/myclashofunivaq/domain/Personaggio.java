@@ -58,8 +58,6 @@ public abstract class Personaggio extends Carta {
 
 	public void setPosizionamento(PosizionamentoPersonaggio posizionamento) {
 		this.posizionamento = posizionamento;
-		if(posizionamento.toString().equals(PosizionamentoPersonaggio.DIFESA.toString()))
-			this.armatura *= 2;
 	}
 	
 
