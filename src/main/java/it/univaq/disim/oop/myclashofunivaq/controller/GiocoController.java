@@ -22,6 +22,7 @@ import it.univaq.disim.oop.myclashofunivaq.domain.Mazzo;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.PosizionamentoPersonaggio;
+import it.univaq.disim.oop.myclashofunivaq.domain.Stato;
 import it.univaq.disim.oop.myclashofunivaq.domain.Turno;
 import it.univaq.disim.oop.myclashofunivaq.view.InizializzaDati;
 import it.univaq.disim.oop.myclashofunivaq.view.ViewDispatcher;
@@ -131,123 +132,157 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 		Mazzo mazzo = mazzoService.trovaMazzo(giocatoreCorrente);
 
-		for (Carta carta : mazzoService.mostraCarteMano(mazzo)) {
-			ImageView imageView = utility.creaImpostaImageView(carta.getImmagineCarta(), dim_img, dim_img);
-
-			Tooltip tooltip = new Tooltip(carta.getNome() + "\n" + carta.getCostoSchieramento());
-			Tooltip.install(imageView, tooltip);
-
-			utility.aggiungiImmagineGriglia(carteMano, imageView);
-			utility.aggiungiCartaGriglia(carteMano, carta);
-
-			utility.setImageDragProperty(carteMano, imageView);
+		if (turnoService.isFirstTurno(turnoCorrente)) {
 			
-			gridsList.remove(carteMano);
-			
-			for (GridPane grid : gridsList) {
+			for (Carta carta : mazzoService.mostraCarteMano(mazzo)) {
+				ImageView imageView = utility.creaImpostaImageView(carta.getImmagineCarta(), dim_img, dim_img);
 
-				grid.setOnDragOver(event -> {
-					if (event.getGestureSource() != grid && event.getDragboard().hasImage()) {
-						event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-					}
-					event.consume();
-				});
+				this.impostaTooltip(imageView, carta);
 
-				grid.setOnDragDropped(event -> {
-					Dragboard db = event.getDragboard();
-					boolean success = false;
-					
-					ImageView newImageView = null;
-					Carta cartaSchierata = null;
-					Posizione posizione = null;
-					ImageView imageViewProssimaCarta = null;
+				//Mapping immagini e carte in mano
+				utility.aggiungiCartaImmagineGriglia(carteMano, carta, imageView);
 
-					if (db.hasImage()) {
-						newImageView = utility.creaImpostaImageView(db.getImage(), dim_img, dim_img);
-
-						utility.aggiungiImmagineGriglia(grid, newImageView);
-						utility.aggiungiCartaGriglia(grid, carta);
-
-						imageViewProssimaCarta = utility.creaImpostaImageView(prossimaCarta.getImage(), 100,
-								100);
-						
-						posizione = utility.getPosizioneCartaSelezionata()[0];
-						
-						try {
-							cartaSchierata = (Carta) utility.ricercaCartaSelezionata(posizione).clone();
-						} catch (CloneNotSupportedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-
-						utility.aggiungiImmagineGriglia(carteMano, imageViewProssimaCarta, posizione);
-
-						utility.setImageDragProperty(carteMano, imageViewProssimaCarta);
-
-						prossimaCarta.setImage(mazzoService.mostraProssimaCarta(mazzo).getImmagineCarta());
-						
-						utility.resetArrayCopy();
-						
-					
-						success = true;
-
-					}
-
-					event.setDropCompleted(success);
-					event.consume();
-					
-					if(cartaSchierata instanceof Personaggio) {
-						
-						
-						Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-						alert.setTitle("SCELTA POSIZIONE CARTA");
-						alert.setHeaderText(null);
-						alert.setContentText("ATTACCO o DIFESA");
-						
-						System.out.println(cartaSchierata.toString());
-						
-						ButtonType bottoneSceltaAttacco = new ButtonType(PosizionamentoPersonaggio.ATTACCO.toString());
-						ButtonType bottoneSceltaDifesa = new ButtonType(PosizionamentoPersonaggio.DIFESA.toString());
-						
-						alert.getButtonTypes().setAll(bottoneSceltaAttacco, bottoneSceltaDifesa);
-						
-						boolean[] flag = {false};
-						PosizionamentoPersonaggio posizionamentoScelto = null;
-
-						alert.showAndWait().ifPresent(response -> {
-							if (response == bottoneSceltaDifesa)
-								flag[0] = true;
-							
-						});
-						
-						if(flag[0]) {
-							posizionamentoScelto = PosizionamentoPersonaggio.DIFESA;
-							newImageView.setRotate(270);
-						}
-						else
-							posizionamentoScelto = PosizionamentoPersonaggio.ATTACCO;
-							
-						
-						giocatoreService.effettuaSchieramentoPersonaggio((Personaggio) cartaSchierata, utility.ricercaStradaSchieramento(grid), 
-								posizionamentoScelto);
-					}
-
-					
-
-				});
+				utility.setImageDragProperty(carteMano, imageView);
 
 			}
 			
 		}
+		else {
+			utility.ripristinaStato(turnoCorrente.getStato(), gridsList);
+		}
+		
+		Carta[] prossimaCartaMazzo = new Carta[1]; //WRAPPER
+		prossimaCartaMazzo[0] = mazzoService.mostraProssimaCarta(mazzo);
+		prossimaCarta.setImage(prossimaCartaMazzo[0].getImmagineCarta());
+		
+		// gridsList.remove(carteMano);
+		for (GridPane grid : gridsList) {
 
-		prossimaCarta.setImage(mazzoService.mostraProssimaCarta(mazzo).getImmagineCarta());
+			grid.setOnDragOver(event -> {
+				if (event.getGestureSource() != grid && event.getDragboard().hasImage()) {
+					event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+				}
+		
+				event.consume();
+			});
+
+			grid.setOnDragDropped(event -> {
+				
+				if(grid.equals(carteMano)) {
+					System.err.println("NON PUOI AGGIUNGERE CARTE IN MANO");
+					throw new RuntimeException();
+					
+				}
+				
+				if(grid.getChildren().size() == 4 && grid.getId().equals("stradaSX")) {
+					System.err.println("STRADA PIENA");
+					throw new RuntimeException();
+				}
+					
+				
+				Dragboard db = event.getDragboard();
+				boolean success = false;
+
+				ImageView newImageView = null;
+				Posizione posizione = null;
+				Carta cartaSchierata = null;
+				ImageView imageViewProssimaCarta = null;
+
+				if (db.hasImage()) {
+					newImageView = utility.creaImpostaImageView(db.getImage(), dim_img, dim_img);
+					
+					//Mapping immagine posizionata
+					utility.aggiungiCartaImmagineGriglia(grid, null, newImageView);
+					
+					imageViewProssimaCarta = utility.creaImpostaImageView(prossimaCarta.getImage(), 100, 100);
+						
+					posizione = utility.getPosizioneCartaSelezionata()[0];
+
+					try {
+						//Mapping carta schierata
+						cartaSchierata = (Carta) utility.ricercaCartaSelezionataInMano(posizione).clone();
+						utility.aggiungiCartaImmagineGriglia(grid, cartaSchierata, null); //aggiunta nella strada
+						this.impostaTooltip(newImageView, cartaSchierata);
+					} catch (CloneNotSupportedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					//Mapping immagine/carta da prossima carta a mano
+					utility.aggiungiCartaImmagineGriglia(carteMano, prossimaCartaMazzo[0], imageViewProssimaCarta, posizione);
+					
+					this.impostaTooltip(imageViewProssimaCarta, prossimaCartaMazzo[0]);
+
+					utility.setImageDragProperty(carteMano, imageViewProssimaCarta);
+					
+					prossimaCartaMazzo[0] = mazzoService.mostraProssimaCarta(mazzo);
+					prossimaCarta.setImage(prossimaCartaMazzo[0].getImmagineCarta());
+
+					utility.resetArrayCopy();
+
+					success = true;
+
+				}
+
+				event.setDropCompleted(success);
+				event.consume();
+			
+				
+				if (cartaSchierata instanceof Personaggio) {
+					
+					Personaggio personaggioSchierato = (Personaggio) cartaSchierata;
+
+					Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+					alert.setTitle("SCELTA POSIZIONE CARTA");
+					alert.setHeaderText(null);
+					alert.setContentText("ATTACCO o DIFESA");
+
+					ButtonType bottoneSceltaAttacco = new ButtonType(
+							PosizionamentoPersonaggio.ATTACCO.toString());
+					ButtonType bottoneSceltaDifesa = new ButtonType(
+							PosizionamentoPersonaggio.DIFESA.toString());
+
+					alert.getButtonTypes().setAll(bottoneSceltaAttacco, bottoneSceltaDifesa);
+
+					boolean[] flag = { false };
+					PosizionamentoPersonaggio posizionamentoScelto = null;
+
+					alert.showAndWait().ifPresent(response -> {
+						if (response == bottoneSceltaDifesa)
+							flag[0] = true;
+
+					});
+
+					if (flag[0]) {
+						posizionamentoScelto = PosizionamentoPersonaggio.DIFESA;
+						newImageView.setRotate(270);
+					} else
+						posizionamentoScelto = PosizionamentoPersonaggio.ATTACCO;
+
+					giocatoreService.effettuaSchieramentoPersonaggio(personaggioSchierato,
+							utility.ricercaStradaSchieramento(grid), posizionamentoScelto);
+					
+					
+					//personaggioSchierato.getMossaSpeciale().esegui(personaggioSchierato);
+				
+				}
+
+			});
+
+		}
+
+		
 
 	}
 
 	@FXML
 	public void passaTurnoAction(ActionEvent event) {
 		try {
+			turnoService.creaSalvaStatoTurno(utility.getMappaGridpaneImmagini(), utility.getMappaGridpaneCarte(),
+					turnoCorrente);
+
 			partitaService.salvaTurnoPartita(turnoCorrente, partita);
+			
 			dispatcher.caricaVista("gioco", partita);
 		} catch (ViewException e) {
 			// TODO Auto-generated catch block
@@ -276,6 +311,11 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 	private String formatElisir(double value) {
 		DecimalFormat df = new DecimalFormat("#.#");
 		return df.format(value * 10);
+	}
+	
+	private void impostaTooltip(ImageView img, Carta carta) {
+		Tooltip tooltip = new Tooltip(carta.getNome() + "\n" + carta.getCostoSchieramento());
+		Tooltip.install(img, tooltip);
 	}
 
 }
