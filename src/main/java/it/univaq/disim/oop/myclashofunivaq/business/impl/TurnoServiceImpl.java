@@ -1,6 +1,7 @@
 package it.univaq.disim.oop.myclashofunivaq.business.impl;
 
 import java.util.HashMap;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -9,9 +10,9 @@ import it.univaq.disim.oop.myclashofunivaq.domain.Turno;
 import it.univaq.disim.oop.myclashofunivaq.business.TurnoService;
 import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.Posizione;
 import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
+import it.univaq.disim.oop.myclashofunivaq.domain.FaseTurno;
 import it.univaq.disim.oop.myclashofunivaq.domain.Giocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
-import it.univaq.disim.oop.myclashofunivaq.domain.Stato;
 import javafx.animation.Timeline;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -39,13 +40,13 @@ public class TurnoServiceImpl implements TurnoService {
 		
 		Turno turno = new Turno(giocatore);
 		turno.setNumero(j);
+		turno.setFase(FaseTurno.Schieramento);
 		
 		if(isFirstTurno(turno))
 			turno.setElisirGiocatore(0.5);
 		else {
 			double newElisir = turniPartita.get(j - 2).getElisirGiocatore() + 0.1;
 			turno.setElisirGiocatore(newElisir);
-			turno.setStato(turniPartita.get(j - 2).getStato());
 		}
 			
 		
@@ -61,19 +62,26 @@ public class TurnoServiceImpl implements TurnoService {
 	public boolean isFirstTurno(Turno turno) {
 		return turno.getNumero() == 0 || turno.getNumero() == 1 ? true : false;
 	}
-	
+
 	@Override
-	public void creaSalvaStatoTurno(Map<GridPane, LinkedHashMap<Posizione, ImageView>> mappaGridpaneImmagini,
-			Map<GridPane, LinkedHashMap<Posizione, Carta>> mappaGridpaneCarte, Turno turno) {
+	public void cambiaFase(Turno turno) {
+		FaseTurno faseTurno = turno.getFase();
 		
-		Stato stato = new Stato();
-		stato.setMappaGridpaneImmagini(mappaGridpaneImmagini);
-		stato.setMappaGridpaneCarte(mappaGridpaneCarte);
+		switch (faseTurno) {
+		case Schieramento: 
+			turno.setFase(FaseTurno.Difesa);
+			break;
+		case Difesa:
+			turno.setFase(FaseTurno.Attacco);
+			break;
+		default:
+			System.out.println("FASI FINITE");
+			break;
+		}
 		
-		turno.setStato(stato);
 		
 	}
-
+	
 	
 
 }

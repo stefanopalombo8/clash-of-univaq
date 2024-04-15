@@ -117,12 +117,19 @@
                         <Font name="System Bold" size="12.0" />
                      </font></Label>
                   <Separator layoutX="157.0" layoutY="-2.0" orientation="VERTICAL" prefHeight="537.0" prefWidth="0.0" style="-fx-background-color: black;" />
-                  <Label layoutX="8.0" layoutY="151.0" prefHeight="17.0" prefWidth="43.0" text="TIMER" />
-                  <Label fx:id="timer" layoutX="47.0" layoutY="168.0" prefHeight="33.0" prefWidth="61.0">
+                  <Label layoutX="13.0" layoutY="271.0" prefHeight="17.0" prefWidth="43.0" text="TIMER" />
+                  <Label fx:id="timer" layoutX="45.0" layoutY="304.0" prefHeight="33.0" prefWidth="61.0">
                      <font>
                         <Font size="36.0" />
                      </font>
                   </Label>
+                  <Label layoutX="10.0" layoutY="154.0" prefHeight="17.0" prefWidth="32.0" text="FASE" />
+                  <Label fx:id="faseCorrente" alignment="CENTER" contentDisplay="CENTER" layoutX="16.0" layoutY="178.0" prefHeight="17.0" prefWidth="128.0">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="cambiaFase" layoutX="31.0" layoutY="212.0" mnemonicParsing="false" onAction="#cambiaFaseAction" text="CAMBIA FASE" />
                </children>
             </AnchorPane>
          </children>

@@ -1,6 +1,8 @@
 package it.univaq.disim.oop.myclashofunivaq.controller.utilitis;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -8,7 +10,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
-import it.univaq.disim.oop.myclashofunivaq.domain.Stato;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -22,6 +23,9 @@ public class GraphicUtility {
 	private Map<GridPane, LinkedHashMap<Posizione, Carta>> mappaGridpaneCarte = new HashMap<>();
 
 	private Posizione[] posizioneCartaSelezionata = new Posizione[1];
+	
+	private static List<GraphicUtility> stati = new ArrayList<>();
+	private static int i = 0;
 
 	public Map<GridPane, LinkedHashMap<Posizione, ImageView>> getMappaGridpaneImmagini() {
 		return mappaGridpaneImmagini;
@@ -41,6 +45,15 @@ public class GraphicUtility {
 
 	public void resetArrayCopy() {
 		this.posizioneCartaSelezionata[0] = null;
+	}
+	
+	public void aggiungiStato(GraphicUtility stato) {
+		stati.add(stato);
+		i++;
+	}
+	
+	public GraphicUtility getUltimoStato() {
+		return stati.get(i - 2);
 	}
 
 	public ImageView creaImpostaImageView(Image image, double height, double width) {
@@ -226,9 +239,11 @@ public class GraphicUtility {
 		return optionalName.get();
 	}
 
-	public void ripristinaStato(Stato stato, List<GridPane> grids)  {
+	public void ripristinaStato(List<GridPane> grids)  {
+		this.setMappaGridpaneImmagini(getUltimoStato().getMappaGridpaneImmagini());
+		
 		//RIPRISTINO DELLE IMMAGINI SUL TERRENO
-		for (Map.Entry<GridPane, LinkedHashMap<Posizione, ImageView>> entry : stato.getMappaGridpaneImmagini()
+		for (Map.Entry<GridPane, LinkedHashMap<Posizione, ImageView>> entry : getUltimoStato().getMappaGridpaneImmagini()
 				.entrySet()) {
 			
 			GridPane gridPaneKey = entry.getKey();
@@ -250,8 +265,12 @@ public class GraphicUtility {
 		}
 		
 		//RIPRISTINO DELLE CARTE
-		this.setMappaGridpaneCarte(stato.getMappaGridpaneCarte());
+		this.setMappaGridpaneCarte(getUltimoStato().getMappaGridpaneCarte());
 		
+	}
+
+	public void setMappaGridpaneImmagini(Map<GridPane, LinkedHashMap<Posizione, ImageView>> mappaGridpaneImmagini) {
+		this.mappaGridpaneImmagini = mappaGridpaneImmagini;
 	}
 	
 }

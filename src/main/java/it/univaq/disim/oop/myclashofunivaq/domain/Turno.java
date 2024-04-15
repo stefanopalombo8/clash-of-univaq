@@ -5,23 +5,15 @@ import java.util.List;
 
 public class Turno {
 	private Integer numero;
+	private FaseTurno fase;
 	private int timer;
 	private Giocatore giocatore;
 	private double elisirGiocatore;
-	private Stato stato;
 	private List<MossaGiocatore> mosseGiocatore;
 	
 	public Turno(Giocatore giocatore) {
 		this.giocatore = giocatore;
 		this.mosseGiocatore = new ArrayList<>();
-	}
-	
-	public Stato getStato() {
-		return stato;
-	}
-
-	public void setStato(Stato stato) {
-		this.stato = stato;
 	}
 
 	public List<MossaGiocatore> getMosseGiocatore() {
@@ -62,6 +54,14 @@ public class Turno {
 
 	public void setElisirGiocatore(double elisirGiocatore) {
 		this.elisirGiocatore = elisirGiocatore;
+	}
+	
+	public FaseTurno getFase() {
+		return fase;
+	}
+
+	public void setFase(FaseTurno fase) {
+		this.fase = fase;
 	}
 	  
 }

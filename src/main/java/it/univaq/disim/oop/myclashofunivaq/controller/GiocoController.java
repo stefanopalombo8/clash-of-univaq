@@ -1,6 +1,7 @@
 package it.univaq.disim.oop.myclashofunivaq.controller;
 
 import java.net.URL;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +18,12 @@ import it.univaq.disim.oop.myclashofunivaq.business.impl.TurnoServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.GraphicUtility;
 import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.Posizione;
 import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
+import it.univaq.disim.oop.myclashofunivaq.domain.FaseTurno;
 import it.univaq.disim.oop.myclashofunivaq.domain.Giocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.Mazzo;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.PosizionamentoPersonaggio;
-import it.univaq.disim.oop.myclashofunivaq.domain.Stato;
 import it.univaq.disim.oop.myclashofunivaq.domain.Turno;
 import it.univaq.disim.oop.myclashofunivaq.view.InizializzaDati;
 import it.univaq.disim.oop.myclashofunivaq.view.ViewDispatcher;
@@ -54,6 +55,12 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 	@FXML
 	private Label nomeGiocatore;
+	
+	@FXML
+	private Label faseCorrente;
+	
+	@FXML 
+	private Button cambiaFase;
 
 	@FXML
 	private GridPane carteMano;
@@ -78,7 +85,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 	private List<GridPane> gridsList;
 
-	private int timerDurantion = 5; // seconds
+	private int timerDurantion = 15; // seconds
 	private int secondsElapsed;
 	private Timeline timeline;
 
@@ -125,6 +132,8 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		turnoCorrente = turnoService.avviaTurno(timeline, giocatoreCorrente);
 
 		nomeGiocatore.setText(giocatoreCorrente.getNickname());
+		
+		faseCorrente.setText(turnoCorrente.getFase().toString());
 
 		double progress = turnoCorrente.getElisirGiocatore();
 		elisir.setProgress(progress);
@@ -148,7 +157,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 			
 		}
 		else {
-			utility.ripristinaStato(turnoCorrente.getStato(), gridsList);
+			utility.ripristinaStato(gridsList);
 		}
 		
 		Carta[] prossimaCartaMazzo = new Carta[1]; //WRAPPER
@@ -185,7 +194,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 				ImageView newImageView = null;
 				Posizione posizione = null;
-				Carta cartaSchierata = null;
+				Carta[] cartaSchierata = new Carta[1];
 				ImageView imageViewProssimaCarta = null;
 
 				if (db.hasImage()) {
@@ -200,13 +209,20 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 					try {
 						//Mapping carta schierata
-						cartaSchierata = (Carta) utility.ricercaCartaSelezionataInMano(posizione).clone();
-						utility.aggiungiCartaImmagineGriglia(grid, cartaSchierata, null); //aggiunta nella strada
-						this.impostaTooltip(newImageView, cartaSchierata);
+						cartaSchierata[0] = (Carta) utility.ricercaCartaSelezionataInMano(posizione).clone();
+						utility.aggiungiCartaImmagineGriglia(grid, cartaSchierata[0], null); //aggiunta nella strada
+						this.impostaTooltip(newImageView, cartaSchierata[0]);
 					} catch (CloneNotSupportedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					
+					newImageView.setOnMouseClicked(event3 -> {
+						if(turnoCorrente.getFase().equals(FaseTurno.Difesa)) {
+							System.out.println("sono " + cartaSchierata[0].getNome() + " stato scelto per la difesa");
+							
+						}
+					});
 					
 					//Mapping immagine/carta da prossima carta a mano
 					utility.aggiungiCartaImmagineGriglia(carteMano, prossimaCartaMazzo[0], imageViewProssimaCarta, posizione);
@@ -227,10 +243,11 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 				event.setDropCompleted(success);
 				event.consume();
 			
+				Personaggio personaggioSchierato = null;
 				
-				if (cartaSchierata instanceof Personaggio) {
+				if (cartaSchierata[0] instanceof Personaggio) {
 					
-					Personaggio personaggioSchierato = (Personaggio) cartaSchierata;
+					personaggioSchierato = (Personaggio) cartaSchierata[0];
 
 					Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 					alert.setTitle("SCELTA POSIZIONE CARTA");
@@ -266,6 +283,8 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 					//personaggioSchierato.getMossaSpeciale().esegui(personaggioSchierato);
 				
 				}
+				
+				
 
 			});
 
@@ -274,15 +293,18 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		
 
 	}
+	
+	@FXML
+	public void cambiaFaseAction(ActionEvent event) {
+		turnoService.cambiaFase(turnoCorrente);
+		faseCorrente.setText(turnoCorrente.getFase().toString());
+	}
 
 	@FXML
 	public void passaTurnoAction(ActionEvent event) {
 		try {
-			turnoService.creaSalvaStatoTurno(utility.getMappaGridpaneImmagini(), utility.getMappaGridpaneCarte(),
-					turnoCorrente);
-
 			partitaService.salvaTurnoPartita(turnoCorrente, partita);
-			
+			utility.aggiungiStato(utility);
 			dispatcher.caricaVista("gioco", partita);
 		} catch (ViewException e) {
 			// TODO Auto-generated catch block
