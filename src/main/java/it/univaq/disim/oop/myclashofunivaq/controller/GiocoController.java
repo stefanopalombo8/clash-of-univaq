@@ -11,6 +11,7 @@ import it.univaq.disim.oop.myclashofunivaq.business.GiocatoreService;
 import it.univaq.disim.oop.myclashofunivaq.business.MazzoService;
 import it.univaq.disim.oop.myclashofunivaq.business.PartitaService;
 import it.univaq.disim.oop.myclashofunivaq.business.TurnoService;
+import it.univaq.disim.oop.myclashofunivaq.business.impl.ElisirException;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.GiocatoreUtenteServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.MazzoServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.PartitaServiceImpl;
@@ -101,6 +102,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 	private GraphicUtility utility;
 	private static final int dim_img = 80;
+	
 
 	public GiocoController() {
 		this.dispatcher = ViewDispatcher.getInstance();
@@ -145,7 +147,6 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 			
 			for (Carta carta : mazzoService.mostraCarteMano(mazzo)) {
 				ImageView imageView = utility.creaImpostaImageView(carta.getImmagineCarta(), dim_img, dim_img);
-
 				this.impostaTooltip(imageView, carta);
 
 				//Mapping immagini e carte in mano
@@ -200,22 +201,29 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 				if (db.hasImage()) {
 					newImageView = utility.creaImpostaImageView(db.getImage(), dim_img, dim_img);
 					
-					//Mapping immagine posizionata
-					utility.aggiungiCartaImmagineGriglia(grid, null, newImageView);
-					
 					imageViewProssimaCarta = utility.creaImpostaImageView(prossimaCarta.getImage(), 100, 100);
-						
+					
 					posizione = utility.getPosizioneCartaSelezionata()[0];
 
 					try {
 						//Mapping carta schierata
-						cartaSchierata[0] = (Carta) utility.ricercaCartaSelezionataInMano(posizione).clone();
+						Carta cartaDaSchierare = utility.ricercaCartaSelezionataInMano(posizione);
+						turnoService.controllaSchieramento(turnoCorrente, cartaDaSchierare);
+						
+						cartaSchierata[0] = (Carta) cartaDaSchierare.clone();
 						utility.aggiungiCartaImmagineGriglia(grid, cartaSchierata[0], null); //aggiunta nella strada
 						this.impostaTooltip(newImageView, cartaSchierata[0]);
-					} catch (CloneNotSupportedException e) {
+						
+					} catch (ElisirException e) {
+						System.out.println(e.getMessage());
+						throw new RuntimeException();
+					}
+					catch (CloneNotSupportedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					
+					utility.aggiungiCartaImmagineGriglia(grid, null, newImageView);
 					
 					newImageView.setOnMouseClicked(event3 -> {
 						if(turnoCorrente.getFase().equals(FaseTurno.Difesa)) {
@@ -223,6 +231,8 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 							
 						}
 					});
+					
+					
 					
 					//Mapping immagine/carta da prossima carta a mano
 					utility.aggiungiCartaImmagineGriglia(carteMano, prossimaCartaMazzo[0], imageViewProssimaCarta, posizione);
@@ -276,9 +286,12 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 					} else
 						posizionamentoScelto = PosizionamentoPersonaggio.ATTACCO;
 
-					giocatoreService.effettuaSchieramentoPersonaggio(personaggioSchierato,
+					giocatoreService.effettuaSchieramentoPersonaggio(turnoCorrente, personaggioSchierato,
 							utility.ricercaStradaSchieramento(grid), posizionamentoScelto);
 					
+					double progress2 = turnoCorrente.getElisirGiocatore();
+					elisir.setProgress(progress2);
+					elisirIndicator.setText(this.formatElisir(progress2));
 					
 					//personaggioSchierato.getMossaSpeciale().esegui(personaggioSchierato);
 				

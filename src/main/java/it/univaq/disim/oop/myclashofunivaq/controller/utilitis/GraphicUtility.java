@@ -26,6 +26,8 @@ public class GraphicUtility {
 	
 	private static List<GraphicUtility> stati = new ArrayList<>();
 	private static int i = 0;
+	
+	boolean controllo = false;
 
 	public Map<GridPane, LinkedHashMap<Posizione, ImageView>> getMappaGridpaneImmagini() {
 		return mappaGridpaneImmagini;
@@ -114,14 +116,17 @@ public class GraphicUtility {
 	public void aggiungiCartaImmagineGriglia(GridPane grid, Carta carta, ImageView imageView) {
 		
 		if(imageView != null) {
+			
 			for (Map.Entry<GridPane, LinkedHashMap<Posizione, ImageView>> entry : mappaGridpaneImmagini.entrySet()) {
 				GridPane gridPaneKey = entry.getKey();
-
-				if (gridPaneKey.equals(grid)) {
+				
+				if (gridPaneKey.getId().equals(grid.getId())) {
 					LinkedHashMap<Posizione, ImageView> innerMap = entry.getValue();
 
 					for (Posizione p : innerMap.keySet()) {
 						if (innerMap.get(p) == null) {
+							if(controllo == true)
+								System.out.println("sono qui dopo il ripristino 2 ");
 							innerMap.replace(p, imageView);
 							grid.add(imageView, p.getColonna(), p.getRiga());
 							break;
@@ -139,7 +144,7 @@ public class GraphicUtility {
 			for (Map.Entry<GridPane, LinkedHashMap<Posizione, Carta>> entry : mappaGridpaneCarte.entrySet()) {
 				GridPane gridPaneKey = entry.getKey();
 
-				if (gridPaneKey.equals(grid)) {
+				if (gridPaneKey.getId().equals(grid.getId())) {
 					LinkedHashMap<Posizione, Carta> innerMap = entry.getValue();
 
 					for (Posizione p : innerMap.keySet()) {
@@ -167,7 +172,7 @@ public class GraphicUtility {
 			for (Map.Entry<GridPane, LinkedHashMap<Posizione, ImageView>> entry : mappaGridpaneImmagini.entrySet()) {
 				GridPane gridPaneKey = entry.getKey();
 
-				if (gridPaneKey.equals(grid)) {
+				if (gridPaneKey.getId().equals(grid.getId())) {
 					LinkedHashMap<Posizione, ImageView> innerMap = entry.getValue();
 
 					for (Posizione p : innerMap.keySet()) {
@@ -188,7 +193,7 @@ public class GraphicUtility {
 			for (Map.Entry<GridPane, LinkedHashMap<Posizione, Carta>> entry : mappaGridpaneCarte.entrySet()) {
 				GridPane gridPaneKey = entry.getKey();
 
-				if (gridPaneKey.equals(grid)) {
+				if (gridPaneKey.getId().equals(grid.getId())) {
 					LinkedHashMap<Posizione, Carta> innerMap = entry.getValue();
 
 					for (Posizione p : innerMap.keySet()) {
@@ -240,10 +245,11 @@ public class GraphicUtility {
 	}
 
 	public void ripristinaStato(List<GridPane> grids)  {
+		controllo = true;
+		//RIPRISTINO DELLE IMMAGINI SUL TERRENO
 		this.setMappaGridpaneImmagini(getUltimoStato().getMappaGridpaneImmagini());
 		
-		//RIPRISTINO DELLE IMMAGINI SUL TERRENO
-		for (Map.Entry<GridPane, LinkedHashMap<Posizione, ImageView>> entry : getUltimoStato().getMappaGridpaneImmagini()
+		for (Map.Entry<GridPane, LinkedHashMap<Posizione, ImageView>> entry : mappaGridpaneImmagini
 				.entrySet()) {
 			
 			GridPane gridPaneKey = entry.getKey();

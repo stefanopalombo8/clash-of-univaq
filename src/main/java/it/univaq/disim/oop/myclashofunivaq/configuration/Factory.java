@@ -68,6 +68,9 @@ public class Factory implements CartaFactory {
 								Personaggio personaggio = (Personaggio) carta;
 								
 								switch(attributo) {
+								case "costoSchieramento":
+									personaggio.setCostoSchieramento(Integer.valueOf(props.getProperty(riga)));
+									break;
 								case "vita":
 									personaggio.setVita(Integer.valueOf(props.getProperty(riga)));
 									break;
