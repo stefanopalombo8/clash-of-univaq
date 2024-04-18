@@ -72,4 +72,18 @@ public class PartitaServiceImpl implements PartitaService {
 		return partita.getTurni().add(turno);
 	}
 
+	@Override
+	public int calcolaNumeroMossePartita(Partita partita) {
+		if(!partite.containsKey(partita.getID()))
+			return 0;
+		
+		int numeroDiMosse = 0;
+		
+		for(Turno turno : partita.getTurni()) {
+			numeroDiMosse += turno.getMosseGiocatore().size();
+		}
+		
+		return numeroDiMosse;
+	}
+
 }
