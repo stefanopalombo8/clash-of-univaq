@@ -1,8 +1,9 @@
 package it.univaq.disim.oop.myclashofunivaq.domain;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public abstract class Giocatore {
+public abstract class Giocatore implements Serializable {
 
 	private String nickname;
 	private Mazzo mazzo;

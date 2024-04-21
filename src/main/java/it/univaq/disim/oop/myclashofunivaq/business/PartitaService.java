@@ -19,4 +19,6 @@ public interface PartitaService {
 	boolean salvaTurnoPartita(Turno turno, Partita partita);
 	
 	int calcolaNumeroMossePartita(Partita partita);	
+	
+	void serializzaPartita(Partita partita);
 }

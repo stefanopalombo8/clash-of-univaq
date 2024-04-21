@@ -1,9 +1,10 @@
 package it.univaq.disim.oop.myclashofunivaq.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Turno {
+public class Turno implements Serializable {
 	private Integer numero;
 	private FaseTurno fase;
 	private int timer;

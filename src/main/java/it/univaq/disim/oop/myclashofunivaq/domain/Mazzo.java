@@ -1,9 +1,10 @@
 package it.univaq.disim.oop.myclashofunivaq.domain;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
-public class Mazzo {
+public class Mazzo implements Serializable {
 
 	private Carta[] carte;
 	
