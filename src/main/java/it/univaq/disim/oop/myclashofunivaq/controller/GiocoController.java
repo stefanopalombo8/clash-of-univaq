@@ -121,6 +121,12 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 	@FXML
 	private GridPane stradaCavversario;
+	
+	@FXML
+	private Button salvaPartita;
+	
+	@FXML
+	private Button esciPartita;
 
 	private List<GridPane> gridsListGiocatore;
 	private List<GridPane> gridsListAvversario;
@@ -506,6 +512,33 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 			System.err.println(e.getMessage());
 		}
 
+	}
+	
+	@FXML
+	public void salvaPartitaAction(ActionEvent event) {
+		partitaService.salvaPartita(partita);
+		this.mazzoService.reset();
+		this.turnoService.reset();
+		
+		try {
+			dispatcher.caricaVista("applicationLayout");
+			dispatcher.caricaVista("homepage");
+		} catch (ViewException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@FXML
+	public void esciAction(ActionEvent event) {
+		this.mazzoService.reset();
+		this.turnoService.reset();
+		
+		try {
+			dispatcher.caricaVista("applicationLayout");
+			dispatcher.caricaVista("homepage");
+		} catch (ViewException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

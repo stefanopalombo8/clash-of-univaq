@@ -6,7 +6,7 @@ import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
 import it.univaq.disim.oop.myclashofunivaq.domain.Giocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.Mazzo;
 
-public interface MazzoService {
+public interface MazzoService extends ResetStaticVariables{
 	Mazzo creaMazzo(List<Carta> carteScelte);
 	boolean controllaMazzo(Mazzo mazzo);
 	void aggiungiMazzo(Mazzo mazzo, Giocatore giocatore);

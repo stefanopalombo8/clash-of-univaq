@@ -156,6 +156,7 @@ public class MazzoController implements Initializable, InizializzaDati<Partita> 
 				dispatcher.caricaVista("sceltaMazzo", partita);
 			} else {
 				System.out.println("\nMAZZI IMPOSTATI");
+				i = 0;
 				dispatcher.caricaVista("gioco", partita);
 			}
 

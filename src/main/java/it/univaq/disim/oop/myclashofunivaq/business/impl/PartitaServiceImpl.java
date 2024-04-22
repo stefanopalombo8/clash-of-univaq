@@ -95,7 +95,7 @@ public class PartitaServiceImpl implements PartitaService {
 	}
 
 	@Override
-	public void serializzaPartita(Partita partita) {
+	public void salvaPartita(Partita partita) {
 		if (!partite.containsKey(partita.getID()))
 			return;
 

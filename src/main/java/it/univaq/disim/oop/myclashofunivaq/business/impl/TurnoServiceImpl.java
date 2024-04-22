@@ -16,8 +16,6 @@ import it.univaq.disim.oop.myclashofunivaq.domain.MossaGiocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
 import it.univaq.disim.oop.myclashofunivaq.domain.Torre;
 import javafx.animation.Timeline;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
 
 public class TurnoServiceImpl implements TurnoService {
 	
@@ -129,6 +127,13 @@ public class TurnoServiceImpl implements TurnoService {
 			}
 		}
 		return torre;
+	}
+
+	@Override
+	public void reset() {
+		i = 0;
+		j = 0;
+		turniPartita.clear();
 	}
 	
 }

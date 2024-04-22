@@ -20,5 +20,5 @@ public interface PartitaService {
 	
 	int calcolaNumeroMossePartita(Partita partita);	
 	
-	void serializzaPartita(Partita partita);
+	void salvaPartita(Partita partita);
 }

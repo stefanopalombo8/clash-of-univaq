@@ -80,6 +80,12 @@ public class MazzoServiceImpl implements MazzoService {
 	public Carta mostraProssimaCarta(Mazzo mazzo) {
 		return mazzo.getCarte()[index++ % mazzo.getCarte().length];
 	}
+
+	@Override
+	public void reset() {
+		index = 0;
+		
+	}
 	
 	
 	

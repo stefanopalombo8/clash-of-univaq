@@ -9,7 +9,7 @@ import it.univaq.disim.oop.myclashofunivaq.domain.Torre;
 import it.univaq.disim.oop.myclashofunivaq.domain.Turno;
 import javafx.animation.Timeline;
 
-public interface TurnoService {
+public interface TurnoService extends ResetStaticVariables {
 	Giocatore alternaGiocatore(Partita partita);
 	Giocatore trovaAltroGiocatore(Partita partita);
 	Turno avviaTurno(Timeline timeline, Giocatore giocatore);
