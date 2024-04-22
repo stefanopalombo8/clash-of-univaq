@@ -9,6 +9,7 @@ public class Turno implements Serializable {
 	private FaseTurno fase;
 	private int timer;
 	private Giocatore giocatore;
+	private Torre torreGiocatore;
 	private double elisirGiocatore;
 	private List<MossaGiocatore> mosseGiocatore;
 	
@@ -63,6 +64,14 @@ public class Turno implements Serializable {
 
 	public void setFase(FaseTurno fase) {
 		this.fase = fase;
+	}
+	
+	public Torre getTorreGiocatore() {
+		return torreGiocatore;
+	}
+
+	public void setTorreGiocatore(Torre torreGiocatore) {
+		this.torreGiocatore = torreGiocatore;
 	}
 	  
 }

@@ -31,8 +31,8 @@
             <Image url="@images/King_Tower_Blue.jpg" />
          </image>
       </ImageView>
-      <ProgressBar layoutX="432.0" layoutY="439.0" prefHeight="18.0" prefWidth="128.0" progress="0.0" />
-      <ProgressBar layoutX="433.0" layoutY="82.0" prefHeight="18.0" prefWidth="128.0" progress="0.0" />
+      <ProgressBar fx:id="vitaTorre1" layoutX="432.0" layoutY="439.0" prefHeight="18.0" prefWidth="128.0" progress="0.0" />
+      <ProgressBar fx:id="vitaTorre2" layoutX="433.0" layoutY="82.0" prefHeight="18.0" prefWidth="128.0" progress="0.0" />
       <ImageView fitHeight="84.0" fitWidth="69.0" layoutX="469.0" layoutY="110.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@images/King_Tower_Red.jpg" />
@@ -164,5 +164,15 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
       </GridPane>
+      <Label fx:id="vitaTorre1Indicator" alignment="CENTER" layoutX="483.0" layoutY="440.0" prefHeight="17.0" prefWidth="32.0" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="vitaTorre2Indicator" alignment="CENTER" layoutX="483.0" layoutY="82.0" prefHeight="17.0" prefWidth="32.0" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

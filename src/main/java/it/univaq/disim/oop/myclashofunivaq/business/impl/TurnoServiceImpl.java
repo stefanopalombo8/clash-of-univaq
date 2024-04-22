@@ -14,6 +14,7 @@ import it.univaq.disim.oop.myclashofunivaq.domain.FaseTurno;
 import it.univaq.disim.oop.myclashofunivaq.domain.Giocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.MossaGiocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
+import it.univaq.disim.oop.myclashofunivaq.domain.Torre;
 import javafx.animation.Timeline;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -43,11 +44,20 @@ public class TurnoServiceImpl implements TurnoService {
 		turno.setNumero(j);
 		turno.setFase(FaseTurno.Schieramento);
 		
-		if(isFirstTurno(turno))
+		if(isFirstTurno(turno)) {
 			turno.setElisirGiocatore(0.7);
+			Torre torre = new Torre();
+			torre.setVita(1);
+			turno.setTorreGiocatore(torre);
+		}
 		else {
 			double newElisir = turniPartita.get(j - 2).getElisirGiocatore() + 0.1;
 			turno.setElisirGiocatore(newElisir);
+			
+			Torre torre = turniPartita.get(j - 2).getTorreGiocatore();
+			double newVitaTorre = torre.getVita();
+			torre.setVita(newVitaTorre);
+			turno.setTorreGiocatore(torre);
 		}
 			
 		
@@ -100,6 +110,25 @@ public class TurnoServiceImpl implements TurnoService {
 	@Override
 	public void salvaMossaGiocatore(Turno turno, MossaGiocatore mossa) {
 		turno.getMosseGiocatore().add(mossa);
+	}
+
+	@Override
+	public Giocatore trovaAltroGiocatore(Partita partita) {
+		int j = i;
+		return partitaService.findAllGiocatori(partita)[j++ % partitaService.findAllGiocatori(partita).length];
+	}
+
+	@Override
+	public Torre trovaTorreGiocatore(Giocatore giocatore) {
+		Torre torre = null;
+		
+		for(Integer i : turniPartita.keySet()) {
+			Turno turno = turniPartita.get(i);
+			if(turno.getGiocatore().equals(giocatore)) {
+				torre = turno.getTorreGiocatore();
+			}
+		}
+		return torre;
 	}
 	
 }

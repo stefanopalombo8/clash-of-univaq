@@ -61,6 +61,18 @@ import javafx.util.Duration;
 public class GiocoController implements Initializable, InizializzaDati<Partita> {
 
 	@FXML
+	private ProgressBar vitaTorre1;
+	
+	@FXML
+	private Label vitaTorre1Indicator;
+	
+	@FXML
+	private ProgressBar vitaTorre2;
+	
+	@FXML
+	private Label vitaTorre2Indicator;
+	
+	@FXML
 	private ProgressBar elisir;
 
 	@FXML
@@ -170,9 +182,14 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		if (turnoCorrente.getNumero() % 2 == 0) {
 			this.carteMano = carteManoG1;
 			this.gridsList = gridsListGiocatore;
+			this.mostraVitaTorre(giocatoreCorrente, vitaTorre1, vitaTorre1Indicator);
+			if(turnoCorrente.getNumero() != 0)
+				this.mostraVitaTorre(this.turnoService.trovaAltroGiocatore(partita), vitaTorre2, vitaTorre2Indicator);
 		} else {
 			this.carteMano = carteManoG2;
 			this.gridsList = gridsListAvversario;
+			this.mostraVitaTorre(giocatoreCorrente, vitaTorre2, vitaTorre2Indicator);
+			this.mostraVitaTorre(this.turnoService.trovaAltroGiocatore(partita), vitaTorre1, vitaTorre1Indicator);
 		}
 
 		this.mappaGriglie();
@@ -198,6 +215,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		}
 
 		if (turnoService.isFirstTurno(turnoCorrente)) {
+			
 			for (Carta carta : mazzoService.mostraCarteMano(mazzo)) {
 				ImageView imageView = utility.creaImpostaImageView(carta.getImmagineCarta(), dim_img, dim_img);
 				this.impostaTooltip(imageView, carta);
@@ -398,6 +416,17 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 	private String formatElisir(double value) {
 		DecimalFormat df = new DecimalFormat("#.#");
 		return df.format(value * 10);
+	}
+	
+	private void mostraVitaTorre(Giocatore giocatore, ProgressBar torre, Label indicator) {
+		double vita = turnoService.trovaTorreGiocatore(giocatore).getVita();
+		torre.setProgress(vita);
+		indicator.setText(this.formatVitaTorre(vita));
+	}
+
+	private String formatVitaTorre(double value) {
+		DecimalFormat df = new DecimalFormat("#.#");
+		return df.format(value * 100);
 	}
 
 	private void impostaTooltip(ImageView img, Carta carta) {
