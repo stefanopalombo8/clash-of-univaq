@@ -20,7 +20,7 @@ public class MazzoServiceImpl implements MazzoService {
 	
 	private final int numCarteInMano = 4;
 	
-	private int index = 0;
+	private static int index = 0;
 	
 	@Override
 	public Mazzo creaMazzo(List<Carta> carteScelte) {

@@ -2,8 +2,12 @@ package it.univaq.disim.oop.myclashofunivaq.controller.utilitis;
 
 public enum GridPaneGioco {
 	mazzo,
-	carteMano,
+	carteManoG1,
+	carteManoG2,
 	stradaSX,
 	stradaDX,
-	stradaC
+	stradaC,
+	stradaSXavversario,
+	stradaDXavversario,
+	stradaCavversario,
 }

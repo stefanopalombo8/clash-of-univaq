@@ -4,36 +4,47 @@ import java.net.URL;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicReference;
 
 import it.univaq.disim.oop.myclashofunivaq.business.GiocatoreService;
 import it.univaq.disim.oop.myclashofunivaq.business.MazzoService;
 import it.univaq.disim.oop.myclashofunivaq.business.PartitaService;
 import it.univaq.disim.oop.myclashofunivaq.business.TurnoService;
+import it.univaq.disim.oop.myclashofunivaq.business.impl.AttaccoException;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.ElisirException;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.GiocatoreUtenteServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.MazzoServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.PartitaServiceImpl;
+import it.univaq.disim.oop.myclashofunivaq.business.impl.PosizionamentoException;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.TurnoServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.GraphicUtility;
+import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.GridPaneGioco;
 import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.Posizione;
 import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
 import it.univaq.disim.oop.myclashofunivaq.domain.FaseTurno;
 import it.univaq.disim.oop.myclashofunivaq.domain.Giocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.Mazzo;
+import it.univaq.disim.oop.myclashofunivaq.domain.MossaGiocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.PosizionamentoPersonaggio;
+import it.univaq.disim.oop.myclashofunivaq.domain.Tank;
 import it.univaq.disim.oop.myclashofunivaq.domain.Turno;
 import it.univaq.disim.oop.myclashofunivaq.view.InizializzaDati;
 import it.univaq.disim.oop.myclashofunivaq.view.ViewDispatcher;
 import it.univaq.disim.oop.myclashofunivaq.view.ViewException;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -42,6 +53,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
@@ -56,14 +68,19 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 	@FXML
 	private Label nomeGiocatore;
-	
+
 	@FXML
 	private Label faseCorrente;
-	
-	@FXML 
+
+	@FXML
 	private Button cambiaFase;
 
 	@FXML
+	private GridPane carteManoG1;
+
+	@FXML
+	private GridPane carteManoG2;
+
 	private GridPane carteMano;
 
 	@FXML
@@ -79,14 +96,25 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 	private GridPane stradaSX;
 
 	@FXML
+	private GridPane stradaSXavversario;
+
+	@FXML
 	private GridPane stradaDX;
+
+	@FXML
+	private GridPane stradaDXavversario;
 
 	@FXML
 	private GridPane stradaC;
 
+	@FXML
+	private GridPane stradaCavversario;
+
+	private List<GridPane> gridsListGiocatore;
+	private List<GridPane> gridsListAvversario;
 	private List<GridPane> gridsList;
 
-	private int timerDurantion = 15; // seconds
+	private int timerDurantion = 60; // seconds
 	private int secondsElapsed;
 	private Timeline timeline;
 
@@ -101,8 +129,9 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 	private final GiocatoreService giocatoreService;
 
 	private GraphicUtility utility;
-	private static final int dim_img = 80;
-	
+	private static final int dim_img = 60;
+
+	private Carta[] cartaSchierata = new Carta[1];
 
 	public GiocoController() {
 		this.dispatcher = ViewDispatcher.getInstance();
@@ -111,18 +140,15 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		this.mazzoService = new MazzoServiceImpl();
 		this.secondsElapsed = timerDurantion;
 		this.utility = new GraphicUtility();
+		this.gridsListGiocatore = new ArrayList<>();
+		this.gridsListAvversario = new ArrayList<>();
 		this.gridsList = new ArrayList<>();
 		this.giocatoreService = new GiocatoreUtenteServiceImpl();
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		gridsList.add(stradaSX);
-		gridsList.add(stradaDX);
-		gridsList.add(stradaC);
-		gridsList.add(carteMano);
 
-		utility.mappingGriglie(gridsList);
 	}
 
 	@Override
@@ -134,117 +160,124 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		turnoCorrente = turnoService.avviaTurno(timeline, giocatoreCorrente);
 
 		nomeGiocatore.setText(giocatoreCorrente.getNickname());
-		
+
 		faseCorrente.setText(turnoCorrente.getFase().toString());
 
-		double progress = turnoCorrente.getElisirGiocatore();
-		elisir.setProgress(progress);
-		elisirIndicator.setText(this.formatElisir(progress));
+		this.mostraElisir();
 
 		Mazzo mazzo = mazzoService.trovaMazzo(giocatoreCorrente);
 
+		if (turnoCorrente.getNumero() % 2 == 0) {
+			this.carteMano = carteManoG1;
+			this.gridsList = gridsListGiocatore;
+		} else {
+			this.carteMano = carteManoG2;
+			this.gridsList = gridsListAvversario;
+		}
+
+		this.mappaGriglie();
+
+		List<GridPane> tutte = new ArrayList<>();
+		tutte.addAll(gridsListGiocatore);
+		tutte.addAll(gridsListAvversario);
+
+		if (turnoCorrente.getNumero() > 0) {
+			utility.ripristinaStato(tutte);
+			for (ImageView img : utility.nuoveImmagini) {
+				GridPane parent = (GridPane) img.getParent();
+				String idParent = parent.getId();
+
+				boolean presente = this.gridsList.stream().anyMatch(gridPane -> idParent.equals(gridPane.getId()));
+
+				if (!presente)
+					img.setOnMouseClicked(this::proprietaClickImageViewAvversario);
+				else
+					img.setOnMouseClicked(this::proprietaClickImageViewGiocatore);
+
+			}
+		}
+
 		if (turnoService.isFirstTurno(turnoCorrente)) {
-			
 			for (Carta carta : mazzoService.mostraCarteMano(mazzo)) {
 				ImageView imageView = utility.creaImpostaImageView(carta.getImmagineCarta(), dim_img, dim_img);
 				this.impostaTooltip(imageView, carta);
 
-				//Mapping immagini e carte in mano
+				// Mapping immagini e carte in mano
 				utility.aggiungiCartaImmagineGriglia(carteMano, carta, imageView);
 
 				utility.setImageDragProperty(carteMano, imageView);
-
 			}
-			
-		}
-		else {
-			utility.ripristinaStato(gridsList);
-		}
-		
-		Carta[] prossimaCartaMazzo = new Carta[1]; //WRAPPER
+		} else
+			utility.ripristinaCarteMano(carteMano);
+
+		Carta[] prossimaCartaMazzo = new Carta[1]; // WRAPPER
 		prossimaCartaMazzo[0] = mazzoService.mostraProssimaCarta(mazzo);
 		prossimaCarta.setImage(prossimaCartaMazzo[0].getImmagineCarta());
-		
-		// gridsList.remove(carteMano);
+
 		for (GridPane grid : gridsList) {
 
 			grid.setOnDragOver(event -> {
 				if (event.getGestureSource() != grid && event.getDragboard().hasImage()) {
 					event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
 				}
-		
+
 				event.consume();
 			});
 
 			grid.setOnDragDropped(event -> {
-				
-				if(grid.equals(carteMano)) {
+
+				if (grid.equals(carteMano)) {
 					System.err.println("NON PUOI AGGIUNGERE CARTE IN MANO");
 					throw new RuntimeException();
-					
+
 				}
-				
-				if(grid.getChildren().size() == 4 && grid.getId().equals("stradaSX")) {
+
+				if (grid.getChildren().size() == 4 && grid.getId().equals("stradaSX")) {
 					System.err.println("STRADA PIENA");
 					throw new RuntimeException();
 				}
-					
-				
+
 				Dragboard db = event.getDragboard();
 				boolean success = false;
 
 				ImageView newImageView = null;
-				Posizione posizione = null;
-				Carta[] cartaSchierata = new Carta[1];
+				Posizione posizioneDaRimpiazzare = null;
 				ImageView imageViewProssimaCarta = null;
 
 				if (db.hasImage()) {
 					newImageView = utility.creaImpostaImageView(db.getImage(), dim_img, dim_img);
-					
-					imageViewProssimaCarta = utility.creaImpostaImageView(prossimaCarta.getImage(), 100, 100);
-					
-					posizione = utility.getPosizioneCartaSelezionata()[0];
+
+					imageViewProssimaCarta = utility.creaImpostaImageView(prossimaCarta.getImage(), 70, 70);
+
+					posizioneDaRimpiazzare = utility.getPosizioneCartaSelezionata()[0];
 
 					try {
-						//Mapping carta schierata
-						Carta cartaDaSchierare = utility.ricercaCartaSelezionataInMano(posizione);
+						// Mapping carta schierata
+						Carta cartaDaSchierare = utility.ricercaCartaSelezionataInMano(posizioneDaRimpiazzare);
 						turnoService.controllaSchieramento(turnoCorrente, cartaDaSchierare);
-						
 						cartaSchierata[0] = (Carta) cartaDaSchierare.clone();
-						utility.aggiungiCartaImmagineGriglia(grid, cartaSchierata[0], null); //aggiunta nella strada
+						utility.aggiungiCartaImmagineGriglia(grid, cartaSchierata[0], null); // aggiunta nella strada
 						this.impostaTooltip(newImageView, cartaSchierata[0]);
-						
+
 					} catch (ElisirException e) {
 						System.out.println(e.getMessage());
 						throw new RuntimeException();
-					}
-					catch (CloneNotSupportedException e) {
+					} catch (CloneNotSupportedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
-					utility.aggiungiCartaImmagineGriglia(grid, null, newImageView);
-					
-					newImageView.setOnMouseClicked(event3 -> {
-						if(turnoCorrente.getFase().equals(FaseTurno.Difesa)) {
-							System.out.println("sono " + cartaSchierata[0].getNome() + " stato scelto per la difesa");
-							
-						}
-					});
-					
-					
-					
-					//Mapping immagine/carta da prossima carta a mano
-					utility.aggiungiCartaImmagineGriglia(carteMano, prossimaCartaMazzo[0], imageViewProssimaCarta, posizione);
-					
-					this.impostaTooltip(imageViewProssimaCarta, prossimaCartaMazzo[0]);
 
+					utility.aggiungiCartaImmagineGriglia(grid, null, newImageView);
+
+					newImageView.setOnMouseClicked(this::proprietaClickImageViewGiocatore);
+
+					// Mapping immagine/carta da prossima carta a mano
+					utility.aggiungiCartaImmagineGriglia(carteMano, prossimaCartaMazzo[0], imageViewProssimaCarta,
+							posizioneDaRimpiazzare);
+					this.impostaTooltip(imageViewProssimaCarta, prossimaCartaMazzo[0]);
 					utility.setImageDragProperty(carteMano, imageViewProssimaCarta);
-					
 					prossimaCartaMazzo[0] = mazzoService.mostraProssimaCarta(mazzo);
 					prossimaCarta.setImage(prossimaCartaMazzo[0].getImmagineCarta());
-
-					utility.resetArrayCopy();
 
 					success = true;
 
@@ -252,11 +285,11 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 				event.setDropCompleted(success);
 				event.consume();
-			
+
 				Personaggio personaggioSchierato = null;
-				
+
 				if (cartaSchierata[0] instanceof Personaggio) {
-					
+
 					personaggioSchierato = (Personaggio) cartaSchierata[0];
 
 					Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -264,10 +297,8 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 					alert.setHeaderText(null);
 					alert.setContentText("ATTACCO o DIFESA");
 
-					ButtonType bottoneSceltaAttacco = new ButtonType(
-							PosizionamentoPersonaggio.ATTACCO.toString());
-					ButtonType bottoneSceltaDifesa = new ButtonType(
-							PosizionamentoPersonaggio.DIFESA.toString());
+					ButtonType bottoneSceltaAttacco = new ButtonType(PosizionamentoPersonaggio.ATTACCO.toString());
+					ButtonType bottoneSceltaDifesa = new ButtonType(PosizionamentoPersonaggio.DIFESA.toString());
 
 					alert.getButtonTypes().setAll(bottoneSceltaAttacco, bottoneSceltaDifesa);
 
@@ -286,31 +317,45 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 					} else
 						posizionamentoScelto = PosizionamentoPersonaggio.ATTACCO;
 
-					giocatoreService.effettuaSchieramentoPersonaggio(turnoCorrente, personaggioSchierato,
-							utility.ricercaStradaSchieramento(grid), posizionamentoScelto);
-					
-					double progress2 = turnoCorrente.getElisirGiocatore();
-					elisir.setProgress(progress2);
-					elisirIndicator.setText(this.formatElisir(progress2));
-					
-					//personaggioSchierato.getMossaSpeciale().esegui(personaggioSchierato);
-				
+					MossaGiocatore mossaGiocatore = giocatoreService.effettuaSchieramentoPersonaggio(turnoCorrente,
+							personaggioSchierato, utility.ricercaStradaSchieramento(grid), posizionamentoScelto);
+
+					turnoService.salvaMossaGiocatore(turnoCorrente, mossaGiocatore);
+
+					this.mostraElisir();
+
+					// personaggioSchierato.getMossaSpeciale().esegui(personaggioSchierato);
+
 				}
-				
-				
 
 			});
 
 		}
 
-		
-
 	}
-	
+
+	private void mappaGriglie() {
+		gridsListGiocatore.add(stradaSX);
+		gridsListGiocatore.add(stradaDX);
+		gridsListGiocatore.add(stradaC);
+		gridsListGiocatore.add(carteMano);
+		utility.mappingGriglie(gridsListGiocatore);
+
+		gridsListAvversario.add(stradaSXavversario);
+		gridsListAvversario.add(stradaDXavversario);
+		gridsListAvversario.add(stradaCavversario);
+		gridsListAvversario.add(carteMano);
+		utility.mappingGriglie(gridsListAvversario);
+	}
+
 	@FXML
 	public void cambiaFaseAction(ActionEvent event) {
 		turnoService.cambiaFase(turnoCorrente);
 		faseCorrente.setText(turnoCorrente.getFase().toString());
+
+		if (turnoCorrente.getFase().equals(FaseTurno.Attacco) || turnoCorrente.getFase().equals(FaseTurno.Difesa)) {
+			this.carteMano.setDisable(true); // Non si può schierare
+		}
 	}
 
 	@FXML
@@ -318,6 +363,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		try {
 			partitaService.salvaTurnoPartita(turnoCorrente, partita);
 			utility.aggiungiStato(utility);
+
 			dispatcher.caricaVista("gioco", partita);
 		} catch (ViewException e) {
 			// TODO Auto-generated catch block
@@ -343,14 +389,94 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		timer.setText(timeString);
 	}
 
+	private void mostraElisir() {
+		double progress = turnoCorrente.getElisirGiocatore();
+		elisir.setProgress(progress);
+		elisirIndicator.setText(this.formatElisir(progress));
+	}
+
 	private String formatElisir(double value) {
 		DecimalFormat df = new DecimalFormat("#.#");
 		return df.format(value * 10);
 	}
-	
+
 	private void impostaTooltip(ImageView img, Carta carta) {
-		Tooltip tooltip = new Tooltip(carta.getNome() + "\n" + carta.getCostoSchieramento());
+		Tooltip tooltip = new Tooltip(carta.getNome() + "\n" + carta.getCostoSchieramento() + "\n");
+		if (carta instanceof Personaggio) {
+			Personaggio p = (Personaggio) carta;
+			tooltip.setText(tooltip.getText() + p.getVita());
+		}
+
 		Tooltip.install(img, tooltip);
+	}
+
+	private void proprietaClickImageViewGiocatore(MouseEvent event) {
+
+		final ImageView imageViewCorrente = (ImageView) event.getSource();
+		final GridPane gridPaneParent = (GridPane) imageViewCorrente.getParent();
+
+		if (cartaSchierata[0] == null) {
+			Posizione posizioneToSearch = new Posizione(GridPane.getColumnIndex(imageViewCorrente),
+					GridPane.getRowIndex(imageViewCorrente));
+			cartaSchierata[0] = utility.ricercaCartaStrada(gridPaneParent.getId(), posizioneToSearch);
+		}
+
+		final Personaggio personaggioCliccato = (Personaggio) cartaSchierata[0];
+
+		try {
+			if (turnoCorrente.getFase().equals(FaseTurno.Difesa)) {
+				MossaGiocatore mossaGiocatore = giocatoreService.cambiaPosizionePersonaggio(turnoCorrente,
+						personaggioCliccato, PosizionamentoPersonaggio.DIFESA);
+				turnoService.salvaMossaGiocatore(turnoCorrente, mossaGiocatore);
+				imageViewCorrente.setRotate(270);
+			} else if (turnoCorrente.getFase().equals(FaseTurno.Attacco)) {
+				System.out.println("sono " + personaggioCliccato.getNome() + " stato scelto per l'attacco");
+
+				MossaGiocatore mossaGiocatore = giocatoreService.cambiaPosizionePersonaggio(turnoCorrente,
+						personaggioCliccato, PosizionamentoPersonaggio.ATTACCO);
+				turnoService.salvaMossaGiocatore(turnoCorrente, mossaGiocatore);
+				imageViewCorrente.setRotate(360);
+
+				System.out.println("VITA " + personaggioCliccato.getVita());
+				giocatoreService.preparaAttacco(personaggioCliccato, utility.ricercaStradaSchieramento(gridPaneParent));
+			} else
+				throw new PosizionamentoException("è la fase di schieramento");
+
+		} catch (PosizionamentoException e) {
+			System.err.println(e.getMessage());
+		}
+
+	}
+
+	private void proprietaClickImageViewAvversario(MouseEvent event) {
+
+		final ImageView imageViewCorrente = (ImageView) event.getSource();
+		final GridPane gridPaneParent = (GridPane) imageViewCorrente.getParent();
+
+		try {
+			if (turnoCorrente.getFase().equals(FaseTurno.Attacco)) {
+
+				Posizione posizioneToSearch = new Posizione(GridPane.getColumnIndex(imageViewCorrente),
+						GridPane.getRowIndex(imageViewCorrente));
+
+				Carta cartaCliccata = utility.ricercaCartaStrada(gridPaneParent.getId(), posizioneToSearch);
+
+				Personaggio personaggio = (Personaggio) cartaCliccata;
+
+				this.impostaTooltip(imageViewCorrente, cartaCliccata);
+
+				giocatoreService.effettuaAttacco(turnoCorrente, personaggio,
+						utility.ricercaStradaSchieramento(gridPaneParent));
+				
+				this.impostaTooltip(imageViewCorrente, cartaCliccata);
+
+			} else
+				throw new AttaccoException("Non puoi selezionarla non è la fase di attacco");
+
+		} catch (AttaccoException e) {
+			System.err.println(e.getMessage());
+		}
+
 	}
 
 }
