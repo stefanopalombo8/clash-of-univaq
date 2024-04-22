@@ -1,10 +1,13 @@
 package it.univaq.disim.oop.myclashofunivaq.business.impl;
 
 import it.univaq.disim.oop.myclashofunivaq.business.GiocatoreUtenteService;
+
 import it.univaq.disim.oop.myclashofunivaq.business.PartitaService;
 import it.univaq.disim.oop.myclashofunivaq.business.PersonaggioService;
 import it.univaq.disim.oop.myclashofunivaq.business.TurnoService;
 import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.GridPaneGioco;
+import it.univaq.disim.oop.myclashofunivaq.domain.Attacco;
+import it.univaq.disim.oop.myclashofunivaq.domain.CambioPosizionamentoPersonaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
 import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreUtente;
 import it.univaq.disim.oop.myclashofunivaq.domain.MossaGiocatore;
@@ -19,6 +22,9 @@ public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
 	private final PersonaggioService personaggioService;
 	private final TurnoService turnoService;
 	
+	private Personaggio personaggioAttaccante;
+	private GridPaneGioco stradaAttaccante;
+
 	public GiocatoreUtenteServiceImpl() {
 		partitaService = new PartitaServiceImpl();
 		personaggioService = new PersonaggioServiceImpl();
@@ -49,13 +55,54 @@ public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
 		schieramento.setCartaSchierata(personaggio);
 		schieramento.setStrada(strada);
 		
-		personaggioService.sceltaPosizionamento(personaggio, posizionamento);
+		try {
+			personaggioService.sceltaPosizionamento(personaggio, posizionamento);
+		} catch (PosizionamentoException e) {
+			e.printStackTrace();
+		}
 		
 		turnoService.aggiornaElisir(turno, personaggio.getCostoSchieramento());
 		
 		return schieramento;
 	}
 
-	
+	@Override
+	public void preparaAttacco(Personaggio personaggioAttaccante, GridPaneGioco strada) {
+		this.personaggioAttaccante = personaggioAttaccante;
+		this.stradaAttaccante = strada;
+	}
 
+	@Override
+	public MossaGiocatore effettuaAttacco(Turno turno, Personaggio personaggioDaAttaccare, GridPaneGioco stradaAttaccato) throws AttaccoException {
+		if(personaggioAttaccante == null)
+			throw new AttaccoException("MANCA IL PERSONAGGIO ATTACCANTE");
+		if(personaggioDaAttaccare == null)
+			throw new AttaccoException("MANCA IL PERSONAGGIO DA ATTACCARE");
+		
+		if( !((stradaAttaccante.toString() + "avversario").equals(stradaAttaccato.toString())  
+				|| (stradaAttaccato.toString() + "avversario").equals(stradaAttaccante.toString()))  )
+			throw new AttaccoException("I PERSONAGGIO SONO SU DUE STRADE DIVERSE");
+		
+		Attacco attacco = new Attacco();
+		attacco.setPersonaggioAttaccante(personaggioAttaccante);
+		attacco.setPersonaggioDaAttaccare(personaggioDaAttaccare);
+		
+		personaggioService.attacca(attacco);
+		
+		return attacco;
+	}
+
+	@Override
+	public MossaGiocatore cambiaPosizionePersonaggio(Turno turno, Personaggio personaggio,
+			PosizionamentoPersonaggio posizionamento) throws PosizionamentoException {
+		
+		CambioPosizionamentoPersonaggio cambioPosizione = new CambioPosizionamentoPersonaggio();
+		cambioPosizione.setPersonaggio(personaggio);
+		cambioPosizione.setNuovaPosizione(posizionamento);
+		
+		this.personaggioService.sceltaPosizionamento(personaggio, posizionamento);
+		
+		return cambioPosizione;
+	}
+	
 }
