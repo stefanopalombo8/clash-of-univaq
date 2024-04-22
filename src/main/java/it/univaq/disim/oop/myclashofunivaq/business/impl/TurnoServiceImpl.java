@@ -12,6 +12,7 @@ import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.Posizione;
 import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
 import it.univaq.disim.oop.myclashofunivaq.domain.FaseTurno;
 import it.univaq.disim.oop.myclashofunivaq.domain.Giocatore;
+import it.univaq.disim.oop.myclashofunivaq.domain.MossaGiocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
 import javafx.animation.Timeline;
 import javafx.scene.image.ImageView;
@@ -43,7 +44,7 @@ public class TurnoServiceImpl implements TurnoService {
 		turno.setFase(FaseTurno.Schieramento);
 		
 		if(isFirstTurno(turno))
-			turno.setElisirGiocatore(0.5);
+			turno.setElisirGiocatore(0.7);
 		else {
 			double newElisir = turniPartita.get(j - 2).getElisirGiocatore() + 0.1;
 			turno.setElisirGiocatore(newElisir);
@@ -95,7 +96,10 @@ public class TurnoServiceImpl implements TurnoService {
 		double newElisir = turno.getElisirGiocatore() - (double) costo / 10;
 		turno.setElisirGiocatore(newElisir);
 	}
-	
-	
 
+	@Override
+	public void salvaMossaGiocatore(Turno turno, MossaGiocatore mossa) {
+		turno.getMosseGiocatore().add(mossa);
+	}
+	
 }
