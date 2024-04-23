@@ -34,6 +34,9 @@ public class PartiteSalvateController implements Initializable {
 
 	@FXML
 	private Button gioca;
+	
+	@FXML
+	private Button buttonHome;
 
 	private final PartitaService partitaService;
 
@@ -125,6 +128,16 @@ public class PartiteSalvateController implements Initializable {
 				e.printStackTrace();
 			}
 
+		}
+	}
+	
+	@FXML
+	public void ritornaHomeAction(ActionEvent event) {
+		try {
+			dispatcher.caricaVista("applicationLayout");
+			dispatcher.caricaVista("homepage");
+		} catch (ViewException e) {
+			e.printStackTrace();
 		}
 	}
 

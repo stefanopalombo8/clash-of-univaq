@@ -10,5 +10,6 @@
       <ListView fx:id="listViewPartite" layoutX="68.0" layoutY="62.0" prefHeight="304.0" prefWidth="481.0" />
       <Button fx:id="gioca" layoutX="283.0" layoutY="27.0" mnemonicParsing="false" onAction="#giocaAction" text="GIOCA" />
       <ChoiceBox fx:id="choiceBox" layoutX="68.0" layoutY="27.0" prefWidth="150.0" />
+      <Button fx:id="buttonHome" layoutX="498.0" layoutY="27.0" mnemonicParsing="false" onAction="#ritornaHomeAction" text="HOME" />
    </children>
 </AnchorPane>
