@@ -1,6 +1,8 @@
 package it.univaq.disim.oop.myclashofunivaq.domain;
 
-public enum PosizionamentoPersonaggio {
+import java.io.Serializable;
+
+public enum PosizionamentoPersonaggio implements Serializable{
 	ATTACCO,
 	DIFESA
 }

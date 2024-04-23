@@ -1,5 +1,6 @@
 package it.univaq.disim.oop.myclashofunivaq.business;
 
+import java.util.List;
 import java.util.Set;
 
 import it.univaq.disim.oop.myclashofunivaq.domain.Giocatore;
@@ -21,4 +22,7 @@ public interface PartitaService {
 	int calcolaNumeroMossePartita(Partita partita);	
 	
 	void salvaPartita(Partita partita);
+	void impostaParamentriSalvataggio(Partita partita, int numeroMosse, int numeroCarte, int valoreCarte);
+	List<Partita> getPartiteDeserializzate();
+	void mappaPartitaSerializzata(Partita partita);
 }

@@ -1,12 +1,15 @@
 package it.univaq.disim.oop.myclashofunivaq.domain;
 
+import java.io.Serializable;
+
 import javafx.scene.image.Image;
 
-public abstract class Carta implements Cloneable{
+public abstract class Carta implements Cloneable, Serializable{
 	
+	private static final long serialVersionUID = 5505535608162922139L;
 	private String nome;
 	private int costoSchieramento;
-	private Image immagineCarta;
+	private transient Image immagineCarta;
 	
 	public Carta(String nome) {
 		this.nome = nome;

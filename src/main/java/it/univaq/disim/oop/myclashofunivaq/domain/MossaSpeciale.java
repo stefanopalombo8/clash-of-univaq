@@ -1,6 +1,8 @@
 package it.univaq.disim.oop.myclashofunivaq.domain;
 
-public class MossaSpeciale {
+import java.io.Serializable;
+
+public class MossaSpeciale implements Serializable {
 	private String nome;
 	private MossaSpecialeInterface mossaImpl;
 	private Personaggio personaggioTarget;

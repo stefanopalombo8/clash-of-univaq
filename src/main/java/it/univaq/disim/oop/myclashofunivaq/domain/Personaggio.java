@@ -1,6 +1,8 @@
 package it.univaq.disim.oop.myclashofunivaq.domain;
 
-public abstract class Personaggio extends Carta {
+import java.io.Serializable;
+
+public abstract class Personaggio extends Carta implements Serializable{
 	private int vita;
 	private int armatura;
 	private int danno;

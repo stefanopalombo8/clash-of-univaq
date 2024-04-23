@@ -20,26 +20,26 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 public class HomepageController implements Initializable {
-	
+
 	@FXML
 	private TextField nickname;
-	
+
 	@FXML
 	private Label confermaNickname;
-	
+
 	@FXML
 	private Button recuperaPartiteSalvate;
-	
+
 	@FXML
 	private Button giocaControGiocatore;
-	
+
 	@FXML
 	private Button giocaControCPU;
-	
+
 	private final PartitaService partitaService;
-	
+
 	private final GiocatoreUtenteService giocatoreUtenteService;
-	
+
 	private ViewDispatcher dispatcher;
 
 	public HomepageController() {
@@ -47,44 +47,52 @@ public class HomepageController implements Initializable {
 		dispatcher = ViewDispatcher.getInstance();
 		partitaService = new PartitaServiceImpl();
 	}
-	
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		disabilitaGamemod(recuperaPartiteSalvate);
 		disabilitaGamemod(giocaControGiocatore);
 		disabilitaGamemod(giocaControCPU);
 	}
-	
+
 	private void disabilitaGamemod(Button bottone) {
 		bottone.disableProperty().bind(nickname.textProperty().isEmpty());
 	}
-	
-	/* qua mi serve il metodo perchè questo procedimento viene fatto per ogni bottone partita
-	 * quindi per non riscriverlo 3 volte
+
+	/*
+	 * qua mi serve il metodo perchè questo procedimento viene fatto per ogni
+	 * bottone partita quindi per non riscriverlo 3 volte
 	 */
-	
+
 	public boolean accettaNickname(Partita partita) {
 		try {
 			GiocatoreUtente giocatore = giocatoreUtenteService.convalidaNickName(nickname.getText());
 			return partitaService.aggiungiGiocatore(giocatore, partita);
-			
+
 		} catch (NicknameNonValido e) {
-			this.confermaNickname.setText(e.getMessage());  //gestione eccezione a livello utente
+			this.confermaNickname.setText(e.getMessage()); // gestione eccezione a livello utente
 			return false;
 		}
-		
+
 	}
-	
-	
+
 	@FXML
 	public void giocaControGiocatoreAction(ActionEvent event) {
 		Partita partita = partitaService.creaPartita();
-		if(this.accettaNickname(partita))
+		if (this.accettaNickname(partita))
 			try {
 				dispatcher.caricaVista("NicknameGiocatore2", partita);
 			} catch (ViewException e) {
 				e.printStackTrace();
 			}
 	}
-	
+
+	@FXML
+	public void recuperaPartiteSalvateAction(ActionEvent event) {
+		try {
+			dispatcher.caricaVista("listaPartiteSalvate");
+		} catch (ViewException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

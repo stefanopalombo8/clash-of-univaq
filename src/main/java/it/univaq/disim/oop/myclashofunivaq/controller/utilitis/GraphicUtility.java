@@ -377,5 +377,46 @@ public class GraphicUtility {
 
 		return toReturn;
 	}
+	
+	public int calcolaNumeroCarteTerreno() {
+		int numero = 0;
+		
+		for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : this.mappaGridpaneCarte.entrySet()) {
+
+			String gridPaneKey = entry.getKey();
+			LinkedHashMap<Posizione, Carta> innerMap = entry.getValue();
+
+			if (gridPaneKey.equals("carteManoG1") || gridPaneKey.equals("carteManoG2"))
+				continue;
+			
+			for(Posizione p : innerMap.keySet()) {
+				Carta carta = innerMap.get(p);
+				if(carta != null)
+					numero += 1;
+			}
+		}
+		return numero;
+	}
+	
+	public int calcolaValoreCarteTerreno() {
+		int valore = 0;
+		
+		for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : this.mappaGridpaneCarte.entrySet()) {
+
+			String gridPaneKey = entry.getKey();
+			LinkedHashMap<Posizione, Carta> innerMap = entry.getValue();
+
+			if (gridPaneKey.equals("carteManoG1") || gridPaneKey.equals("carteManoG2"))
+				continue;
+			
+			for(Posizione p : innerMap.keySet()) {
+				Carta carta = innerMap.get(p);
+				if(carta != null) 
+					valore += carta.getCostoSchieramento();
+					
+			}
+		}
+		return valore;
+	}
 
 }

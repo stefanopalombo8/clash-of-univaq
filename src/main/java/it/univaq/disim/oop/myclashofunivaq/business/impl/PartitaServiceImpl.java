@@ -1,12 +1,12 @@
 package it.univaq.disim.oop.myclashofunivaq.business.impl;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,9 +23,8 @@ public class PartitaServiceImpl implements PartitaService {
 
 	private static Map<Integer, Partita> partite = new HashMap<>();
 	private static Integer ID = 0;
-
-	private static final String nomeFilePartite = "partiteSerializzate.txt";
-	private static final String path = "src/main/resourses/files/" + nomeFilePartite;
+	
+	private static String path = "src/main/resourses/files/partiteSalvate/";
 
 	@Override
 	public Set<Giocatore> findAllGiocatori() {
@@ -99,22 +98,57 @@ public class PartitaServiceImpl implements PartitaService {
 		if (!partite.containsKey(partita.getID()))
 			return;
 
-		try {
-			try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path))) {
-				oos.writeObject(partita);
-			}
-			
-//			try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path))) {
-//				Partita partitaDeserializzata = (Partita) ois.readObject();
-//				System.out.println("PARTITA DESERIALIZZATA " + partitaDeserializzata);
-//			}
+		String path = PartitaServiceImpl.path + "partitaSerializzata" + partita.getID() + ".txt";
 
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path))) {
+			oos.writeObject(partita);
 		} catch (IOException e) {
-			System.err.println("qui 1 " + e.getMessage());
-		} //catch (ClassNotFoundException e) {
-			//System.err.println("qui 2" + e.getMessage());
-		//}
+			System.err.println(e.getMessage());
+		}
 
+	}
+
+	@Override
+	public void impostaParamentriSalvataggio(Partita partita, int numeroMosse, int numeroCarte, int valoreCarte) {
+		partita.setNumeroTotaleMosse(numeroMosse);
+		partita.setNumeroCarteInCampo(numeroCarte);
+		partita.setValoreCarteInCampo(valoreCarte);
+	}
+
+	@Override
+	public List<Partita> getPartiteDeserializzate() {
+		List<Partita> partite = new ArrayList<>();
+
+		File directory = new File(PartitaServiceImpl.path);
+		File[] elencoFile = directory.listFiles();
+
+		if (elencoFile != null) {
+			for (File file : elencoFile) {
+				if (file.isFile()) {
+					try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+						Partita partitaDeserializzata = (Partita) ois.readObject();
+						partite.add(partitaDeserializzata);
+
+					} catch (ClassNotFoundException e) {
+						System.err.println("1 " + e.getMessage());
+					} catch (FileNotFoundException e) {
+						System.err.println("2 " + e.getMessage());
+					} catch (IOException e) {
+						if (e.getMessage() != null)
+							System.err.println("3 " + e.getMessage());
+					}
+				}
+			}
+		}
+
+		System.out.println("numero partite deserializzate " + partite.size());
+		return partite;
+	}
+
+	@Override
+	public void mappaPartitaSerializzata(Partita partita) {
+		partite.put(partita.getID(), partita);
+		ID++;
 	}
 
 }

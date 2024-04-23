@@ -1,6 +1,8 @@
 package it.univaq.disim.oop.myclashofunivaq.domain;
 
-public class Torre {
+import java.io.Serializable;
+
+public class Torre implements Serializable{
 	private double vita;
 	
 	public double getVita() {

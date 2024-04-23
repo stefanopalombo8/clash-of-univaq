@@ -172,11 +172,17 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 	@Override
 	public void inizializza(Partita partita) {
 		this.partita = partita;
+		
+		if(partita.isRecuperata()) {
+			System.out.println("PARTITA DESERIALIZZATA");
+			partitaService.mappaPartitaSerializzata(partita);
+		}
+			
 		giocatoreCorrente = turnoService.alternaGiocatore(partita);
 
 		timerImpl();
 		turnoCorrente = turnoService.avviaTurno(timeline, giocatoreCorrente);
-
+		System.out.println("turno corrente " + turnoCorrente.getNumero());
 		nomeGiocatore.setText(giocatoreCorrente.getNickname());
 
 		faseCorrente.setText(turnoCorrente.getFase().toString());
@@ -221,11 +227,9 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		}
 
 		if (turnoService.isFirstTurno(turnoCorrente)) {
-			
 			for (Carta carta : mazzoService.mostraCarteMano(mazzo)) {
 				ImageView imageView = utility.creaImpostaImageView(carta.getImmagineCarta(), dim_img, dim_img);
 				this.impostaTooltip(imageView, carta);
-
 				// Mapping immagini e carte in mano
 				utility.aggiungiCartaImmagineGriglia(carteMano, carta, imageView);
 
@@ -516,6 +520,16 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 	
 	@FXML
 	public void salvaPartitaAction(ActionEvent event) {
+		partitaService.salvaTurnoPartita(turnoCorrente, partita);
+		utility.aggiungiStato(utility);
+		
+		int numeroMosse = partitaService.calcolaNumeroMossePartita(partita);
+		int numeroCarteInCampo = utility.calcolaNumeroCarteTerreno();
+		int valoreCarteInCampo = utility.calcolaValoreCarteTerreno();
+		
+		partitaService.impostaParamentriSalvataggio(partita, numeroMosse, 
+				numeroCarteInCampo, valoreCarteInCampo);
+		
 		partitaService.salvaPartita(partita);
 		this.mazzoService.reset();
 		this.turnoService.reset();

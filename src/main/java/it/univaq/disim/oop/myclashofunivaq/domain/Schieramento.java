@@ -1,8 +1,10 @@
 package it.univaq.disim.oop.myclashofunivaq.domain;
 
+import java.io.Serializable;
+
 import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.GridPaneGioco;
 
-public class Schieramento implements MossaGiocatore {
+public class Schieramento implements MossaGiocatore, Serializable {
 	
 	private Carta cartaSchierata;
 	private GridPaneGioco strada;

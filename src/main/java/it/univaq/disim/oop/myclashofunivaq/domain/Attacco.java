@@ -1,6 +1,8 @@
 package it.univaq.disim.oop.myclashofunivaq.domain;
 
-public class Attacco implements MossaGiocatore{
+import java.io.Serializable;
+
+public class Attacco implements MossaGiocatore, Serializable{
 	private Personaggio personaggioAttaccante;
 	private Personaggio personaggioDaAttaccare;
 	

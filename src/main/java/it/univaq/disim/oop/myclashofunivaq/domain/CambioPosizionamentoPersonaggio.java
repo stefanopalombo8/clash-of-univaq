@@ -1,6 +1,8 @@
 package it.univaq.disim.oop.myclashofunivaq.domain;
 
-public class CambioPosizionamentoPersonaggio implements MossaGiocatore {
+import java.io.Serializable;
+
+public class CambioPosizionamentoPersonaggio implements MossaGiocatore, Serializable {
 	private Personaggio personaggio;
 	private PosizionamentoPersonaggio nuovaPosizione;
 	
