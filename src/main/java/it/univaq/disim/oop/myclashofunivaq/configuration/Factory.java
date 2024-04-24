@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
@@ -135,6 +136,51 @@ public class Factory implements CartaFactory {
 		//vuol dire che il nome inserito della è presente ed è giusto
 		
 		return categoriaCarta;
+	}
+
+	@Override
+	public void reimpostaImmagine(List<Carta> carte) {
+		for(Carta carta : carte) {
+			String keyDaCercare = costruisciChiave(carta);
+			
+			String path = costruisciPath("personaggi.properties");
+			
+			try(FileInputStream fis = new FileInputStream(path)) {
+				final Properties props = new Properties();
+				props.load(fis);
+				
+				props.stringPropertyNames().stream().forEach(
+						riga -> {
+							if(riga.startsWith(keyDaCercare)) {
+								String attributo = riga.substring(keyDaCercare.length());
+								
+								if(carta instanceof Personaggio) {
+									
+									Personaggio personaggio = (Personaggio) carta;
+									
+									switch(attributo) {
+									case "immagine":
+										Image immagine = new Image(costruisciPath(props.getProperty(riga)));
+										
+										personaggio.setImmagineCarta(immagine);
+									}
+								}
+
+								
+							}
+						});
+			
+				
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
 	}
 			
 }
