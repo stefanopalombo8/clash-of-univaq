@@ -18,6 +18,12 @@ public class CambioPosizionamentoPersonaggio implements MossaGiocatore, Serializ
 	public void setNuovaPosizione(PosizionamentoPersonaggio nuovaPosizione) {
 		this.nuovaPosizione = nuovaPosizione;
 	}
+	@Override
+	public String toString() {
+		return "CambioPosizionamentoPersonaggio [personaggio=" + personaggio + ", nuovaPosizione=" + nuovaPosizione
+				+ "]";
+	}
+	
 	
 	
 }

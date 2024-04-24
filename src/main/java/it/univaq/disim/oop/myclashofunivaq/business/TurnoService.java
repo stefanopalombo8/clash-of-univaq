@@ -17,7 +17,7 @@ public interface TurnoService extends ResetStaticVariables {
 	void cambiaFase(Turno turno);
 	void controllaSchieramento(Turno turno, Carta carta) throws ElisirException;
 	void aggiornaElisir(Turno turno, int costo);
-	void salvaMossaGiocatore(Turno turno, MossaGiocatore mossa);
+	void salvaMossaGiocatore(Partita partita, Turno turno, MossaGiocatore mossa);
 	Torre trovaTorreGiocatore(Giocatore giocatore);
 	void ripopolaMappaTurni(Partita partita);
 }

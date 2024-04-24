@@ -11,5 +11,8 @@ public class Torre implements Serializable{
 	public void setVita(double vita) {
 		this.vita = vita;
 	}
-	
+	@Override
+	public String toString() {
+		return "Torre [vita=" + vita + "]";
+	}
 }

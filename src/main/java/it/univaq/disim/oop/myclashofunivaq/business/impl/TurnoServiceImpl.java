@@ -1,5 +1,9 @@
 package it.univaq.disim.oop.myclashofunivaq.business.impl;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 
 import java.util.LinkedHashMap;
@@ -9,11 +13,14 @@ import it.univaq.disim.oop.myclashofunivaq.business.PartitaService;
 import it.univaq.disim.oop.myclashofunivaq.domain.Turno;
 import it.univaq.disim.oop.myclashofunivaq.business.TurnoService;
 import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.Posizione;
+import it.univaq.disim.oop.myclashofunivaq.domain.Attacco;
+import it.univaq.disim.oop.myclashofunivaq.domain.CambioPosizionamentoPersonaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
 import it.univaq.disim.oop.myclashofunivaq.domain.FaseTurno;
 import it.univaq.disim.oop.myclashofunivaq.domain.Giocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.MossaGiocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
+import it.univaq.disim.oop.myclashofunivaq.domain.Schieramento;
 import it.univaq.disim.oop.myclashofunivaq.domain.Torre;
 import javafx.animation.Timeline;
 
@@ -23,6 +30,8 @@ public class TurnoServiceImpl implements TurnoService {
 	private static int i = 0; // indice per i giocatori
 	private static int j = 0; // indice per l'ID dei turni
 	private static Map<Integer, Turno> turniPartita = new HashMap<>();
+	
+	private static final String path = "src/main/resourses/files/logsPartite/";
 	
 	public TurnoServiceImpl() {
 		partitaService = new PartitaServiceImpl();
@@ -106,8 +115,37 @@ public class TurnoServiceImpl implements TurnoService {
 	}
 
 	@Override
-	public void salvaMossaGiocatore(Turno turno, MossaGiocatore mossa) {
+	public void salvaMossaGiocatore(Partita partita, Turno turno, MossaGiocatore mossa) {
 		turno.getMosseGiocatore().add(mossa);
+		StringBuilder builder = new StringBuilder();
+		builder.append("GIOCATORE: ");
+		builder.append(turno.getGiocatore().getNickname() + " ");
+		
+		if(mossa instanceof Schieramento) {
+			Schieramento s = (Schieramento) mossa;
+			builder.append(s.toString());
+		}
+		else if(mossa instanceof CambioPosizionamentoPersonaggio) {
+			CambioPosizionamentoPersonaggio c = (CambioPosizionamentoPersonaggio) mossa;
+			builder.append(c.toString());
+		}
+		else if(mossa instanceof Attacco) {
+			Attacco a = (Attacco) mossa;
+			builder.append(a.toString());
+		}
+		else
+			builder.append("ERRORE NELLA MOSSA");
+		
+		builder.append("\n");
+		String path = TurnoServiceImpl.path + "partita" + partita.getID() + ".txt";
+		
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(path), true))) {
+            writer.write(builder.toString());
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+		
+		
 	}
 
 	@Override

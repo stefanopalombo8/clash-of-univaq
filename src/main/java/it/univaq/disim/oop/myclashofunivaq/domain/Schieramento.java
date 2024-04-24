@@ -21,4 +21,9 @@ public class Schieramento implements MossaGiocatore, Serializable {
 	public void setStrada(GridPaneGioco strada) {
 		this.strada = strada;
 	}
+	
+	@Override
+	public String toString() {
+		return "Schieramento [cartaSchierata=" + cartaSchierata + ", strada=" + strada + "]";
+	}
 }
