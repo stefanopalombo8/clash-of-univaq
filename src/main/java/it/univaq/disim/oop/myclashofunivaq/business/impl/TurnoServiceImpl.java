@@ -135,5 +135,17 @@ public class TurnoServiceImpl implements TurnoService {
 		j = 0;
 		turniPartita.clear();
 	}
+
+	@Override
+	public void ripopolaMappaTurni(Partita partita) {
+		if(turniPartita.isEmpty()) {
+			i++;
+			for(Turno t : partita.getTurni()) {
+				turniPartita.put(t.getNumero(), t);
+				j = t.getNumero();
+			}
+			j++;
+		}
+	}
 	
 }
