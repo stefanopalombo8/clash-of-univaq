@@ -34,7 +34,7 @@ public class PartiteSalvateController implements Initializable {
 
 	@FXML
 	private Button gioca;
-	
+
 	@FXML
 	private Button buttonHome;
 
@@ -52,34 +52,35 @@ public class PartiteSalvateController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		gioca.disableProperty().bind(Bindings.isNull(listViewPartite.getSelectionModel().selectedItemProperty()));
 		choiceBox.setItems(FXCollections.observableArrayList("numeroMosse", "numeroCarte", "valoreCarte"));
-		
+
 		List<Partita> partiteDeserializzate = partitaService.getPartiteDeserializzate();
-		
+
 		sceltaOrdinamento = "ID";
 
 		choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			sceltaOrdinamento = newValue; // Aggiorna il criterio di ordinamento quando l'utente cambia selezione
-			aggiornaListaPartite(partiteDeserializzate); // Riordina la lista quando l'utente cambia criterio di ordinamento
+			aggiornaListaPartite(partiteDeserializzate); // Riordina la lista quando l'utente cambia criterio di
+															// ordinamento
 		});
-		
+
 		this.aggiornaListaPartite(partiteDeserializzate);
 
 	}
 
 	private void aggiornaListaPartite(List<Partita> partiteDeserializzate) {
 		ObservableList<String> partiteObservableList = FXCollections.observableArrayList();
-		
+
 		Collections.sort(partiteDeserializzate, new PartitaComparator());
-		
+
 		for (Partita p : partiteDeserializzate) {
 			if (p != null) {
 				Set<Giocatore> giocatoriPartita = p.getGiocatori();
 				StringBuilder builder = new StringBuilder();
-				for(Giocatore g : giocatoriPartita) {
+				for (Giocatore g : giocatoriPartita) {
 					builder.append(g.getNickname());
 					builder.append(" ");
 				}
-				
+
 				partiteObservableList.add("ID_partita: " + p.getID() + " numero_mosse: " + p.getNumeroTotaleMosse()
 						+ " numero_carte_campo: " + p.getNumeroCarteInCampo() + " valore_carte_campo: "
 						+ p.getValoreCarteInCampo() + " giocatori: " + builder.toString());
@@ -96,24 +97,12 @@ public class PartiteSalvateController implements Initializable {
 			String[] parts = selectedItem.split(" ");
 			Integer partitaID = Integer.parseInt(parts[1]);
 
-			Partita partitaInMemoria = this.partitaService.trovaPartitaByID(partitaID);
 			Partita partitaDaGiocare = null;
 
-			if (partitaInMemoria != null) {
-				System.out.println("ho ripreso la partita dalla memoria");
-				try {
-					partitaInMemoria.setRecuperata(true);
-					this.dispatcher.caricaVista("gioco", partitaInMemoria);
-				} catch (ViewException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			} else {
-				for (Partita p : partitaService.getPartiteDeserializzate()) {
-					if (p.getID().equals(partitaID)) {
-						partitaDaGiocare = p;
-						break;
-					}
+			for (Partita p : partitaService.getPartiteDeserializzate()) {
+				if (p.getID().equals(partitaID)) {
+					partitaDaGiocare = p;
+					break;
 				}
 			}
 
@@ -122,15 +111,13 @@ public class PartiteSalvateController implements Initializable {
 					partitaDaGiocare.setRecuperata(true);
 					this.dispatcher.caricaVista("gioco", partitaDaGiocare);
 				}
-
 			} catch (ViewException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 		}
 	}
-	
+
 	@FXML
 	public void ritornaHomeAction(ActionEvent event) {
 		try {
@@ -145,7 +132,7 @@ public class PartiteSalvateController implements Initializable {
 
 		@Override
 		public int compare(Partita p1, Partita p2) {
-			
+
 			switch (sceltaOrdinamento) {
 			case "numeroMosse":
 				return Integer.compare(p1.getNumeroTotaleMosse(), p2.getNumeroTotaleMosse()); // più veloce

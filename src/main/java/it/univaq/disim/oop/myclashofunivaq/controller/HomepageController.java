@@ -4,10 +4,15 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import it.univaq.disim.oop.myclashofunivaq.business.GiocatoreUtenteService;
+import it.univaq.disim.oop.myclashofunivaq.business.MazzoService;
 import it.univaq.disim.oop.myclashofunivaq.business.PartitaService;
+import it.univaq.disim.oop.myclashofunivaq.business.ResetStaticVariables;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.GiocatoreUtenteServiceImpl;
+import it.univaq.disim.oop.myclashofunivaq.business.impl.MazzoServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.NicknameNonValido;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.PartitaServiceImpl;
+import it.univaq.disim.oop.myclashofunivaq.business.impl.TurnoServiceImpl;
+import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.GraphicUtility;
 import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreUtente;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
 import it.univaq.disim.oop.myclashofunivaq.view.ViewDispatcher;
@@ -37,6 +42,12 @@ public class HomepageController implements Initializable {
 	private Button giocaControCPU;
 
 	private final PartitaService partitaService;
+	
+	private final ResetStaticVariables mazzoReset;
+	private final ResetStaticVariables turniReset;
+	private final ResetStaticVariables utilityReset;
+	
+	
 
 	private final GiocatoreUtenteService giocatoreUtenteService;
 
@@ -46,12 +57,19 @@ public class HomepageController implements Initializable {
 		giocatoreUtenteService = new GiocatoreUtenteServiceImpl();
 		dispatcher = ViewDispatcher.getInstance();
 		partitaService = new PartitaServiceImpl();
+		mazzoReset = new MazzoServiceImpl();
+		turniReset = new TurnoServiceImpl();
+		utilityReset = new GraphicUtility();
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		disabilitaGamemod(giocaControGiocatore);
 		disabilitaGamemod(giocaControCPU);
+		
+		this.mazzoReset.reset();
+		this.turniReset.reset();
+		this.utilityReset.reset();
 	}
 
 	private void disabilitaGamemod(Button bottone) {
@@ -78,6 +96,7 @@ public class HomepageController implements Initializable {
 	@FXML
 	public void giocaControGiocatoreAction(ActionEvent event) {
 		Partita partita = partitaService.creaPartita();
+		
 		if (this.accettaNickname(partita))
 			try {
 				dispatcher.caricaVista("NicknameGiocatore2", partita);
