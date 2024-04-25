@@ -1,6 +1,8 @@
 package it.univaq.disim.oop.myclashofunivaq.controller.utilitis;
 
-public class Posizione {
+import java.io.Serializable;
+
+public class Posizione implements Serializable {
 	private int riga;
 	private int colonna;
 	

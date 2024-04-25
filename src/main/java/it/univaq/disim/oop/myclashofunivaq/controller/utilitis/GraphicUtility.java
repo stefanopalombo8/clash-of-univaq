@@ -1,5 +1,11 @@
 package it.univaq.disim.oop.myclashofunivaq.controller.utilitis;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -12,6 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import it.univaq.disim.oop.myclashofunivaq.business.GiocatoreService;
+import it.univaq.disim.oop.myclashofunivaq.business.ResetStaticVariables;
 import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
 import it.univaq.disim.oop.myclashofunivaq.domain.FaseTurno;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
@@ -27,7 +34,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 
-public class GraphicUtility {
+public class GraphicUtility implements ResetStaticVariables, Serializable {
 
 	private Map<String, LinkedHashMap<Posizione, ImageView>> mappaGridpaneImmagini = new HashMap<>();
 	private Map<String, LinkedHashMap<Posizione, Carta>> mappaGridpaneCarte = new HashMap<>();
@@ -38,6 +45,25 @@ public class GraphicUtility {
 	private static int i = 0;
 
 	public List<ImageView> nuoveImmagini = new ArrayList<>();
+	
+	private static String path = "src/main/resourses/files/partiteSalvate/carte";
+
+	public static void serializeMappaGridpaneCarte(Map<String, LinkedHashMap<Posizione, Carta>> mappaGridpaneCarte, String index)
+			throws IOException {
+		String path = GraphicUtility.path + index + ".txt";
+		try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(path))) {
+			outputStream.writeObject(mappaGridpaneCarte);
+		}
+	}
+
+	public static Map<String, LinkedHashMap<Posizione, Carta>> deserializeMappaGridpaneCarte(String index)
+			throws IOException, ClassNotFoundException {
+		String path = GraphicUtility.path + index + ".txt";
+		try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(path))) {
+			return (Map<String, LinkedHashMap<Posizione, Carta>>) inputStream.readObject();
+		}
+	}
+
 
 	public Map<String, LinkedHashMap<Posizione, ImageView>> getMappaGridpaneImmagini() {
 		return mappaGridpaneImmagini;
@@ -59,6 +85,10 @@ public class GraphicUtility {
 		this.mappaGridpaneCarte = mappaGridpaneCarte;
 	}
 
+	public static List<GraphicUtility> getStati() {
+		return stati;
+	}
+
 	public void aggiungiStato(GraphicUtility stato) {
 		stati.add(stato);
 		i++;
@@ -70,6 +100,12 @@ public class GraphicUtility {
 
 	public GraphicUtility getUltimoStato() {
 		return stati.get(i - 1);
+	}
+
+	public void sovrascriviUltimoStato(GraphicUtility stato) {
+		int index = stati.size() - 1;
+		stati.remove(index);
+		stati.add(index, stato);
 	}
 
 	public ImageView creaImpostaImageView(Image image, double height, double width) {
@@ -133,7 +169,7 @@ public class GraphicUtility {
 	 */
 
 	public void aggiungiCartaImmagineGriglia(GridPane grid, Carta carta, ImageView imageView) {
-
+		
 		if (carta != null) {
 			for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : mappaGridpaneCarte.entrySet()) {
 				String gridPaneKey = entry.getKey();
@@ -183,7 +219,7 @@ public class GraphicUtility {
 		for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : mappaGridpaneCarte.entrySet()) {
 			String gridPaneKey = entry.getKey();
 
-			if (gridPaneKey.equals("carteManoG1") || gridPaneKey.equals("carteManoG2")) {
+			if (gridPaneKey.equals(GridPaneGioco.carteManoG1.toString()) || gridPaneKey.equals(GridPaneGioco.carteManoG2.toString())) {
 
 				LinkedHashMap<Posizione, Carta> innerMap = entry.getValue();
 
@@ -233,7 +269,6 @@ public class GraphicUtility {
 	 */
 
 	public void aggiungiCartaImmagineGriglia(GridPane grid, Carta carta, ImageView imageView, Posizione posizione) {
-
 		if (carta != null) {
 			for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : mappaGridpaneCarte.entrySet()) {
 				String gridPaneKey = entry.getKey();
@@ -293,7 +328,7 @@ public class GraphicUtility {
 			String gridPaneKey = entry.getKey();
 			LinkedHashMap<Posizione, ImageView> innerMap = entry.getValue();
 
-			if (gridPaneKey.equals("carteManoG1") || gridPaneKey.equals("carteManoG2"))
+			if (gridPaneKey.equals(GridPaneGioco.carteManoG1.toString()) || gridPaneKey.equals(GridPaneGioco.carteManoG2.toString()))
 				continue;
 
 			for (GridPane grid : grids) {
@@ -318,23 +353,30 @@ public class GraphicUtility {
 			}
 		}
 
-		this.setMappaGridpaneCarte(this.getUltimoStato().mappaGridpaneCarte);
+//		this.setMappaGridpaneCarte(this.getUltimoStato().mappaGridpaneCarte);
 
-		for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : this.mappaGridpaneCarte.entrySet()) {
+		for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : this.getUltimoStato().mappaGridpaneCarte.entrySet()) {
 
 			String gridPaneKey = entry.getKey();
 			LinkedHashMap<Posizione, Carta> innerMap = entry.getValue();
 
-			if (gridPaneKey.equals("carteManoG1") || gridPaneKey.equals("carteManoG2"))
+			if (gridPaneKey.equals(GridPaneGioco.carteManoG1.toString()) || gridPaneKey.equals(GridPaneGioco.carteManoG2.toString()))
 				continue;
 
 			for (GridPane grid : grids) {
 				if (gridPaneKey.equals(grid.getId())) {
 					for (Posizione p : innerMap.keySet()) {
-						Personaggio personaggio = (Personaggio) innerMap.get(p);
-//						if (personaggio != null) {
-//							System.out.println(grid.getId() + " " + p + " vita " + personaggio.getVita());
-//						}
+						Carta carta = innerMap.get(p);
+						if (carta != null) {
+							LinkedHashMap<Posizione, Carta> currentInnerMap = this.mappaGridpaneCarte
+									.get(gridPaneKey);
+							currentInnerMap.replace(this.ricercaNewPosizione(p, currentInnerMap), carta);
+							
+							if(carta instanceof Personaggio) {
+								Personaggio personaggio = (Personaggio) carta;
+								personaggio.setMana(personaggio.getMana() + 1);
+							}
+						}
 					}
 				}
 			}
@@ -343,7 +385,6 @@ public class GraphicUtility {
 	}
 
 	public void ripristinaCarteMano(GridPane gridManoCorrente) {
-
 		LinkedHashMap<Posizione, ImageView> oldInnerMap = this.getUltimoStatoGiocatore().mappaGridpaneImmagini
 				.get(gridManoCorrente.getId());
 		LinkedHashMap<Posizione, ImageView> currentInnerMap = this.mappaGridpaneImmagini.get(gridManoCorrente.getId());
@@ -361,6 +402,18 @@ public class GraphicUtility {
 
 			}
 		}
+		
+		LinkedHashMap<Posizione, Carta> oldInnerMapCarte = this.getUltimoStatoGiocatore().mappaGridpaneCarte
+				.get(gridManoCorrente.getId());
+		LinkedHashMap<Posizione, Carta> currentInnerMapCarte = this.mappaGridpaneCarte.get(gridManoCorrente.getId());
+
+		for (Posizione p : oldInnerMapCarte.keySet()) {
+			Carta oldCarta = oldInnerMapCarte.get(p);
+			if (oldCarta != null) {
+				currentInnerMapCarte.replace(this.ricercaNewPosizione(p, currentInnerMapCarte), oldCarta);
+			}
+		}
+		
 
 	}
 
@@ -377,46 +430,93 @@ public class GraphicUtility {
 
 		return toReturn;
 	}
-	
+
 	public int calcolaNumeroCarteTerreno() {
 		int numero = 0;
-		
+
 		for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : this.mappaGridpaneCarte.entrySet()) {
 
 			String gridPaneKey = entry.getKey();
 			LinkedHashMap<Posizione, Carta> innerMap = entry.getValue();
 
-			if (gridPaneKey.equals("carteManoG1") || gridPaneKey.equals("carteManoG2"))
+			if (gridPaneKey.equals(GridPaneGioco.carteManoG1.toString()) || gridPaneKey.equals(GridPaneGioco.carteManoG2.toString()))
 				continue;
-			
-			for(Posizione p : innerMap.keySet()) {
+
+			for (Posizione p : innerMap.keySet()) {
 				Carta carta = innerMap.get(p);
-				if(carta != null)
+				if (carta != null)
 					numero += 1;
 			}
 		}
 		return numero;
 	}
-	
+
 	public int calcolaValoreCarteTerreno() {
 		int valore = 0;
-		
+
 		for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : this.mappaGridpaneCarte.entrySet()) {
 
 			String gridPaneKey = entry.getKey();
 			LinkedHashMap<Posizione, Carta> innerMap = entry.getValue();
 
-			if (gridPaneKey.equals("carteManoG1") || gridPaneKey.equals("carteManoG2"))
+			if (gridPaneKey.equals(GridPaneGioco.carteManoG1.toString()) || gridPaneKey.equals(GridPaneGioco.carteManoG2.toString()))
 				continue;
-			
-			for(Posizione p : innerMap.keySet()) {
+
+			for (Posizione p : innerMap.keySet()) {
 				Carta carta = innerMap.get(p);
-				if(carta != null) 
+				if (carta != null)
 					valore += carta.getCostoSchieramento();
-					
+
 			}
 		}
 		return valore;
+	}
+
+	@Override
+	public void reset() {
+		i = 0;
+		stati.clear();
+	}
+
+	
+	public void ripristinaStato(List<GridPane> grids,
+			Map<String, LinkedHashMap<Posizione, Carta>> mappaDeserializzata) {
+
+		// RIPRISTINO DELLE IMMAGINI SUL TERRENO
+
+		for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : mappaDeserializzata.entrySet()) {
+
+			String gridPaneKey = entry.getKey();
+			LinkedHashMap<Posizione, Carta> innerMap = entry.getValue();
+
+			for (GridPane gridDaPopolare : grids) {
+				if (gridPaneKey.equals(gridDaPopolare.getId())) {
+					for (Posizione p : innerMap.keySet()) {
+						Carta carta = innerMap.get(p);
+						if (carta != null) {
+							ImageView newImageView = this.creaImpostaImageView(carta.getImmagineCarta(), 60, 60);
+
+							if (gridDaPopolare.getId().equals(GridPaneGioco.carteManoG1.toString())
+									|| gridDaPopolare.getId().equals(GridPaneGioco.carteManoG2.toString())) {
+								this.setImageDragProperty(gridDaPopolare, newImageView);
+							}
+							else
+								this.nuoveImmagini.add(newImageView);
+
+							gridDaPopolare.add(newImageView, p.getColonna(), p.getRiga());
+
+							LinkedHashMap<Posizione, ImageView> currentInnerMap = this.mappaGridpaneImmagini
+									.get(gridDaPopolare.getId());
+							currentInnerMap.replace(this.ricercaNewPosizione(p, currentInnerMap), newImageView);
+
+						}
+					}
+				}
+			}
+
+			this.setMappaGridpaneCarte(mappaDeserializzata);
+		}
+
 	}
 
 }
