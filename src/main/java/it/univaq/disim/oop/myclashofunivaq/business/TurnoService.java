@@ -20,4 +20,5 @@ public interface TurnoService extends ResetStaticVariables {
 	void salvaMossaGiocatore(Partita partita, Turno turno, MossaGiocatore mossa);
 	Torre trovaTorreGiocatore(Giocatore giocatore);
 	void ripopolaMappaTurni(Partita partita);
+	void annullaUltimoTurno(Turno turnoCorrente);
 }

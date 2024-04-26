@@ -185,5 +185,13 @@ public class TurnoServiceImpl implements TurnoService {
 			j++;
 		}
 	}
+
+	@Override
+	public void annullaUltimoTurno(Turno turnoCorrente) {
+		i--;
+		j--;
+		turniPartita.remove(turnoCorrente.getNumero());
+		
+	}
 	
 }
