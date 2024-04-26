@@ -124,7 +124,7 @@ public class PartitaServiceImpl implements PartitaService {
 
 		if (elencoFile != null) {
 			for (File file : elencoFile) {
-				if (file.isFile()) {
+				if (file.isFile() && file.getName().startsWith("partita")) {
 					try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
 						Partita partitaDeserializzata = (Partita) ois.readObject();
 						partite.add(partitaDeserializzata);
