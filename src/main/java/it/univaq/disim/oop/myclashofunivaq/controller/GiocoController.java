@@ -132,6 +132,9 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 	@FXML
 	private Button esciPartita;
+	
+	@FXML
+	private Button annullaMossa;
 
 	private List<GridPane> gridsListGiocatore;
 	private List<GridPane> gridsListAvversario;
@@ -352,7 +355,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 					try {
 						// Mapping carta schierata
-						Carta cartaDaSchierare = utility.ricercaCartaSelezionataInMano(posizioneDaRimpiazzare);
+						Carta cartaDaSchierare = utility.ricercaCartaStrada(this.carteMano.getId(), posizioneDaRimpiazzare);
 						turnoService.controllaSchieramento(turnoCorrente, cartaDaSchierare);
 						cartaSchierata[0] = (Carta) cartaDaSchierare.clone();
 						utility.aggiungiCartaImmagineGriglia(grid, cartaSchierata[0], null); // aggiunta nella
@@ -631,6 +634,21 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		try {
 			dispatcher.caricaVista("applicationLayout");
 			dispatcher.caricaVista("homepage");
+		} catch (ViewException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@FXML
+	public void annullaMossaAction(ActionEvent event) {		
+		if(this.carteMano.getId().equals("carteManoG2"))
+			utility.ripristinaDopoAnnullamento(gridsList, gridsListGiocatore);
+		else
+			utility.ripristinaDopoAnnullamento(gridsList, gridsListAvversario);
+		
+		turnoService.annullaUltimoTurno(turnoCorrente);
+		try {
+			dispatcher.caricaVista("gioco", partita);
 		} catch (ViewException e) {
 			e.printStackTrace();
 		}
