@@ -232,7 +232,7 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 
 	public Carta ricercaCartaStrada(String gridPaneSource, Posizione posizione) {
 		Carta carta = null;
-
+		
 		for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : mappaGridpaneCarte.entrySet()) {
 			String gridPaneKey = entry.getKey();
 
@@ -591,6 +591,34 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 			}
 
 		}
+	}
+
+	public boolean checkAttaccoTorre(String stradaAttaccante) {
+		for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : this.mappaGridpaneCarte.entrySet()) {
+			String gridPaneKey = entry.getKey();
+			LinkedHashMap<Posizione, Carta> innerMap = entry.getValue();
+
+			if (!((stradaAttaccante.toString() + "avversario").equals(gridPaneKey)
+					|| (gridPaneKey + "avversario").equals(stradaAttaccante.toString()))) {
+				continue;
+			}
+
+			for (Posizione p : innerMap.keySet()) {
+				Carta carta = innerMap.get(p);
+				if (carta != null)
+					return false;
+			}
+
+		}
+
+		return true;
+	}
+	
+	public void eliminaImmagineCarta(Posizione posizione) {
+		// elimino l'immagine
+		
+		
+		// elimino  la carta
 	}
 
 }
