@@ -37,6 +37,7 @@ import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.PosizionamentoPersonaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.Tank;
+import it.univaq.disim.oop.myclashofunivaq.domain.Torre;
 import it.univaq.disim.oop.myclashofunivaq.domain.Turno;
 import it.univaq.disim.oop.myclashofunivaq.view.InizializzaDati;
 import it.univaq.disim.oop.myclashofunivaq.view.ViewDispatcher;
@@ -76,6 +77,8 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 	@FXML
 	private Label vitaTorre2Indicator;
+
+	private ProgressBar vitaTorreAvversaria;
 
 	@FXML
 	private ProgressBar elisir;
@@ -132,7 +135,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 	@FXML
 	private Button esciPartita;
-	
+
 	@FXML
 	private Button annullaMossa;
 
@@ -205,14 +208,19 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 				this.carteMano = carteManoG1;
 				this.gridsList = gridsListGiocatore;
 				this.mostraVitaTorre(giocatoreCorrente, vitaTorre1, vitaTorre1Indicator);
-				if (turnoCorrente.getNumero() != 0)
+
+				if (turnoCorrente.getNumero() != 0) {
 					this.mostraVitaTorre(this.turnoService.trovaAltroGiocatore(partita), vitaTorre2,
 							vitaTorre2Indicator);
+					this.vitaTorreAvversaria = vitaTorre2;
+				}
+
 			} else {
 				this.carteMano = carteManoG2;
 				this.gridsList = gridsListAvversario;
 				this.mostraVitaTorre(giocatoreCorrente, vitaTorre2, vitaTorre2Indicator);
 				this.mostraVitaTorre(this.turnoService.trovaAltroGiocatore(partita), vitaTorre1, vitaTorre1Indicator);
+				this.vitaTorreAvversaria = vitaTorre1;
 			}
 
 			this.mappaGriglie();
@@ -241,11 +249,11 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		} else {
 			System.out.println(
 					"size else " + GraphicUtility.getStati().size() + " " + GraphicUtility.getStati().toString());
-			
+
 			giocatoreCorrente = turnoService.alternaGiocatore(partita);
 			timerImpl();
 			turnoCorrente = turnoService.avviaTurno(timeline, giocatoreCorrente);
-			
+
 			nomeGiocatore.setText(giocatoreCorrente.getNickname());
 
 			faseCorrente.setText(turnoCorrente.getFase().toString());
@@ -258,14 +266,19 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 				this.carteMano = carteManoG1;
 				this.gridsList = gridsListGiocatore;
 				this.mostraVitaTorre(giocatoreCorrente, vitaTorre1, vitaTorre1Indicator);
-				if (turnoCorrente.getNumero() != 0)
+
+				if (turnoCorrente.getNumero() != 0) {
 					this.mostraVitaTorre(this.turnoService.trovaAltroGiocatore(partita), vitaTorre2,
 							vitaTorre2Indicator);
+					this.vitaTorreAvversaria = vitaTorre2;
+				}
+
 			} else {
 				this.carteMano = carteManoG2;
 				this.gridsList = gridsListAvversario;
 				this.mostraVitaTorre(giocatoreCorrente, vitaTorre2, vitaTorre2Indicator);
 				this.mostraVitaTorre(this.turnoService.trovaAltroGiocatore(partita), vitaTorre1, vitaTorre1Indicator);
+				this.vitaTorreAvversaria = vitaTorre1;
 			}
 
 			this.mappaGriglie();
@@ -286,7 +299,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 						img.setOnMouseClicked(this::proprietaClickImageViewAvversario);
 					else
 						img.setOnMouseClicked(this::proprietaClickImageViewGiocatore);
-					
+
 				}
 			}
 
@@ -309,7 +322,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		}
 
 	}
-	
+
 	private void trascinamentoImmagini(Mazzo mazzo) {
 		Carta[] prossimaCartaMazzo = new Carta[1]; // WRAPPER
 		prossimaCartaMazzo[0] = mazzoService.mostraProssimaCarta(mazzo);
@@ -332,7 +345,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 					throw new RuntimeException();
 
 				}
-				
+
 				// 3 immagini + 1 nodo parent
 				if (grid.getChildren().size() == 4) {
 					System.err.println("STRADA PIENA");
@@ -355,7 +368,8 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 					try {
 						// Mapping carta schierata
-						Carta cartaDaSchierare = utility.ricercaCartaStrada(this.carteMano.getId(), posizioneDaRimpiazzare);
+						Carta cartaDaSchierare = utility.ricercaCartaStrada(this.carteMano.getId(),
+								posizioneDaRimpiazzare);
 						turnoService.controllaSchieramento(turnoCorrente, cartaDaSchierare);
 						cartaSchierata[0] = (Carta) cartaDaSchierare.clone();
 						utility.aggiungiCartaImmagineGriglia(grid, cartaSchierata[0], null); // aggiunta nella
@@ -373,7 +387,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 					utility.aggiungiCartaImmagineGriglia(grid, null, newImageView);
 
 					newImageView.setOnMouseClicked(this::proprietaClickImageViewGiocatore);
-					
+
 					// Mapping immagine/carta da prossima carta a mano
 					utility.aggiungiCartaImmagineGriglia(carteMano, prossimaCartaMazzo[0], imageViewProssimaCarta,
 							posizioneDaRimpiazzare);
@@ -470,7 +484,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 			} else {
 				utility.aggiungiStato(utility);
 			}
-			
+
 			partita.setRecuperata(false);
 			dispatcher.caricaVista("gioco", partita);
 		} catch (ViewException e) {
@@ -524,13 +538,11 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		final ImageView imageViewCorrente = (ImageView) event.getSource();
 		final GridPane gridPaneParent = (GridPane) imageViewCorrente.getParent();
 
-		if (cartaSchierata[0] == null) {
-			Posizione posizioneToSearch = new Posizione(GridPane.getColumnIndex(imageViewCorrente),
-					GridPane.getRowIndex(imageViewCorrente));
-			cartaSchierata[0] = utility.ricercaCartaStrada(gridPaneParent.getId(), posizioneToSearch);
-		}
+		Posizione posizioneToSearch = new Posizione(GridPane.getColumnIndex(imageViewCorrente),
+				GridPane.getRowIndex(imageViewCorrente));
+		cartaSchierata[0] = utility.ricercaCartaStrada(gridPaneParent.getId(), posizioneToSearch);
 
-		final Personaggio personaggioCliccato = (Personaggio) cartaSchierata[0];
+		Personaggio personaggioCliccato = (Personaggio) cartaSchierata[0];
 
 		try {
 			if (turnoCorrente.getFase().equals(FaseTurno.Difesa)) {
@@ -548,7 +560,29 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 				System.out.println("VITA " + personaggioCliccato.getVita());
 				System.out.println("MANA " + personaggioCliccato.getMana());
-				giocatoreService.preparaAttacco(personaggioCliccato, utility.ricercaStradaSchieramento(gridPaneParent));
+				try {
+					if (turnoCorrente.getNumero() > 0) {
+						GridPaneGioco gridPersonaggio = utility.ricercaStradaSchieramento(gridPaneParent);
+						if (utility.checkAttaccoTorre(gridPersonaggio.toString())) {
+							
+							Giocatore avversario = turnoService.trovaAltroGiocatore(partita);
+							Torre torreAvversaria = turnoService.trovaTorreGiocatore(avversario);
+
+							giocatoreService.attaccaTorre(turnoCorrente, personaggioCliccato, gridPersonaggio,
+									torreAvversaria);
+
+							if (vitaTorreAvversaria.getId().equals("vitaTorre1"))
+								this.mostraVitaTorre(avversario, vitaTorreAvversaria, vitaTorre1Indicator);
+							else
+								this.mostraVitaTorre(avversario, vitaTorreAvversaria, vitaTorre2Indicator);
+
+						} else
+							giocatoreService.preparaAttacco(personaggioCliccato, gridPersonaggio);
+					} else
+						throw new AttaccoException("NON SI può ATTACCARE è IL PRIMO TURNO");
+				} catch (AttaccoException e) {
+					System.err.println(e.getMessage());
+				}
 			} else
 				throw new PosizionamentoException("è la fase di schieramento");
 
@@ -571,14 +605,18 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 				Carta cartaCliccata = utility.ricercaCartaStrada(gridPaneParent.getId(), posizioneToSearch);
 
-				Personaggio personaggio = (Personaggio) cartaCliccata;
+				Personaggio personaggioAttaccato = (Personaggio) cartaCliccata;
 
 				utility.impostaTooltip(imageViewCorrente, cartaCliccata);
 
-				giocatoreService.effettuaAttacco(turnoCorrente, personaggio,
+				giocatoreService.effettuaAttacco(turnoCorrente, personaggioAttaccato,
 						utility.ricercaStradaSchieramento(gridPaneParent));
-
-				utility.impostaTooltip(imageViewCorrente, cartaCliccata);
+				
+				if(personaggioAttaccato.getVita() <= 0) {
+					utility.eliminaImmagineCarta(posizioneToSearch);
+				}
+				else
+					utility.impostaTooltip(imageViewCorrente, cartaCliccata);
 
 			} else
 				throw new AttaccoException("Non puoi selezionarla non è la fase di attacco");
@@ -638,14 +676,14 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 			e.printStackTrace();
 		}
 	}
-	
+
 	@FXML
-	public void annullaMossaAction(ActionEvent event) {		
-		if(this.carteMano.getId().equals("carteManoG2"))
+	public void annullaMossaAction(ActionEvent event) {
+		if (this.carteMano.getId().equals("carteManoG2"))
 			utility.ripristinaDopoAnnullamento(gridsList, gridsListGiocatore);
 		else
 			utility.ripristinaDopoAnnullamento(gridsList, gridsListAvversario);
-		
+
 		turnoService.annullaUltimoTurno(turnoCorrente);
 		try {
 			dispatcher.caricaVista("gioco", partita);
