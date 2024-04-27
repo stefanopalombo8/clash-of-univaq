@@ -14,13 +14,14 @@ import it.univaq.disim.oop.myclashofunivaq.business.MazzoService;
 import it.univaq.disim.oop.myclashofunivaq.business.PartitaService;
 import it.univaq.disim.oop.myclashofunivaq.business.CartaService;
 import it.univaq.disim.oop.myclashofunivaq.business.TurnoService;
+import it.univaq.disim.oop.myclashofunivaq.business.impl.Carte;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.MazzoServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.PartitaServiceImpl;
-import it.univaq.disim.oop.myclashofunivaq.business.impl.Personaggi;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.TurnoServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.GraphicUtility;
 import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
 import it.univaq.disim.oop.myclashofunivaq.domain.Giocatore;
+import it.univaq.disim.oop.myclashofunivaq.domain.Incantesimo;
 import it.univaq.disim.oop.myclashofunivaq.domain.Mazzo;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
@@ -72,7 +73,7 @@ public class MazzoController implements Initializable, InizializzaDati<Partita> 
 	public MazzoController() {
 		dispatcher = ViewDispatcher.getInstance();
 		partitaService = new PartitaServiceImpl();
-		cartaService = new Personaggi();
+		cartaService = new Carte();
 		mazzoService = new MazzoServiceImpl();
 		turnoService = new TurnoServiceImpl();
 		carteScelte = new ArrayList<>();
@@ -83,21 +84,27 @@ public class MazzoController implements Initializable, InizializzaDati<Partita> 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		Personaggio personaggio = null;
+		Incantesimo incantesimo = null;
 		grids.add(mazzo);
 		
+		utility.mappingGriglie(grids);
 		
-		for (Personaggio p : cartaService.trovaTuttiPersonaggi()) {
-			ImageView imageView = utility.creaImpostaImageView(p.getImmagineCarta(), dim_img, dim_img);
-			utility.mappingGriglie(grids);
+		for (Carta carta : cartaService.trovaTutteCarte()) {
+			ImageView imageView = utility.creaImpostaImageView(carta.getImmagineCarta(), dim_img, dim_img);
+			
 			roster.getChildren().add(imageView);
 			
-			personaggio = p;
+			if(carta instanceof Personaggio)
+				personaggio = (Personaggio) carta;
+			else if(carta instanceof Incantesimo) 
+				incantesimo = (Incantesimo) carta;
+				
 			
 			imageView.setOnDragDetected(event -> {
 				Dragboard db = imageView.startDragAndDrop(TransferMode.ANY);
 				ClipboardContent content = new ClipboardContent();
 				content.putImage(imageView.getImage());
-				carteScelte.add(p);
+				carteScelte.add(carta);
 				db.setContent(content);
 				event.consume();
 	
@@ -128,8 +135,11 @@ public class MazzoController implements Initializable, InizializzaDati<Partita> 
 
 		}
 		
-		for(int i = 0; i<8; i++) {
+		for(int i = 0; i<4; i++) {
 			carteScelte.add(personaggio);
+		}
+		for(int i = 4; i <8; i++) {
+			carteScelte.add(incantesimo);
 		}
 		
 	}
