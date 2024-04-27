@@ -30,8 +30,10 @@ public class TurnoServiceImpl implements TurnoService {
 	private static int i = 0; // indice per i giocatori
 	private static int j = 0; // indice per l'ID dei turni
 	private static Map<Integer, Turno> turniPartita = new HashMap<>();
+	private static Map<Integer, Torre> torriPartitaCopy = new HashMap<>();
 	
 	private static final String path = "src/main/resourses/files/logsPartite/";
+	
 	
 	public TurnoServiceImpl() {
 		partitaService = new PartitaServiceImpl();
@@ -69,6 +71,16 @@ public class TurnoServiceImpl implements TurnoService {
 			
 		
 		turniPartita.put(turno.getNumero(), turno);
+		
+		Torre torreCopy = null;
+		try {
+			torreCopy = (Torre) turno.getTorreGiocatore().clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		torriPartitaCopy.put(turno.getNumero(), torreCopy);
 		
 		j++;
 		
@@ -190,8 +202,12 @@ public class TurnoServiceImpl implements TurnoService {
 	public void annullaUltimoTurno(Turno turnoCorrente) {
 		i--;
 		j--;
+		
+		if(j > 0)
+			turniPartita.get(j - 1).setTorreGiocatore(torriPartitaCopy.get(j - 1));
+		
 		turniPartita.remove(turnoCorrente.getNumero());
 		
 	}
-	
+
 }
