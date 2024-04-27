@@ -28,15 +28,27 @@ public class PersonaggioServiceImpl implements PersonaggioService{
 
 	@Override
 	public void attacca(Attacco attacco) {
-		System.out.println("VITA ATTACCANTE " + attacco.getPersonaggioAttaccante().getVita() + 
-				" VITA ATTACCATO " + attacco.getPersonaggioDaAttaccare().getVita());
-		
-		attacco.getPersonaggioDaAttaccare().setVita(attacco.getPersonaggioDaAttaccare().getVita() -  
-				attacco.getPersonaggioAttaccante().getDanno());
-		
-		
-		System.out.println("VITA ATTACCATO " + attacco.getPersonaggioDaAttaccare().getVita());
-		
+		if(attacco.getTorreAttaccata() == null) {
+			System.out.println("VITA ATTACCANTE " + attacco.getPersonaggioAttaccante().getVita() + 
+					" VITA ATTACCATO " + attacco.getPersonaggioDaAttaccare().getVita());
+			
+			attacco.getPersonaggioDaAttaccare().setVita(attacco.getPersonaggioDaAttaccare().getVita() -  
+					attacco.getPersonaggioAttaccante().getDanno());
+			
+			
+			System.out.println("VITA ATTACCATO " + attacco.getPersonaggioDaAttaccare().getVita());
+		}
+		else { //attacca direttamente la torre
+			double danno = (double) attacco.getPersonaggioAttaccante().getDanno() / 100;
+			System.out.println("danno " + danno);
+			
+			System.out.println("vita torre " + attacco.getTorreAttaccata().getVita());
+			attacco.getTorreAttaccata().setVita(attacco.getTorreAttaccata().getVita() - 
+					danno);
+			
+			System.out.println("VITA TORRE " + attacco.getTorreAttaccata().getVita());
+		}
+			
 	}
 
 }

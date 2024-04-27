@@ -1,5 +1,8 @@
 package it.univaq.disim.oop.myclashofunivaq.business.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import it.univaq.disim.oop.myclashofunivaq.business.GiocatoreUtenteService;
 
 import it.univaq.disim.oop.myclashofunivaq.business.PartitaService;
@@ -14,6 +17,7 @@ import it.univaq.disim.oop.myclashofunivaq.domain.MossaGiocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.PosizionamentoPersonaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.Schieramento;
+import it.univaq.disim.oop.myclashofunivaq.domain.Torre;
 import it.univaq.disim.oop.myclashofunivaq.domain.Turno;
 
 public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
@@ -22,6 +26,7 @@ public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
 	private final PersonaggioService personaggioService;
 	private final TurnoService turnoService;
 	
+	private List<Personaggio> personaggiAttaccantiTurno;
 	private Personaggio personaggioAttaccante;
 	private GridPaneGioco stradaAttaccante;
 
@@ -29,6 +34,7 @@ public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
 		partitaService = new PartitaServiceImpl();
 		personaggioService = new PersonaggioServiceImpl();
 		turnoService = new TurnoServiceImpl();
+		personaggiAttaccantiTurno = new ArrayList<>();
 	}
 
 	@Override
@@ -67,9 +73,15 @@ public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
 	}
 
 	@Override
-	public void preparaAttacco(Personaggio personaggioAttaccante, GridPaneGioco strada) {
-		this.personaggioAttaccante = personaggioAttaccante;
-		this.stradaAttaccante = strada;
+	public void preparaAttacco(Personaggio personaggioAttaccante, GridPaneGioco strada) throws AttaccoException{
+		if(!(personaggioAttaccante.equals(this.personaggioAttaccante))) {
+			this.personaggioAttaccante = personaggioAttaccante;
+			this.stradaAttaccante = strada;
+		}
+			
+		else
+			throw new AttaccoException("NON PUOI ATTACCARE TE STESSO");
+		
 	}
 
 	@Override
@@ -83,11 +95,16 @@ public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
 				|| (stradaAttaccato.toString() + "avversario").equals(stradaAttaccante.toString()))  )
 			throw new AttaccoException("I PERSONAGGIO SONO SU DUE STRADE DIVERSE");
 		
+		if(personaggiAttaccantiTurno.contains(personaggioAttaccante))
+			throw new AttaccoException("QUESTO PERSONAGGIO HA già ATTACCATO");
+		
 		Attacco attacco = new Attacco();
 		attacco.setPersonaggioAttaccante(personaggioAttaccante);
 		attacco.setPersonaggioDaAttaccare(personaggioDaAttaccare);
 		
 		personaggioService.attacca(attacco);
+		
+		this.personaggiAttaccantiTurno.add(personaggioAttaccante);
 		
 		return attacco;
 	}
@@ -103,6 +120,26 @@ public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
 		this.personaggioService.sceltaPosizionamento(personaggio, posizionamento);
 		
 		return cambioPosizione;
+	}
+
+	@Override
+	public MossaGiocatore attaccaTorre(Turno turno, Personaggio personaggioAttaccante, GridPaneGioco strada,
+			Torre torreAvversaria) throws AttaccoException {
+		
+		if(personaggioAttaccante == null)
+			throw new AttaccoException("MANCA IL PERSONAGGIO ATTACCANTE");
+		if(personaggiAttaccantiTurno.contains(personaggioAttaccante))
+			throw new AttaccoException("QUESTO PERSONAGGIO HA già ATTACCATO");
+		
+		Attacco attacco = new Attacco();
+		attacco.setPersonaggioAttaccante(personaggioAttaccante);
+		attacco.setTorreAttaccata(torreAvversaria);
+		
+		this.personaggioService.attacca(attacco);
+		
+		this.personaggiAttaccantiTurno.add(personaggioAttaccante);
+		
+		return attacco;
 	}
 	
 }
