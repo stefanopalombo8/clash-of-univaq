@@ -11,6 +11,7 @@ import it.univaq.disim.oop.myclashofunivaq.configuration.Factory;
 import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
 import it.univaq.disim.oop.myclashofunivaq.domain.CuraPersonaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
+import it.univaq.disim.oop.myclashofunivaq.domain.RendiInvulnerabile;
 import it.univaq.disim.oop.myclashofunivaq.domain.Tank;
 
 public class Carte implements CartaService {
@@ -30,6 +31,10 @@ public class Carte implements CartaService {
 		CuraPersonaggio cura = new CuraPersonaggio("CuraPersonaggio");
 		cartaFactory.modellaCarta(cura);
 		carte.add(cura);
+		
+		RendiInvulnerabile invulnerabile = new RendiInvulnerabile("RendiInvulnerabile");
+		cartaFactory.modellaCarta(invulnerabile);
+		carte.add(invulnerabile);
 	}
 
 	@Override

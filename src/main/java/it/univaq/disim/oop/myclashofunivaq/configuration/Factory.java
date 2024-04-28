@@ -16,6 +16,7 @@ import it.univaq.disim.oop.myclashofunivaq.domain.CuraPersonaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.Incantesimo;
 import it.univaq.disim.oop.myclashofunivaq.domain.MossaSpeciale;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
+import it.univaq.disim.oop.myclashofunivaq.domain.RendiInvulnerabile;
 import it.univaq.disim.oop.myclashofunivaq.domain.Tank;
 import it.univaq.disim.oop.myclashofunivaq.domain.nomipersonaggi.IncantesimiNomi;
 import it.univaq.disim.oop.myclashofunivaq.domain.nomipersonaggi.TankNomi;
@@ -107,9 +108,7 @@ public class Factory implements CartaFactory {
 		} else {
 			String path = costruisciPath("incantesimi.properties");
 			
-			System.out.println("KEY " + keyDaCercare);
-			System.out.println("PATH " + path);
-			
+			System.out.println("key " + keyDaCercare);
 			try (FileInputStream fis = new FileInputStream(path)) {
 				final Properties props = new Properties();
 				props.load(fis);
@@ -124,10 +123,14 @@ public class Factory implements CartaFactory {
 						case "costoSchieramento":
 							incantesimo.setCostoSchieramento(Integer.valueOf(props.getProperty(riga)));
 							break;
+						case "cura":
+							CuraPersonaggio incantesimoCura = (CuraPersonaggio) incantesimo;
+							incantesimoCura.setCura(Integer.valueOf(props.getProperty(riga)));
+							break;
 						case "immagine":
 							Image immagine = new Image(costruisciPath(props.getProperty(riga)));
-
 							incantesimo.setImmagineCarta(immagine);
+							break;
 						}
 
 					}
@@ -160,7 +163,11 @@ public class Factory implements CartaFactory {
 		} else if (carta instanceof CuraPersonaggio) {
 			nomi = IncantesimiNomi.values();
 			categoriaCarta = CuraPersonaggio.class.getSimpleName();
-		} else
+		} else if (carta instanceof RendiInvulnerabile) {
+			nomi = IncantesimiNomi.values();
+			categoriaCarta = RendiInvulnerabile.class.getSimpleName(); 
+		}
+		else
 			throw new CategoriaNonTrovataException("Categoria non ancora implementata");
 
 		Optional<Enum<?>> optionalName = Arrays.stream(nomi).filter(n -> n.toString().equals(carta.getNome()))
