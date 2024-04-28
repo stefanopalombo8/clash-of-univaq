@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.univaq.disim.oop.myclashofunivaq.business.GiocatoreUtenteService;
-
+import it.univaq.disim.oop.myclashofunivaq.business.IncantesimoService;
 import it.univaq.disim.oop.myclashofunivaq.business.PartitaService;
 import it.univaq.disim.oop.myclashofunivaq.business.PersonaggioService;
 import it.univaq.disim.oop.myclashofunivaq.business.TurnoService;
@@ -25,6 +25,7 @@ public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
 	private final PartitaService partitaService;
 	private final PersonaggioService personaggioService;
 	private final TurnoService turnoService;
+	private final IncantesimoService incantesimoService;
 	
 	private List<Personaggio> personaggiAttaccantiTurno;
 	private Personaggio personaggioAttaccante;
@@ -35,6 +36,7 @@ public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
 		personaggioService = new PersonaggioServiceImpl();
 		turnoService = new TurnoServiceImpl();
 		personaggiAttaccantiTurno = new ArrayList<>();
+		incantesimoService = new IncantesimoServiceImpl();
 	}
 
 	@Override
@@ -97,6 +99,10 @@ public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
 		
 		if(personaggiAttaccantiTurno.contains(personaggioAttaccante))
 			throw new AttaccoException("QUESTO PERSONAGGIO HA già ATTACCATO");
+		
+		if("RendiInvulnerabile".equals(incantesimoService.checkPersonaggioTarget(personaggioDaAttaccare))) {
+			throw new AttaccoException("QUESTO PERSONAGGIO è invulnerabile");
+		}
 		
 		Attacco attacco = new Attacco();
 		attacco.setPersonaggioAttaccante(personaggioAttaccante);

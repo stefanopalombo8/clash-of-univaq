@@ -1,0 +1,70 @@
+package it.univaq.disim.oop.myclashofunivaq.business.impl;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import it.univaq.disim.oop.myclashofunivaq.business.IncantesimoService;
+import it.univaq.disim.oop.myclashofunivaq.domain.Incantesimo;
+import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
+import it.univaq.disim.oop.myclashofunivaq.domain.Turno;
+
+public class IncantesimoServiceImpl implements IncantesimoService {
+
+	private static Map<Incantesimo, Integer> incantesimiAttivi = new HashMap<>();
+	private static final int durataIncantesimo = 1;
+	
+	
+	@Override
+	public void aggiungiIncantesimoAttivo(Turno turno, Incantesimo incantesimo, Personaggio personaggioTarget) {
+		if(personaggioTarget != null && incantesimo != null) {
+			incantesimo.setPersonaggioTarget(personaggioTarget);
+			
+			incantesimiAttivi.put(incantesimo, 0);
+		}
+	}
+
+	@Override
+	public List<Incantesimo> getIncantesimiAttivi() {
+		List<Incantesimo> listToReturn = new ArrayList<>();
+		listToReturn.addAll(incantesimiAttivi.keySet());
+		
+		return listToReturn;
+	}
+
+	@Override
+	public void eseguiIncantesimo(Incantesimo incantesimo, Personaggio personaggioTarget) {
+		if(personaggioTarget != null && incantesimo != null) {
+			if(incantesimo.getPersonaggioTarget() == null)
+				incantesimo.setPersonaggioTarget(personaggioTarget);
+			
+			incantesimo.esegui();
+			
+		}
+	}
+	
+	@Override
+	public String checkPersonaggioTarget(Personaggio personaggioTarget) {
+		for(Incantesimo incantesimo : incantesimiAttivi.keySet()) {
+			if(incantesimo.getPersonaggioTarget().equals(personaggioTarget)) 
+				return incantesimo.getNome();
+		}
+		
+		return null;
+		
+	}
+
+	@Override
+	public void checkAnnullaEffettoIncantesimi() {
+		for(Incantesimo incantesimo : incantesimiAttivi.keySet()) {
+			Integer numero = incantesimiAttivi.get(incantesimo);
+			if(numero == durataIncantesimo) {
+				incantesimiAttivi.remove(incantesimo);
+			}
+			else
+				incantesimiAttivi.replace(incantesimo, numero += 1);
+		}
+	}
+
+}
