@@ -243,8 +243,10 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 				boolean presente = this.gridsList.stream().anyMatch(gridPane -> idParent.equals(gridPane.getId()));
 
-				if (!presente)
+				if (!presente) {
 					img.setOnMouseClicked(this::proprietaClickImageViewAvversario);
+					this.dragAndDropIncantesimo(img);
+				}
 				else
 					img.setOnMouseClicked(this::proprietaClickImageViewGiocatore);
 
@@ -371,7 +373,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 				if (db.hasImage()) {
 					newImageView = utility.creaImpostaImageView(db.getImage(), dim_img, dim_img);
 
-					imageViewProssimaCarta = utility.creaImpostaImageView(prossimaCarta.getImage(), 70, 70);
+					imageViewProssimaCarta = utility.creaImpostaImageView(prossimaCarta.getImage(), dim_img, dim_img);
 
 					posizioneDaRimpiazzare = utility.getPosizioneCartaSelezionata()[0];
 					

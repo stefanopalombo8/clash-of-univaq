@@ -122,10 +122,11 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 	}
 
 	public void impostaTooltip(ImageView img, Carta carta) {
-		Tooltip tooltip = new Tooltip(carta.getNome() + "\n" + carta.getCostoSchieramento() + "\n");
+		Tooltip tooltip = new Tooltip("NOME: " + carta.getNome() + "\n" + "COSTO: " + carta.getCostoSchieramento() + "\n");
 		if (carta instanceof Personaggio) {
 			Personaggio p = (Personaggio) carta;
-			tooltip.setText(tooltip.getText() + p.getVita() + "\n" + p.getMana());
+			tooltip.setText(tooltip.getText() + "VITA " + p.getVita() + "\n" + "MANA: " + p.getMana()
+					+ "\n" + "ARMOR: " + p.getArmatura());
 		}
 
 		Tooltip.install(img, tooltip);
