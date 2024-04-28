@@ -15,7 +15,7 @@ public interface GiocatoreService {
 	MossaGiocatore cambiaPosizionePersonaggio(Turno turno, Personaggio personaggio, PosizionamentoPersonaggio posizionamento)
 			throws PosizionamentoException;
 	void preparaAttacco(Personaggio personaggioAttaccante, GridPaneGioco strada) throws AttaccoException;
-	MossaGiocatore effettuaAttacco(Turno turno, Personaggio personaggioDaAttaccare, GridPaneGioco strada) throws AttaccoException;
+	MossaGiocatore effettuaAttacco(Turno turno, Personaggio personaggioDaAttaccare, GridPaneGioco strada, Torre torre) throws AttaccoException;
 	MossaGiocatore attaccaTorre(Turno turno, Personaggio personaggioAttaccante,GridPaneGioco strada, Torre torreAvversaria)
 			throws AttaccoException;
 

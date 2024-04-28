@@ -639,7 +639,26 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 		return true;
 	}
 	
-	public void eliminaImmagineCarta(GridPane grid, Posizione posizione) {
+	public void eliminaImmagineCarta(GridPane grid, Posizione posizione, ImageView imageViewDaElimanare) {
+		if(grid.getChildren().contains(imageViewDaElimanare))
+			grid.getChildren().remove(imageViewDaElimanare);
+		
+		for (Map.Entry<String, LinkedHashMap<Posizione, ImageView>> entry : this.mappaGridpaneImmagini.entrySet()) {
+			String gridPaneKey = entry.getKey();
+			LinkedHashMap<Posizione, ImageView> innerMap = entry.getValue();
+			
+			if(gridPaneKey.equals(grid.getId()))
+				innerMap.replace(this.ricercaNewPosizione(posizione, innerMap), null);
+		}
+		
+		for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : this.mappaGridpaneCarte.entrySet()) {
+			String gridPaneKey = entry.getKey();
+			LinkedHashMap<Posizione, Carta> innerMap = entry.getValue();
+			
+			if(gridPaneKey.equals(grid.getId()))
+				innerMap.replace(this.ricercaNewPosizione(posizione, innerMap), null);
+
+		}
 		
 	}
 

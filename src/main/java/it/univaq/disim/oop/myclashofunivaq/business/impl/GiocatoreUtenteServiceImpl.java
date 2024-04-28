@@ -87,7 +87,7 @@ public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
 	}
 
 	@Override
-	public MossaGiocatore effettuaAttacco(Turno turno, Personaggio personaggioDaAttaccare, GridPaneGioco stradaAttaccato) throws AttaccoException {
+	public MossaGiocatore effettuaAttacco(Turno turno, Personaggio personaggioDaAttaccare, GridPaneGioco stradaAttaccato, Torre torreAvversaria) throws AttaccoException {
 		if(personaggioAttaccante == null)
 			throw new AttaccoException("MANCA IL PERSONAGGIO ATTACCANTE");
 		if(personaggioDaAttaccare == null)
@@ -107,6 +107,7 @@ public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
 		Attacco attacco = new Attacco();
 		attacco.setPersonaggioAttaccante(personaggioAttaccante);
 		attacco.setPersonaggioDaAttaccare(personaggioDaAttaccare);
+		attacco.setTorreAttaccata(torreAvversaria);
 		
 		personaggioService.attacca(attacco);
 		

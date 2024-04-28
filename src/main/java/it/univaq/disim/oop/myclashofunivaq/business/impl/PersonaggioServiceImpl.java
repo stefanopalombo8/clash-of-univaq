@@ -5,6 +5,7 @@ import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.GridPaneGioco;
 import it.univaq.disim.oop.myclashofunivaq.domain.Attacco;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.PosizionamentoPersonaggio;
+import it.univaq.disim.oop.myclashofunivaq.domain.Torre;
 
 public class PersonaggioServiceImpl implements PersonaggioService{
 
@@ -28,18 +29,11 @@ public class PersonaggioServiceImpl implements PersonaggioService{
 
 	@Override
 	public void attacca(Attacco attacco) {
-		if(attacco.getTorreAttaccata() == null) {
-			System.out.println("VITA ATTACCANTE " + attacco.getPersonaggioAttaccante().getVita() + 
-					" VITA ATTACCATO " + attacco.getPersonaggioDaAttaccare().getVita());
-			
-			attacco.getPersonaggioDaAttaccare().setVita(attacco.getPersonaggioDaAttaccare().getVita() -  
-					attacco.getPersonaggioAttaccante().getDanno());
-			
-			
-			System.out.println("VITA ATTACCATO " + attacco.getPersonaggioDaAttaccare().getVita());
-		}
-		else { //attacca direttamente la torre
-			double danno = (double) attacco.getPersonaggioAttaccante().getDanno() / 100;
+		Personaggio attaccante = attacco.getPersonaggioAttaccante();
+		Personaggio attaccato = attacco.getPersonaggioDaAttaccare();
+		
+		if(attacco.getPersonaggioDaAttaccare() == null) {
+			double danno = (double) attaccante.getDanno() / 100;
 			System.out.println("danno " + danno);
 			
 			System.out.println("vita torre " + attacco.getTorreAttaccata().getVita());
@@ -47,6 +41,29 @@ public class PersonaggioServiceImpl implements PersonaggioService{
 					danno);
 			
 			System.out.println("VITA TORRE " + attacco.getTorreAttaccata().getVita());
+		}
+		else {
+			System.out.println("VITA ATTACCANTE " + attaccante.getVita() + 
+					" VITA ATTACCATO " + attaccato.getVita());
+			
+			if(attaccato.getArmatura() <= 0) {
+				attaccato.setVita(attaccato.getVita() -  attaccante.getDanno());
+				if(attaccato.getVita() <= 0) {
+					double danno = (double) attaccato.getVita() / 100;
+					Torre torreAttaccata = attacco.getTorreAttaccata();
+					
+					torreAttaccata.setVita(torreAttaccata.getVita() 
+							+ danno);
+					
+					if(torreAttaccata.getVita() < 0)
+						torreAttaccata.setVita(0);
+						
+				}
+			}
+			else
+				attaccato.setArmatura(attaccato.getArmatura() - attaccante.getDanno());
+			
+			System.out.println("VITA ATTACCATO " + attacco.getPersonaggioDaAttaccare().getVita());
 		}
 			
 	}

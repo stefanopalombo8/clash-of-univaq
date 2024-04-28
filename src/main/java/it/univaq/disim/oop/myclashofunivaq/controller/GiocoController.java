@@ -65,6 +65,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
 public class GiocoController implements Initializable, InizializzaDati<Partita> {
@@ -548,6 +549,28 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		double vita = turnoService.trovaTorreGiocatore(giocatore).getVita();
 		torre.setProgress(vita);
 		indicator.setText(this.formatVitaTorre(vita));
+		
+		if(vita == 0) {
+			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+			alert.setTitle("VITTORIA!!!");
+			alert.setHeaderText("HA VINTO IL GIOCATORE " + giocatoreCorrente.getNickname());
+			alert.setContentText("PREMI ESCI per tornare alla HOMEPAGE");
+				
+			ButtonType esci = new ButtonType("ESCI");
+			
+			alert.getButtonTypes().setAll(esci);
+			
+			alert.showAndWait().ifPresent(response -> {
+				if (response == esci) {
+					try {
+						dispatcher.caricaVista("applicationLayout");
+						dispatcher.caricaVista("homepage");
+					} catch (ViewException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		}
 	}
 
 	private String formatVitaTorre(double value) {
@@ -631,11 +654,19 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 				utility.impostaTooltip(imageViewCorrente, cartaCliccata);
 
+				Giocatore avversario = turnoService.trovaAltroGiocatore(partita);
+				
 				giocatoreService.effettuaAttacco(turnoCorrente, personaggioAttaccato,
-						utility.ricercaStradaSchieramento(gridPaneParent));
+						utility.ricercaStradaSchieramento(gridPaneParent), turnoService.trovaTorreGiocatore(avversario));
 
 				if (personaggioAttaccato.getVita() <= 0) {
-//					utility.eliminaImmagineCarta(gridPaneParent, posizioneToSearch, imageViewCorrente);
+					utility.eliminaImmagineCarta(gridPaneParent, posizioneToSearch, imageViewCorrente);
+					
+					if (vitaTorreAvversaria.getId().equals("vitaTorre1"))
+						this.mostraVitaTorre(avversario, vitaTorreAvversaria, vitaTorre1Indicator);
+					else
+						this.mostraVitaTorre(avversario, vitaTorreAvversaria, vitaTorre2Indicator);
+					
 				} else
 					utility.impostaTooltip(imageViewCorrente, cartaCliccata);
 
