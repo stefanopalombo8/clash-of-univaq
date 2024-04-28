@@ -16,5 +16,6 @@ public abstract class Incantesimo extends Carta{
 		this.personaggioTarget = personaggioTarget;
 	}
 	
+	public abstract void esegui();
 	
 }

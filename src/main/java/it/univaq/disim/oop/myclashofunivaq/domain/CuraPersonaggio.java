@@ -16,4 +16,10 @@ public class CuraPersonaggio extends Incantesimo{
 		this.cura = cura;
 	}
 
+	@Override
+	public void esegui() {
+		System.out.println("sono qui, cura " + cura);
+		this.getPersonaggioTarget().setVita(this.getPersonaggioTarget().getVita() + cura);
+	}
+
 }

@@ -7,4 +7,10 @@ public class RendiInvulnerabile extends Incantesimo {
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	public void esegui() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
