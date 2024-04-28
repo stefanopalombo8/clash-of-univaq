@@ -107,7 +107,7 @@ public class Factory implements CartaFactory {
 			}
 		} else {
 			String path = costruisciPath("incantesimi.properties");
-			
+
 			System.out.println("key " + keyDaCercare);
 			try (FileInputStream fis = new FileInputStream(path)) {
 				final Properties props = new Properties();
@@ -143,7 +143,7 @@ public class Factory implements CartaFactory {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
 
 	}
@@ -165,9 +165,8 @@ public class Factory implements CartaFactory {
 			categoriaCarta = CuraPersonaggio.class.getSimpleName();
 		} else if (carta instanceof RendiInvulnerabile) {
 			nomi = IncantesimiNomi.values();
-			categoriaCarta = RendiInvulnerabile.class.getSimpleName(); 
-		}
-		else
+			categoriaCarta = RendiInvulnerabile.class.getSimpleName();
+		} else
 			throw new CategoriaNonTrovataException("Categoria non ancora implementata");
 
 		Optional<Enum<?>> optionalName = Arrays.stream(nomi).filter(n -> n.toString().equals(carta.getNome()))
@@ -190,37 +189,69 @@ public class Factory implements CartaFactory {
 			String keyDaCercare = costruisciChiave(carta);
 
 			String path = costruisciPath("personaggi.properties");
+			
+			if(carta instanceof Personaggio) {
+				try (FileInputStream fis = new FileInputStream(path)) {
+					final Properties props = new Properties();
+					props.load(fis);
 
-			try (FileInputStream fis = new FileInputStream(path)) {
-				final Properties props = new Properties();
-				props.load(fis);
-
-				props.stringPropertyNames().stream().forEach(riga -> {
-					if (riga.startsWith(keyDaCercare)) {
-						String attributo = riga.substring(keyDaCercare.length());
-
-						if (carta instanceof Personaggio) {
-
-							Personaggio personaggio = (Personaggio) carta;
+					props.stringPropertyNames().stream().forEach(riga -> {
+						if (riga.startsWith(keyDaCercare)) {
+							String attributo = riga.substring(keyDaCercare.length());
 
 							switch (attributo) {
 							case "immagine":
 								Image immagine = new Image(costruisciPath(props.getProperty(riga)));
 
-								personaggio.setImmagineCarta(immagine);
+								carta.setImmagineCarta(immagine);
 							}
+
 						}
+					});
 
-					}
-				});
-
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+			else {
+				String path2 = costruisciPath("incantesimi.properties");
+				
+				try (FileInputStream fis = new FileInputStream(path2)) {
+					final Properties props = new Properties();
+					props.load(fis);
+
+					props.stringPropertyNames().stream().forEach(riga -> {
+						if (riga.startsWith(keyDaCercare)) {
+							String attributo = riga.substring(keyDaCercare.length());
+
+							switch (attributo) {
+							case "immagine":
+								Image immagine = new Image(costruisciPath(props.getProperty(riga)));
+
+								carta.setImmagineCarta(immagine);
+							}
+
+						}
+					});
+
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+
+			
+			
+			
+			
 
 		}
 

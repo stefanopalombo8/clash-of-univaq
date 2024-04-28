@@ -145,7 +145,7 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 				posizione = new Posizione(GridPane.getColumnIndex(imageView), GridPane.getRowIndex(imageView));
 
 			posizioneCartaSelezionata[0] = posizione;
-
+			
 		});
 	}
 
@@ -253,6 +253,31 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 		}
 
 		return carta;
+	}
+	
+	public ImageView ricercaImmagineStrada(String gridPaneSource, Posizione posizione) {
+		ImageView imageView = null;
+		
+		for (Map.Entry<String, LinkedHashMap<Posizione, ImageView>> entry : mappaGridpaneImmagini.entrySet()) {
+			String gridPaneKey = entry.getKey();
+
+			if (gridPaneKey.equals(gridPaneSource)) {
+
+				LinkedHashMap<Posizione, ImageView> innerMap = entry.getValue();
+
+				for (Posizione p : innerMap.keySet()) {
+					if (p.getRiga() == posizione.getRiga() && p.getColonna() == posizione.getColonna()) {
+						imageView = innerMap.get(p);
+						break;
+					}
+				}
+
+				break;
+			}
+
+		}
+
+		return imageView;
 	}
 
 	/*
@@ -614,11 +639,8 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 		return true;
 	}
 	
-	public void eliminaImmagineCarta(Posizione posizione) {
-		// elimino l'immagine
+	public void eliminaImmagineCarta(GridPane grid, Posizione posizione) {
 		
-		
-		// elimino  la carta
 	}
 
 }

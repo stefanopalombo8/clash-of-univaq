@@ -8,6 +8,7 @@ import it.univaq.disim.oop.myclashofunivaq.business.MazzoService;
 import it.univaq.disim.oop.myclashofunivaq.business.PartitaService;
 import it.univaq.disim.oop.myclashofunivaq.business.ResetStaticVariables;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.GiocatoreUtenteServiceImpl;
+import it.univaq.disim.oop.myclashofunivaq.business.impl.IncantesimoServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.MazzoServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.NicknameNonValido;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.PartitaServiceImpl;
@@ -46,7 +47,7 @@ public class HomepageController implements Initializable {
 	private final ResetStaticVariables mazzoReset;
 	private final ResetStaticVariables turniReset;
 	private final ResetStaticVariables utilityReset;
-	
+	private final ResetStaticVariables incantesimiReset;
 	
 
 	private final GiocatoreUtenteService giocatoreUtenteService;
@@ -60,6 +61,7 @@ public class HomepageController implements Initializable {
 		mazzoReset = new MazzoServiceImpl();
 		turniReset = new TurnoServiceImpl();
 		utilityReset = new GraphicUtility();
+		incantesimiReset = new IncantesimoServiceImpl();
 	}
 
 	@Override
@@ -70,6 +72,7 @@ public class HomepageController implements Initializable {
 		this.mazzoReset.reset();
 		this.turniReset.reset();
 		this.utilityReset.reset();
+		this.incantesimiReset.reset();
 	}
 
 	private void disabilitaGamemod(Button bottone) {

@@ -1,6 +1,8 @@
 package it.univaq.disim.oop.myclashofunivaq.domain;
 
-public abstract class Incantesimo extends Carta{
+import java.io.Serializable;
+
+public abstract class Incantesimo extends Carta implements Serializable{
 	private Personaggio personaggioTarget;
 	
 	public Incantesimo(String nome) {

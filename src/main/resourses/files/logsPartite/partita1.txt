@@ -1,0 +1,1 @@
+GIOCATORE: g1 Schieramento [cartaSchierata=Carta [nome=GOLEM], strada=stradaC]

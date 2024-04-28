@@ -496,7 +496,6 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 	@FXML
 	public void passaTurnoAction(ActionEvent event) {
 		try {
-			this.incantesimoService.checkAnnullaEffettoIncantesimi();
 			
 			partitaService.salvaTurnoPartita(turnoCorrente, partita);
 
@@ -507,6 +506,9 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 			}
 
 			partita.setRecuperata(false);
+			
+			this.incantesimoService.checkAnnullaEffettoIncantesimi();
+			
 			dispatcher.caricaVista("gioco", partita);
 		} catch (ViewException e) {
 			e.printStackTrace();

@@ -6,11 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import it.univaq.disim.oop.myclashofunivaq.business.IncantesimoService;
+import it.univaq.disim.oop.myclashofunivaq.business.ResetStaticVariables;
 import it.univaq.disim.oop.myclashofunivaq.domain.Incantesimo;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.Turno;
 
-public class IncantesimoServiceImpl implements IncantesimoService {
+public class IncantesimoServiceImpl implements IncantesimoService, ResetStaticVariables {
 
 	private static Map<Incantesimo, Integer> incantesimiAttivi = new HashMap<>();
 	private static final int durataIncantesimo = 1;
@@ -65,6 +66,11 @@ public class IncantesimoServiceImpl implements IncantesimoService {
 			else
 				incantesimiAttivi.replace(incantesimo, numero += 1);
 		}
+	}
+
+	@Override
+	public void reset() {
+		incantesimiAttivi.clear();
 	}
 
 }

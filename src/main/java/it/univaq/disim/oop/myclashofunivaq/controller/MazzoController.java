@@ -96,10 +96,11 @@ public class MazzoController implements Initializable, InizializzaDati<Partita> 
 			
 			if(carta instanceof Personaggio)
 				personaggio = (Personaggio) carta;
-			else if(carta instanceof Incantesimo) 
-				incantesimo = (Incantesimo) carta;
+			else if(carta instanceof Incantesimo)  {
+				if(carta.getNome().equals("RendiInvulnerabile"))
+					incantesimo = (Incantesimo) carta;
+			}
 				
-			
 			imageView.setOnDragDetected(event -> {
 				Dragboard db = imageView.startDragAndDrop(TransferMode.ANY);
 				ClipboardContent content = new ClipboardContent();
