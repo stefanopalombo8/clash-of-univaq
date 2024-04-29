@@ -21,6 +21,8 @@ import it.univaq.disim.oop.myclashofunivaq.business.impl.TurnoServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.GraphicUtility;
 import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
 import it.univaq.disim.oop.myclashofunivaq.domain.Giocatore;
+import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreComputer;
+import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreUtente;
 import it.univaq.disim.oop.myclashofunivaq.domain.Incantesimo;
 import it.univaq.disim.oop.myclashofunivaq.domain.Mazzo;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
@@ -34,6 +36,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -55,6 +58,9 @@ public class MazzoController implements Initializable, InizializzaDati<Partita> 
 
 	@FXML
 	private Button confermaMazzo;
+	
+	@FXML
+	private Label nomeGiocatoreCorrente;
 
 	private ViewDispatcher dispatcher;
 	private Partita partita;
@@ -65,6 +71,7 @@ public class MazzoController implements Initializable, InizializzaDati<Partita> 
 	private final MazzoService mazzoService;
 	private GraphicUtility utility;
 
+	private Giocatore giocatoreCorrente;
 	private List<Carta> carteScelte;
 	private List<GridPane> grids;
 	private static int i = 0;
@@ -82,11 +89,18 @@ public class MazzoController implements Initializable, InizializzaDati<Partita> 
 	}
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {
+	public void initialize(URL location, ResourceBundle resources) {	}
+
+	@Override
+	public void inizializza(Partita partita) {
+		this.partita = partita;
+		giocatoreCorrente = turnoService.alternaGiocatore(partita);
+		this.nomeGiocatoreCorrente.setText(giocatoreCorrente.getNickname());
+		
 		Personaggio personaggio = null;
 		Incantesimo incantesimo = null;
+
 		grids.add(mazzo);
-		
 		utility.mappingGriglie(grids);
 		
 		for (Carta carta : cartaService.trovaTutteCarte()) {
@@ -143,20 +157,19 @@ public class MazzoController implements Initializable, InizializzaDati<Partita> 
 			carteScelte.add(incantesimo);
 		}
 		
-	}
-
-	@Override
-	public void inizializza(Partita partita) {
-		this.partita = partita;
+		if(giocatoreCorrente instanceof GiocatoreComputer) {
+			this.action();
+		}
+		
 	}
 
 	@FXML
-	private void confermaMazzoAction(ActionEvent event) throws InterruptedException {
-		Giocatore giocatoreCorrente;
-
+	private void confermaMazzoAction(ActionEvent event)  {
+		this.action();
+	}
+	
+	private void action() {
 		try {
-			
-			giocatoreCorrente = turnoService.alternaGiocatore(partita);
 			i++;
 			Mazzo mazzo = mazzoService.creaMazzo(carteScelte);
 			
@@ -174,7 +187,6 @@ public class MazzoController implements Initializable, InizializzaDati<Partita> 
 		} catch (ViewException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 }

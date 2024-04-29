@@ -7,7 +7,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univaq.disim.oop.myclashofunivaq.controller.HomepageController">
    <children>
-      <Button fx:id="giocaControCPU" layoutX="222.0" layoutY="241.0" mnemonicParsing="false" text="GIOCA contro COMPUTER" />
+      <Button fx:id="giocaControCPU" layoutX="222.0" layoutY="241.0" mnemonicParsing="false" onAction="#giocaControCPUAction" text="GIOCA contro COMPUTER" />
       <Button fx:id="giocaControGiocatore" layoutX="221.0" layoutY="283.0" mnemonicParsing="false" onAction="#giocaControGiocatoreAction" text="GIOCA contro GIOCATORE" />
       <Button fx:id="recuperaPartiteSalvate" layoutX="221.0" layoutY="318.0" mnemonicParsing="false" onAction="#recuperaPartiteSalvateAction" prefHeight="25.0" prefWidth="157.0" text="PARTITE SALVATE" />
       <TextField fx:id="nickname" layoutX="225.0" layoutY="161.0" promptText="nickname nel gioco" />

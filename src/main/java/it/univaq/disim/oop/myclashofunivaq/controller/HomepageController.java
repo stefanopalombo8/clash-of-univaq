@@ -14,6 +14,7 @@ import it.univaq.disim.oop.myclashofunivaq.business.impl.NicknameNonValido;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.PartitaServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.TurnoServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.GraphicUtility;
+import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreComputer;
 import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreUtente;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
 import it.univaq.disim.oop.myclashofunivaq.view.ViewDispatcher;
@@ -103,6 +104,20 @@ public class HomepageController implements Initializable {
 		if (this.accettaNickname(partita))
 			try {
 				dispatcher.caricaVista("NicknameGiocatore2", partita);
+			} catch (ViewException e) {
+				e.printStackTrace();
+			}
+	}
+	
+	@FXML
+	public void giocaControCPUAction(ActionEvent event) {
+		Partita partita = partitaService.creaPartita();
+		GiocatoreComputer giocatoreComputer = new GiocatoreComputer("CPU");;
+		
+		if (this.accettaNickname(partita))
+			try {
+				partitaService.aggiungiGiocatore(giocatoreComputer, partita);
+				dispatcher.caricaVista("sceltaMazzo", partita);
 			} catch (ViewException e) {
 				e.printStackTrace();
 			}

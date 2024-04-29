@@ -21,6 +21,7 @@ import it.univaq.disim.oop.myclashofunivaq.business.PersonaggioService;
 import it.univaq.disim.oop.myclashofunivaq.business.TurnoService;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.AttaccoException;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.ElisirException;
+import it.univaq.disim.oop.myclashofunivaq.business.impl.GiocatoreServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.GiocatoreUtenteServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.IncantesimoServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.ManaException;
@@ -183,7 +184,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		this.gridsListGiocatore = new ArrayList<>();
 		this.gridsListAvversario = new ArrayList<>();
 		this.gridsList = new ArrayList<>();
-		this.giocatoreService = new GiocatoreUtenteServiceImpl();
+		this.giocatoreService = new GiocatoreServiceImpl();
 		this.cartaFactory = Factory.getInstance();
 		this.incantesimoService = new IncantesimoServiceImpl();
 		this.personaggioService = new PersonaggioServiceImpl();
