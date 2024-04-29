@@ -14,6 +14,7 @@ import it.univaq.disim.oop.myclashofunivaq.domain.CambioPosizionamentoPersonaggi
 import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
 import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreUtente;
 import it.univaq.disim.oop.myclashofunivaq.domain.MossaGiocatore;
+import it.univaq.disim.oop.myclashofunivaq.domain.MossaSpeciale;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.PosizionamentoPersonaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.Schieramento;
@@ -30,7 +31,7 @@ public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
 	private List<Personaggio> personaggiAttaccantiTurno;
 	private Personaggio personaggioAttaccante;
 	private GridPaneGioco stradaAttaccante;
-
+	
 	public GiocatoreUtenteServiceImpl() {
 		partitaService = new PartitaServiceImpl();
 		personaggioService = new PersonaggioServiceImpl();
@@ -111,8 +112,19 @@ public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
 		
 		personaggioService.attacca(attacco);
 		
-		this.personaggiAttaccantiTurno.add(personaggioAttaccante);
 		
+		if(personaggioService.getPersonaggiConMosseAttive().contains(personaggioAttaccante)) {
+			MossaSpeciale mossaSpecialeAttaccante = personaggioAttaccante.getMossaSpeciale();
+			if(mossaSpecialeAttaccante.getNome().equals("attaccaDueVolte")) {
+				this.personaggioService.rimuoviPersonaggioConMossaAttivo(personaggioAttaccante);
+			}
+			
+		}
+		else 
+			this.personaggiAttaccantiTurno.add(personaggioAttaccante);
+		
+		
+			
 		return attacco;
 	}
 

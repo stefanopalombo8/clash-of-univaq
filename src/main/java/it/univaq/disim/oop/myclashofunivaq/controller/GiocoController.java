@@ -11,18 +11,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import it.univaq.disim.oop.myclashofunivaq.business.GiocatoreService;
 import it.univaq.disim.oop.myclashofunivaq.business.IncantesimoService;
 import it.univaq.disim.oop.myclashofunivaq.business.MazzoService;
 import it.univaq.disim.oop.myclashofunivaq.business.PartitaService;
+import it.univaq.disim.oop.myclashofunivaq.business.PersonaggioService;
 import it.univaq.disim.oop.myclashofunivaq.business.TurnoService;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.AttaccoException;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.ElisirException;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.GiocatoreUtenteServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.IncantesimoServiceImpl;
+import it.univaq.disim.oop.myclashofunivaq.business.impl.ManaException;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.MazzoServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.PartitaServiceImpl;
+import it.univaq.disim.oop.myclashofunivaq.business.impl.PersonaggioServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.PosizionamentoException;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.TurnoServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.configuration.CartaFactory;
@@ -162,6 +166,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 	private final GiocatoreService giocatoreService;
 	private final CartaFactory cartaFactory;
 	private final IncantesimoService incantesimoService;
+	private final PersonaggioService personaggioService;
 
 	private GraphicUtility utility;
 	private static final int dim_img = 60;
@@ -181,6 +186,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		this.giocatoreService = new GiocatoreUtenteServiceImpl();
 		this.cartaFactory = Factory.getInstance();
 		this.incantesimoService = new IncantesimoServiceImpl();
+		this.personaggioService = new PersonaggioServiceImpl();
 	}
 
 	@Override
@@ -246,8 +252,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 				if (!presente) {
 					img.setOnMouseClicked(this::proprietaClickImageViewAvversario);
 					this.dragAndDropIncantesimo(img);
-				}
-				else
+				} else
 					img.setOnMouseClicked(this::proprietaClickImageViewGiocatore);
 
 			}
@@ -306,18 +311,28 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 					if (!presente) {
 						img.setOnMouseClicked(this::proprietaClickImageViewAvversario);
 						this.dragAndDropIncantesimo(img);
-					}
-					else
+					} else
 						img.setOnMouseClicked(this::proprietaClickImageViewGiocatore);
-
+					
+					Posizione posizioneToSearch = new Posizione(GridPane.getColumnIndex(img),
+							GridPane.getRowIndex(img));
+					
+					Personaggio personaggio = (Personaggio) utility.ricercaCartaStrada(idParent, posizioneToSearch);
+					utility.impostaTooltip(img, personaggio);
+					try {
+						this.personaggioService.eseguiMossaSpeciale(personaggio);
+					} catch (ManaException e) {
+						System.err.println(e.getMessage());
+					}
+					
 				}
 			}
 
 			if (turnoService.isFirstTurno(turnoCorrente) || GraphicUtility.getStati().size() <= 1) {
-				
-				if(Arrays.stream(mazzo.getCarte()).anyMatch(carta -> carta == null))
+
+				if (Arrays.stream(mazzo.getCarte()).anyMatch(carta -> carta == null))
 					this.cartaFactory.reimpostaImmagine(Arrays.asList(mazzo.getCarte()));
-				
+
 				for (Carta carta : mazzoService.mostraCarteMano(mazzo)) {
 					ImageView imageView = utility.creaImpostaImageView(carta.getImmagineCarta(), dim_img, dim_img);
 					utility.impostaTooltip(imageView, carta);
@@ -376,8 +391,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 					imageViewProssimaCarta = utility.creaImpostaImageView(prossimaCarta.getImage(), dim_img, dim_img);
 
 					posizioneDaRimpiazzare = utility.getPosizioneCartaSelezionata()[0];
-					
-					
+
 					try {
 						// Mapping carta schierata
 						Carta cartaDaSchierare = utility.ricercaCartaStrada(this.carteMano.getId(),
@@ -385,12 +399,12 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 						turnoService.controllaSchieramento(turnoCorrente, cartaDaSchierare);
 						cartaSchierata[0] = (Carta) cartaDaSchierare.clone();
 						utility.impostaTooltip(newImageView, cartaSchierata[0]);
-						
-						if(cartaSchierata[0] instanceof Incantesimo) {
+
+						if (cartaSchierata[0] instanceof Incantesimo) {
 							System.err.println("stai schierando un incatesimo in strada");
 							throw new RuntimeException();
 						}
-						
+
 						utility.aggiungiCartaImmagineGriglia(grid, cartaSchierata[0], null); // aggiunta nella
 																								// strada
 
@@ -400,11 +414,11 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 					} catch (CloneNotSupportedException e) {
 						e.printStackTrace();
 					}
-					
+
 					utility.aggiungiCartaImmagineGriglia(grid, null, newImageView);
 
 					newImageView.setOnMouseClicked(this::proprietaClickImageViewGiocatore);
-					
+
 					this.dragAndDropIncantesimo(newImageView);
 
 					carteMano.getChildren()
@@ -499,7 +513,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 	@FXML
 	public void passaTurnoAction(ActionEvent event) {
 		try {
-			
+
 			partitaService.salvaTurnoPartita(turnoCorrente, partita);
 
 			if (partita.isRecuperata() && !GraphicUtility.getStati().isEmpty()) {
@@ -509,9 +523,10 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 			}
 
 			partita.setRecuperata(false);
-			
+
 			this.incantesimoService.checkAnnullaEffettoIncantesimi();
-			
+			this.personaggioService.resetMosseSpecialiAttive();
+
 			dispatcher.caricaVista("gioco", partita);
 		} catch (ViewException e) {
 			e.printStackTrace();
@@ -551,17 +566,17 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		double vita = turnoService.trovaTorreGiocatore(giocatore).getVita();
 		torre.setProgress(vita);
 		indicator.setText(this.formatVitaTorre(vita));
-		
-		if(vita == 0) {
+
+		if (vita == 0) {
 			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 			alert.setTitle("VITTORIA!!!");
 			alert.setHeaderText("HA VINTO IL GIOCATORE " + giocatoreCorrente.getNickname());
 			alert.setContentText("PREMI ESCI per tornare alla HOMEPAGE");
-				
+
 			ButtonType esci = new ButtonType("ESCI");
-			
+
 			alert.getButtonTypes().setAll(esci);
-			
+
 			alert.showAndWait().ifPresent(response -> {
 				if (response == esci) {
 					try {
@@ -657,18 +672,19 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 				utility.impostaTooltip(imageViewCorrente, cartaCliccata);
 
 				Giocatore avversario = turnoService.trovaAltroGiocatore(partita);
-				
+
 				giocatoreService.effettuaAttacco(turnoCorrente, personaggioAttaccato,
-						utility.ricercaStradaSchieramento(gridPaneParent), turnoService.trovaTorreGiocatore(avversario));
+						utility.ricercaStradaSchieramento(gridPaneParent),
+						turnoService.trovaTorreGiocatore(avversario));
 
 				if (personaggioAttaccato.getVita() <= 0) {
 					utility.eliminaImmagineCarta(gridPaneParent, posizioneToSearch, imageViewCorrente);
-					
+
 					if (vitaTorreAvversaria.getId().equals("vitaTorre1"))
 						this.mostraVitaTorre(avversario, vitaTorreAvversaria, vitaTorre1Indicator);
 					else
 						this.mostraVitaTorre(avversario, vitaTorreAvversaria, vitaTorre2Indicator);
-					
+
 				} else
 					utility.impostaTooltip(imageViewCorrente, cartaCliccata);
 
@@ -680,34 +696,36 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		}
 
 	}
-	
+
 	private void dragAndDropIncantesimo(ImageView imageViewTarget) {
 		final ImageView imageViewCorrente = imageViewTarget;
 		final GridPane gridPaneParent = (GridPane) imageViewCorrente.getParent();
-		
+
 		imageViewCorrente.setOnDragOver(event2 -> {
-		    if (event2.getDragboard().hasImage()) {
-		        event2.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-		    }
-		    event2.consume();
+			if (event2.getDragboard().hasImage()) {
+				event2.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+			}
+			event2.consume();
 		});
 
 		imageViewCorrente.setOnDragDropped(event2 -> {
-		    Dragboard db2 = event2.getDragboard();
-		    boolean success2 = false;
-		    
-		    if (db2.hasImage()) {
-		        
-		    	Posizione posizioneCartaMano = utility.getPosizioneCartaSelezionata()[0];
-		    	Incantesimo incantesimoDaSchierare = (Incantesimo) utility.ricercaCartaStrada(this.carteMano.getId(),
-		    			posizioneCartaMano);				
-		    	
-		        System.out.println("INCANTESIMO " + incantesimoDaSchierare);
-		        
-		        Posizione posizionePersonaggioTarget = new Posizione(GridPane.getColumnIndex(imageViewCorrente), GridPane.getRowIndex(imageViewCorrente));
-		        
-				Personaggio personaggioCliccato = (Personaggio) utility.ricercaCartaStrada(gridPaneParent.getId(), posizionePersonaggioTarget);
-				
+			Dragboard db2 = event2.getDragboard();
+			boolean success2 = false;
+
+			if (db2.hasImage()) {
+
+				Posizione posizioneCartaMano = utility.getPosizioneCartaSelezionata()[0];
+				Incantesimo incantesimoDaSchierare = (Incantesimo) utility.ricercaCartaStrada(this.carteMano.getId(),
+						posizioneCartaMano);
+
+				System.out.println("INCANTESIMO " + incantesimoDaSchierare);
+
+				Posizione posizionePersonaggioTarget = new Posizione(GridPane.getColumnIndex(imageViewCorrente),
+						GridPane.getRowIndex(imageViewCorrente));
+
+				Personaggio personaggioCliccato = (Personaggio) utility.ricercaCartaStrada(gridPaneParent.getId(),
+						posizionePersonaggioTarget);
+
 				Incantesimo incancantesimoDaSchierareClone = null;
 				try {
 					incancantesimoDaSchierareClone = (Incantesimo) incantesimoDaSchierare.clone();
@@ -715,19 +733,20 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-		
-				if(incantesimoDaSchierare.getNome().equals("RendiInvulnerabile"))
-					this.incantesimoService.aggiungiIncantesimoAttivo(turnoCorrente, incancantesimoDaSchierareClone, personaggioCliccato);
+
+				if (incantesimoDaSchierare.getNome().equals("RendiInvulnerabile"))
+					this.incantesimoService.aggiungiIncantesimoAttivo(turnoCorrente, incancantesimoDaSchierareClone,
+							personaggioCliccato);
 				else {
 					this.incantesimoService.eseguiIncantesimo(incantesimoDaSchierare, personaggioCliccato);
 					utility.impostaTooltip(imageViewCorrente, personaggioCliccato);
 				}
-				
-		        success2 = true;
-		    }
 
-		    event2.setDropCompleted(success2);
-		    event2.consume();
+				success2 = true;
+			}
+
+			event2.setDropCompleted(success2);
+			event2.consume();
 		});
 
 	}
@@ -825,5 +844,5 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 		utility.ripristinaStato(tutte, mappa);
 	}
-
+	
 }

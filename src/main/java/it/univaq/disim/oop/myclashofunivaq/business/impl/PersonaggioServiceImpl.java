@@ -1,14 +1,21 @@
 package it.univaq.disim.oop.myclashofunivaq.business.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import it.univaq.disim.oop.myclashofunivaq.business.PersonaggioService;
+import it.univaq.disim.oop.myclashofunivaq.business.ResetStaticVariables;
 import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.GridPaneGioco;
 import it.univaq.disim.oop.myclashofunivaq.domain.Attacco;
+import it.univaq.disim.oop.myclashofunivaq.domain.MossaSpeciale;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.PosizionamentoPersonaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.Torre;
 
-public class PersonaggioServiceImpl implements PersonaggioService{
-
+public class PersonaggioServiceImpl implements PersonaggioService, ResetStaticVariables{
+	
+	private static List<Personaggio> personaggioConMosseAttive = new ArrayList<>();
+	
 	@Override
 	public void sceltaPosizionamento(Personaggio personaggio, PosizionamentoPersonaggio posizionamento) 
 			throws PosizionamentoException{
@@ -66,6 +73,43 @@ public class PersonaggioServiceImpl implements PersonaggioService{
 			System.out.println("VITA ATTACCATO " + attacco.getPersonaggioDaAttaccare().getVita());
 		}
 			
+	}
+
+	@Override
+	public void eseguiMossaSpeciale(Personaggio personaggio) throws ManaException {
+		MossaSpeciale mossaSpeciale = personaggio.getMossaSpeciale();
+		
+		if(personaggio.getMana() < mossaSpeciale.getManaRichiesto())
+			throw new ManaException("MANA INSUFFICIENTE");
+
+		mossaSpeciale.esegui(personaggio);
+		personaggio.setMana(personaggio.getMana() - mossaSpeciale.getManaRichiesto());
+		if(mossaSpeciale.getNome().equals("attaccaDueVolte")) {
+			personaggioConMosseAttive.add(personaggio);
+		}
+			
+		System.out.println("MOSSA SPECIALE ATTIVATA");
+		
+	}
+
+	@Override
+	public List<Personaggio> getPersonaggiConMosseAttive() {
+		return new ArrayList<>(personaggioConMosseAttive);
+	}
+
+	@Override
+	public void rimuoviPersonaggioConMossaAttivo(Personaggio personaggio) {
+		personaggioConMosseAttive.remove(personaggio);
+	}
+
+	@Override
+	public void reset() {
+		personaggioConMosseAttive.clear();
+	}
+
+	@Override
+	public void resetMosseSpecialiAttive() {
+		personaggioConMosseAttive.clear();
 	}
 
 }

@@ -4,19 +4,24 @@ import java.io.Serializable;
 
 public class MossaSpeciale implements Serializable {
 	private String nome;
-	private MossaSpecialeInterface mossaImpl;
+	private MossaSpecialeAzione mossaImpl;
 	private Personaggio personaggioTarget;
+	private int manaRichiesto;
 	
-	public MossaSpeciale(String nome, MossaSpecialeInterface mossaImpl) {
+	public MossaSpeciale(String nome) {
+		this.nome = nome;
+	}
+	
+	public MossaSpeciale(String nome, MossaSpecialeAzione mossaImpl) {
 		this.nome = nome;
 		this.mossaImpl = mossaImpl;
 	}
 	
-	public MossaSpecialeInterface getMossaImpl() {
+	public MossaSpecialeAzione getMossaImpl() {
 		return mossaImpl;
 	}
 
-	public void setMossaImpl(MossaSpecialeInterface mossaImpl) {
+	public void setMossaImpl(MossaSpecialeAzione mossaImpl) {
 		this.mossaImpl = mossaImpl;
 	}
 
@@ -36,6 +41,14 @@ public class MossaSpeciale implements Serializable {
 		this.personaggioTarget = personaggioTarget;
 	}
 	
+	public int getManaRichiesto() {
+		return manaRichiesto;
+	}
+
+	public void setManaRichiesto(int manaRichiesto) {
+		this.manaRichiesto = manaRichiesto;
+	}
+
 	public void esegui(Personaggio personaggioTarget) { // oppure booleana per riscontro
 		this.personaggioTarget = personaggioTarget;
 		mossaImpl.esegui(this);
