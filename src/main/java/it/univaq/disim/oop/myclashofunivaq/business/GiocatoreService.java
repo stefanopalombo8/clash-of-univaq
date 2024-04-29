@@ -3,6 +3,7 @@ package it.univaq.disim.oop.myclashofunivaq.business;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.AttaccoException;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.PosizionamentoException;
 import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.GridPaneGioco;
+import it.univaq.disim.oop.myclashofunivaq.domain.Incantesimo;
 import it.univaq.disim.oop.myclashofunivaq.domain.MossaGiocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.PosizionamentoPersonaggio;
@@ -18,5 +19,6 @@ public interface GiocatoreService {
 	MossaGiocatore effettuaAttacco(Turno turno, Personaggio personaggioDaAttaccare, GridPaneGioco strada, Torre torre) throws AttaccoException;
 	MossaGiocatore attaccaTorre(Turno turno, Personaggio personaggioAttaccante,GridPaneGioco strada, Torre torreAvversaria)
 			throws AttaccoException;
+	MossaGiocatore effettuaSchieramentoIncantesimo(Turno turno, Incantesimo incantesimo);
 
 }

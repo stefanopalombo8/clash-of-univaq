@@ -13,6 +13,7 @@ import it.univaq.disim.oop.myclashofunivaq.domain.Attacco;
 import it.univaq.disim.oop.myclashofunivaq.domain.CambioPosizionamentoPersonaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
 import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreUtente;
+import it.univaq.disim.oop.myclashofunivaq.domain.Incantesimo;
 import it.univaq.disim.oop.myclashofunivaq.domain.MossaGiocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.MossaSpeciale;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
@@ -159,6 +160,16 @@ public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
 		this.personaggiAttaccantiTurno.add(personaggioAttaccante);
 		
 		return attacco;
+	}
+
+	@Override
+	public MossaGiocatore effettuaSchieramentoIncantesimo(Turno turno, Incantesimo incantesimo) {
+		Schieramento schieramento = new Schieramento();
+		schieramento.setCartaSchierata(incantesimo);
+		
+		turnoService.aggiornaElisir(turno, incantesimo.getCostoSchieramento());
+		
+		return schieramento;
 	}
 	
 }

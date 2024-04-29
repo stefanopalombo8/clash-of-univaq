@@ -151,7 +151,7 @@ public class TurnoServiceImpl implements TurnoService {
 		builder.append("\n");
 		String path = TurnoServiceImpl.path + "partita" + partita.getID() + ".txt";
 		
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(path)))) {
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(path), true))) {
             writer.write(builder.toString());
         } catch (IOException e) {
             System.err.println(e.getMessage());

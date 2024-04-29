@@ -734,6 +734,13 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 					e.printStackTrace();
 				}
 
+				MossaGiocatore mossa = this.giocatoreService.effettuaSchieramentoIncantesimo
+						(turnoCorrente, incantesimoDaSchierare);
+				
+				turnoService.salvaMossaGiocatore(partita, turnoCorrente, mossa);
+				
+				this.mostraElisir();
+				
 				if (incantesimoDaSchierare.getNome().equals("RendiInvulnerabile"))
 					this.incantesimoService.aggiungiIncantesimoAttivo(turnoCorrente, incancantesimoDaSchierareClone,
 							personaggioCliccato);
