@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univaq.disim.oop.myclashofunivaq.controller.HomepageController">
    <children>
@@ -11,7 +12,10 @@
       <Button fx:id="giocaControGiocatore" layoutX="221.0" layoutY="283.0" mnemonicParsing="false" onAction="#giocaControGiocatoreAction" text="GIOCA contro GIOCATORE" />
       <Button fx:id="recuperaPartiteSalvate" layoutX="221.0" layoutY="318.0" mnemonicParsing="false" onAction="#recuperaPartiteSalvateAction" prefHeight="25.0" prefWidth="157.0" text="PARTITE SALVATE" />
       <TextField fx:id="nickname" layoutX="225.0" layoutY="161.0" promptText="nickname nel gioco" />
-      <Label layoutX="182.0" layoutY="135.0" prefHeight="17.0" prefWidth="296.0" text="BENVENUTO PLAYER, INSERISCI IL TUO NICKNAME" />
+      <Label layoutX="125.0" layoutY="128.0" prefHeight="25.0" prefWidth="349.0" text="BENVENUTO PLAYER, INSERISCI IL TUO NICKNAME">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font></Label>
       <Label fx:id="confermaNickname" alignment="CENTER" layoutX="206.0" layoutY="200.0" prefHeight="17.0" prefWidth="187.0" textAlignment="CENTER" />
    </children>
 </AnchorPane>

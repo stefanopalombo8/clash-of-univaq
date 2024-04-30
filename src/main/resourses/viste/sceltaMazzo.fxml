@@ -8,11 +8,15 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univaq.disim.oop.myclashofunivaq.controller.MazzoController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="508.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.univaq.disim.oop.myclashofunivaq.controller.MazzoController">
    <children>
-      <Label layoutX="305.0" layoutY="24.0" prefHeight="17.0" prefWidth="189.0" text="SCELTA MAZZO per il GIOCATORE" />
-      <ScrollPane layoutX="22.0" layoutY="266.0" prefHeight="219.0" prefWidth="647.0">
+      <Label layoutX="280.0" layoutY="14.0" prefHeight="19.0" prefWidth="211.0" text="SCELTA MAZZO per il GIOCATORE">
+         <font>
+            <Font size="13.0" />
+         </font></Label>
+      <ScrollPane layoutX="26.0" layoutY="280.0" prefHeight="219.0" prefWidth="647.0">
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="219.0" prefWidth="651.0">
                <children>
@@ -20,7 +24,7 @@
                </children></AnchorPane>
         </content>
       </ScrollPane>
-      <GridPane fx:id="mazzo" gridLinesVisible="true" layoutX="22.0" layoutY="58.0" prefHeight="186.0" prefWidth="393.0">
+      <GridPane fx:id="mazzo" gridLinesVisible="true" layoutX="26.0" layoutY="72.0" prefHeight="186.0" prefWidth="393.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -32,7 +36,11 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
       </GridPane>
-      <Button fx:id="confermaMazzo" layoutX="464.0" layoutY="138.0" mnemonicParsing="false" onAction="#confermaMazzoAction" text="CONFERMA" />
-      <Label fx:id="nomeGiocatoreCorrente" layoutX="494.0" layoutY="24.0" prefHeight="17.0" prefWidth="102.0" />
+      <Button fx:id="confermaMazzo" layoutX="468.0" layoutY="152.0" mnemonicParsing="false" onAction="#confermaMazzoAction" text="CONFERMA" />
+      <Label fx:id="nomeGiocatoreCorrente" layoutX="491.0" layoutY="13.0" prefHeight="17.0" prefWidth="102.0">
+         <font>
+            <Font name="System Bold Italic" size="15.0" />
+         </font></Label>
+      <Label layoutX="202.0" layoutY="45.0" text="DAL ROSTER CLICCA PER SCEGLIERE, CLICCA INVECE DAL MAZZO PER TOGLIERLA" />
    </children>
 </AnchorPane>
