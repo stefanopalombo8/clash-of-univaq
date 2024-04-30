@@ -18,14 +18,14 @@ import it.univaq.disim.oop.myclashofunivaq.domain.MossaSpeciale;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.RendiInvulnerabile;
 import it.univaq.disim.oop.myclashofunivaq.domain.Tank;
-import it.univaq.disim.oop.myclashofunivaq.domain.nomipersonaggi.IncantesimiNomi;
-import it.univaq.disim.oop.myclashofunivaq.domain.nomipersonaggi.TankNomi;
+import it.univaq.disim.oop.myclashofunivaq.domain.nomicarte.IncantesimiNomi;
+import it.univaq.disim.oop.myclashofunivaq.domain.nomicarte.TankNomi;
 import javafx.scene.image.Image;
 
 public class Factory implements CartaFactory {
 
 	private static final String cartellaConfigurazione = "/configurations/";
-	private static final String puntoSeparatore = "."; // nel caso nel file si vuole cambiare il separatore
+	private static final String puntoSeparatore = ".";
 
 	private static Factory instance = new Factory();
 
@@ -77,6 +77,9 @@ public class Factory implements CartaFactory {
 						case "vita":
 							personaggio.setVita(Integer.valueOf(props.getProperty(riga)));
 							break;
+						case "armatura":
+							personaggio.setArmatura(Integer.valueOf(props.getProperty(riga)));
+							break;
 						case "danno":
 							personaggio.setDanno(Integer.valueOf(props.getProperty(riga)));
 							break;
@@ -85,30 +88,28 @@ public class Factory implements CartaFactory {
 
 							MossaSpeciale mossaImpl = mosseSpeciali.stream()
 									.filter(mossa -> mossa.getNome().equals(nomeMossaPersonaggio)).findAny()
-									.orElseThrow(() -> new NomeNonTrovatoException("nome non presente nell'elenco"));
+									.orElseThrow(() -> new NomeNonTrovatoException("nome non presente nell'elenco "
+											+ "delle mosse speciali"));
 
 							personaggio.setMossaSpeciale(mossaImpl);
 							break;
 						case "immagine":
 							Image immagine = new Image(costruisciPath(props.getProperty(riga)));
-
 							personaggio.setImmagineCarta(immagine);
+							break;
 						}
 
 					}
 				});
 
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {
 			String path = costruisciPath("incantesimi.properties");
 
-			System.out.println("key " + keyDaCercare);
 			try (FileInputStream fis = new FileInputStream(path)) {
 				final Properties props = new Properties();
 				props.load(fis);
@@ -132,12 +133,10 @@ public class Factory implements CartaFactory {
 							incantesimo.setImmagineCarta(immagine);
 							break;
 						}
-
 					}
 				});
 
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -172,13 +171,14 @@ public class Factory implements CartaFactory {
 		Optional<Enum<?>> optionalName = Arrays.stream(nomi).filter(n -> n.toString().equals(carta.getNome()))
 				.findAny();
 
-		String nomeInEnum = optionalName.orElseThrow(() -> new NomeNonTrovatoException("nome non presente nell'elenco"))
+		String nomeInEnum = optionalName.orElseThrow(() -> new NomeNonTrovatoException("nome non presente nell'elenco "
+				+ "della Enum corrente"))
 				.toString();
 
 		if (!nomeInEnum.equals(carta.getNome()))
 			carta.setNome(nomeInEnum);
 
-		// vuol dire che il nome inserito della è presente ed è giusto
+		// vuol dire che il nome inserito è presente ed è giusto
 
 		return categoriaCarta;
 	}
@@ -188,9 +188,9 @@ public class Factory implements CartaFactory {
 		for (Carta carta : carte) {
 			String keyDaCercare = costruisciChiave(carta);
 
-			String path = costruisciPath("personaggi.properties");
-			
 			if(carta instanceof Personaggio) {
+				String path = costruisciPath("personaggi.properties");
+				
 				try (FileInputStream fis = new FileInputStream(path)) {
 					final Properties props = new Properties();
 					props.load(fis);
@@ -202,8 +202,8 @@ public class Factory implements CartaFactory {
 							switch (attributo) {
 							case "immagine":
 								Image immagine = new Image(costruisciPath(props.getProperty(riga)));
-
 								carta.setImmagineCarta(immagine);
+								break;
 							}
 
 						}
@@ -218,9 +218,9 @@ public class Factory implements CartaFactory {
 				}
 			}
 			else {
-				String path2 = costruisciPath("incantesimi.properties");
+				String path = costruisciPath("incantesimi.properties");
 				
-				try (FileInputStream fis = new FileInputStream(path2)) {
+				try (FileInputStream fis = new FileInputStream(path)) {
 					final Properties props = new Properties();
 					props.load(fis);
 
@@ -231,8 +231,8 @@ public class Factory implements CartaFactory {
 							switch (attributo) {
 							case "immagine":
 								Image immagine = new Image(costruisciPath(props.getProperty(riga)));
-
 								carta.setImmagineCarta(immagine);
+								break;
 							}
 
 						}
@@ -247,11 +247,6 @@ public class Factory implements CartaFactory {
 				}
 				
 			}
-
-			
-			
-			
-			
 
 		}
 

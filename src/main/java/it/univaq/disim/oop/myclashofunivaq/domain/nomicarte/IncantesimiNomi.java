@@ -1,6 +1,8 @@
 package it.univaq.disim.oop.myclashofunivaq.domain.nomicarte;
 
-public enum IncantesimiNomi {
+import java.io.Serializable;
+
+public enum IncantesimiNomi implements Serializable{
 	CuraPersonaggio,
 	BloccaAttacco,
 	RendiInvulnerabile

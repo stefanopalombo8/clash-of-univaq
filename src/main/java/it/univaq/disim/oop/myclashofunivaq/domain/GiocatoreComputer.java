@@ -4,7 +4,6 @@ public class GiocatoreComputer extends Giocatore {
 
 	public GiocatoreComputer(String nickname) {
 		super(nickname);
-		// TODO Auto-generated constructor stub
 	}
-
+	
 }
