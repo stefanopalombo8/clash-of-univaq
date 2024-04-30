@@ -1,4 +1,4 @@
-package it.univaq.disim.oop.myclashofunivaq.domain.nomipersonaggi;
+package it.univaq.disim.oop.myclashofunivaq.domain.nomicarte;
 
 public enum IncantesimiNomi {
 	CuraPersonaggio,

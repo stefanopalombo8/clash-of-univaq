@@ -2,7 +2,7 @@ package it.univaq.disim.oop.myclashofunivaq.domain;
 
 import java.io.Serializable;
 
-public class Attacco implements MossaGiocatore, Serializable{
+public class Attacco implements MossaGiocatore, Serializable {
 	private Personaggio personaggioAttaccante;
 	private Personaggio personaggioDaAttaccare;
 	private Torre torreAttaccata;
@@ -30,5 +30,4 @@ public class Attacco implements MossaGiocatore, Serializable{
 		return "Attacco [personaggioAttaccante=" + personaggioAttaccante + ", personaggioDaAttaccare="
 				+ personaggioDaAttaccare + ", torreAttaccata=" + torreAttaccata + "]";
 	}
-
 }

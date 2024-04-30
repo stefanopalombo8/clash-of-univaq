@@ -20,6 +20,14 @@ public abstract class Giocatore implements Serializable {
 		this.nickname = nickname;
 	}
 	
+	public Mazzo getMazzo() {
+		return mazzo;
+	}
+
+	public void setMazzo(Mazzo mazzo) {
+		this.mazzo = mazzo;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if(obj == null) return false;
@@ -30,14 +38,6 @@ public abstract class Giocatore implements Serializable {
 	@Override
 	public int hashCode() {
 	    return Objects.hash(nickname);
-	}
-
-	public Mazzo getMazzo() {
-		return mazzo;
-	}
-
-	public void setMazzo(Mazzo mazzo) {
-		this.mazzo = mazzo;
 	}
 	
 }

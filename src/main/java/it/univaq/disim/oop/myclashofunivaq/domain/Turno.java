@@ -7,7 +7,6 @@ import java.util.List;
 public class Turno implements Serializable {
 	private Integer numero;
 	private FaseTurno fase;
-	private int timer;
 	private Giocatore giocatore;
 	private Torre torreGiocatore;
 	private double elisirGiocatore;
@@ -32,14 +31,6 @@ public class Turno implements Serializable {
 
 	public void setNumero(Integer numero) {
 		this.numero = numero;
-	}
-
-	public int getTimer() {
-		return timer;
-	}
-
-	public void setTimer(int timer) {
-		this.timer = timer;
 	}
 
 	public Giocatore getGiocatore() {

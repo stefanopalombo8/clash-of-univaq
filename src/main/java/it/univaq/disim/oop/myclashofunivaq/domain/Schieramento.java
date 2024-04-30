@@ -7,7 +7,7 @@ import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.GridPaneGioco;
 public class Schieramento implements MossaGiocatore, Serializable {
 	
 	private Carta cartaSchierata;
-	private GridPaneGioco strada;
+	private GridPaneGioco strada;	
 	
 	public Carta getCartaSchierata() {
 		return cartaSchierata;

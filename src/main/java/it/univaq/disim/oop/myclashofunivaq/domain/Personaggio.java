@@ -61,6 +61,4 @@ public abstract class Personaggio extends Carta implements Serializable{
 	public void setPosizionamento(PosizionamentoPersonaggio posizionamento) {
 		this.posizionamento = posizionamento;
 	}
-	
-
 }

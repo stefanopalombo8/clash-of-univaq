@@ -23,7 +23,4 @@ public class CambioPosizionamentoPersonaggio implements MossaGiocatore, Serializ
 		return "CambioPosizionamentoPersonaggio [personaggio=" + personaggio + ", nuovaPosizione=" + nuovaPosizione
 				+ "]";
 	}
-	
-	
-	
 }

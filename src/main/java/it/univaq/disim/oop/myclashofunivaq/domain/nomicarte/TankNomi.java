@@ -1,8 +1,8 @@
-package it.univaq.disim.oop.myclashofunivaq.domain.nomipersonaggi;
+package it.univaq.disim.oop.myclashofunivaq.domain.nomicarte;
 
 import java.io.Serializable;
 
-public enum TankNomi implements Serializable{
+public enum TankNomi implements Serializable {
 	GIGANTE,
 	GOLEM,
 	PALADINO_CON_SCUDO

@@ -13,7 +13,7 @@ public abstract class Carta implements Cloneable, Serializable{
 	
 	public Carta(String nome) {
 		this.nome = nome;
-	}
+	}	
 	public String getNome() {
 		return nome;
 	}
@@ -32,16 +32,12 @@ public abstract class Carta implements Cloneable, Serializable{
 	public void setImmagineCarta(Image immagineCarta) {
 		this.immagineCarta = immagineCarta;
 	}
-	
 	@Override
 	public String toString() {
 		return "Carta [nome=" + nome + "]";
 	}
-	
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return (Carta) super.clone();
 	}
-	
-
 }

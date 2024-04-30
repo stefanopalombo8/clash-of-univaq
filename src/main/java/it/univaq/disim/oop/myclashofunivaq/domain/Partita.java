@@ -10,7 +10,6 @@ public class Partita implements Serializable {
 	private Integer ID;
 	private Set<Giocatore> giocatori = new HashSet<>();
 	private List<Turno> turni = new ArrayList<>();
-	
 	private boolean isRecuperata = false;
 	private int numeroTotaleMosse = 0;
 	private int numeroCarteInCampo = 0;

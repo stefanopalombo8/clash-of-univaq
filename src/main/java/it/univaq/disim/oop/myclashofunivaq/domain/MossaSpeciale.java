@@ -12,11 +12,6 @@ public class MossaSpeciale implements Serializable {
 		this.nome = nome;
 	}
 	
-	public MossaSpeciale(String nome, MossaSpecialeAzione mossaImpl) {
-		this.nome = nome;
-		this.mossaImpl = mossaImpl;
-	}
-	
 	public MossaSpecialeAzione getMossaImpl() {
 		return mossaImpl;
 	}
@@ -49,7 +44,7 @@ public class MossaSpeciale implements Serializable {
 		this.manaRichiesto = manaRichiesto;
 	}
 
-	public void esegui(Personaggio personaggioTarget) { // oppure booleana per riscontro
+	public void esegui(Personaggio personaggioTarget) {
 		this.personaggioTarget = personaggioTarget;
 		mossaImpl.esegui(this);
 	}
