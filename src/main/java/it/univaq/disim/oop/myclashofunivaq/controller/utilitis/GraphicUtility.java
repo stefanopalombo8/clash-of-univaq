@@ -24,6 +24,8 @@ import it.univaq.disim.oop.myclashofunivaq.domain.FaseTurno;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.Tank;
 import it.univaq.disim.oop.myclashofunivaq.domain.Turno;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Tooltip;
@@ -49,6 +51,7 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 	private List<ImageView> nuoveImmagini = new ArrayList<>();
 
 	private static String path = "src/main/resourses/files/partiteSalvate/carte";
+	
 
 	public static void serializeMappaGridpaneCarte(Map<String, LinkedHashMap<Posizione, Carta>> mappaGridpaneCarte,
 			String index) throws IOException {
@@ -63,6 +66,16 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 		String path = GraphicUtility.path + index + ".txt";
 		try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(path))) {
 			return (Map<String, LinkedHashMap<Posizione, Carta>>) inputStream.readObject();
+		}
+	}
+	
+	public void impostaRetroCarte(GridPane grid) {
+		Image image = new Image("/viste/images/retroCarte.jpg");
+		for(int i = 0; i < 4; i++) {
+			ImageView imageView = this.creaImpostaImageView(image, 60, 50);
+			grid.add(imageView, i, 0);
+			GridPane.setHalignment(imageView, HPos.CENTER); // Allineamento orizzontale al centro
+	        GridPane.setValignment(imageView, VPos.CENTER); // Allineamento verticale al centro
 		}
 	}
 
