@@ -114,9 +114,12 @@ public class TurnoServiceImpl implements TurnoService {
 	
 	@Override
 	public void controllaSchieramento(Turno turno, Carta carta) throws ElisirException {
-		//if(!turniPartita.containsKey(turno.getNumero()))
-		if(turno.getElisirGiocatore() < (double) carta.getCostoSchieramento() / 10)
+		if(turno.getElisirGiocatore() < (double) carta.getCostoSchieramento() / 10) {
+			if(turno.getElisirGiocatore() < 0)
+				turno.setElisirGiocatore(0);
 			throw new ElisirException("ELISIR INSUFFICIENTE");
+		}
+			
 		
 	}
 

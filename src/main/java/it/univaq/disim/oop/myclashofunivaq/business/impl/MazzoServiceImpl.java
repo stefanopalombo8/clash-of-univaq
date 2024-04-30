@@ -26,8 +26,33 @@ public class MazzoServiceImpl implements MazzoService {
 	public Mazzo creaMazzo(List<Carta> carteScelte) {
 		Mazzo mazzo = new Mazzo();
 		
-		return mazzo.inserisci_carte(carteScelte) == true ? mazzo : null;
+		return inserisci_carte(mazzo, carteScelte) == true ? mazzo : null;
 		
+	}
+	
+	private boolean inserisci_carte(Mazzo mazzo, List<Carta> lista) {
+		for(Carta carta : lista) {
+			if(!this.inserisci_carta(mazzo, carta))
+				return false;
+		}
+		
+		return true;
+	}
+	
+	private boolean inserisci_carta(Mazzo mazzo, Carta carta) {
+		if(carta == null) 
+			return false;
+		
+		Carta[] carte = mazzo.getCarte();
+		
+		for(int i = 0; i < carte.length; i++) {
+			if(carte[i] == null) {
+				carte[i] = carta;
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	@Override
