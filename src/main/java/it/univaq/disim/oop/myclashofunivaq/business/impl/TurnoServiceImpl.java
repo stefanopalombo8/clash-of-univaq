@@ -1,18 +1,17 @@
 package it.univaq.disim.oop.myclashofunivaq.business.impl;
 
 import java.io.BufferedWriter;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
-
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import it.univaq.disim.oop.myclashofunivaq.business.PartitaService;
+import it.univaq.disim.oop.myclashofunivaq.business.ResetStaticVariables;
 import it.univaq.disim.oop.myclashofunivaq.domain.Turno;
 import it.univaq.disim.oop.myclashofunivaq.business.TurnoService;
-import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.Posizione;
 import it.univaq.disim.oop.myclashofunivaq.domain.Attacco;
 import it.univaq.disim.oop.myclashofunivaq.domain.CambioPosizionamentoPersonaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
@@ -22,9 +21,10 @@ import it.univaq.disim.oop.myclashofunivaq.domain.MossaGiocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
 import it.univaq.disim.oop.myclashofunivaq.domain.Schieramento;
 import it.univaq.disim.oop.myclashofunivaq.domain.Torre;
+
 import javafx.animation.Timeline;
 
-public class TurnoServiceImpl implements TurnoService {
+public class TurnoServiceImpl implements TurnoService, ResetStaticVariables {
 	
 	private final PartitaService partitaService;
 	private static int i = 0; // indice per i giocatori
@@ -34,6 +34,7 @@ public class TurnoServiceImpl implements TurnoService {
 	
 	private static final String path = "src/main/resourses/files/logsPartite/";
 	
+	private double limiteElisir = 20;
 	
 	public TurnoServiceImpl() {
 		partitaService = new PartitaServiceImpl();
@@ -60,7 +61,9 @@ public class TurnoServiceImpl implements TurnoService {
 			turno.setTorreGiocatore(torre);
 		}
 		else {
-			double newElisir = turniPartita.get(j - 2).getElisirGiocatore() + 0.1;
+			double newElisir = turniPartita.get(j - 2).getElisirGiocatore() + 0.5;
+			if(newElisir >= (limiteElisir/10))
+				newElisir = limiteElisir/10;
 			turno.setElisirGiocatore(newElisir);
 			
 			Torre torre = turniPartita.get(j - 2).getTorreGiocatore();
@@ -165,8 +168,14 @@ public class TurnoServiceImpl implements TurnoService {
 
 	@Override
 	public Giocatore trovaAltroGiocatore(Partita partita) {
-		int j = i;
-		return partitaService.findAllGiocatori(partita)[j++ % partitaService.findAllGiocatori(partita).length];
+		Giocatore giocatoreCorrente = this.getUltimoTurno(partita).getGiocatore();
+		
+		for(Giocatore g : partitaService.findAllGiocatori(partita)) {
+			if(!giocatoreCorrente.getNickname().equals(g.getNickname()))
+					return g;
+		}
+		
+		return null;
 	}
 
 	@Override
@@ -213,4 +222,14 @@ public class TurnoServiceImpl implements TurnoService {
 		
 	}
 
+	@Override
+	public Turno getUltimoTurno(Partita partita) {
+		return partita.getTurni().get(partita.getTurni().size() - 1);
+	}
+
+	@Override
+	public boolean isTurnoPari(Turno turno) {
+		return turno.getNumero() % 2 == 0;
+	}
+	
 }
