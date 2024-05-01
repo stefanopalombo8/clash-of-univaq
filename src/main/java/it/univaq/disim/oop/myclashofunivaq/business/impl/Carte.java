@@ -10,6 +10,8 @@ import it.univaq.disim.oop.myclashofunivaq.configuration.CartaFactory;
 import it.univaq.disim.oop.myclashofunivaq.configuration.Factory;
 import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
 import it.univaq.disim.oop.myclashofunivaq.domain.CuraPersonaggio;
+import it.univaq.disim.oop.myclashofunivaq.domain.Fulmine;
+import it.univaq.disim.oop.myclashofunivaq.domain.Furia;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.RendiInvulnerabile;
 import it.univaq.disim.oop.myclashofunivaq.domain.Tank;
@@ -35,11 +37,18 @@ public class Carte implements CartaService {
 		RendiInvulnerabile invulnerabile = new RendiInvulnerabile("RendiInvulnerabile");
 		cartaFactory.modellaCarta(invulnerabile);
 		carte.add(invulnerabile);
+		
+		Fulmine fulmine = new Fulmine("Fulmine");
+		cartaFactory.modellaCarta(fulmine);
+		carte.add(fulmine);
+		
+		Furia furia = new Furia("Furia");
+		cartaFactory.modellaCarta(furia);
+		carte.add(furia);
 	}
 
 	@Override
 	public Set<Carta> trovaTutteCarte() {
-		// TODO Auto-generated method stub
 		return carte;
 	}
 

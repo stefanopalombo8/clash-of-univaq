@@ -5,5 +5,7 @@ import java.io.Serializable;
 public enum IncantesimiNomi implements Serializable{
 	CuraPersonaggio,
 	BloccaAttacco,
-	RendiInvulnerabile
+	RendiInvulnerabile,
+	Fulmine,
+	Furia
 }

@@ -13,6 +13,8 @@ import it.univaq.disim.oop.myclashofunivaq.business.impl.MosseSpeciali;
 import it.univaq.disim.oop.myclashofunivaq.domain.BloccaAttacco;
 import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
 import it.univaq.disim.oop.myclashofunivaq.domain.CuraPersonaggio;
+import it.univaq.disim.oop.myclashofunivaq.domain.Fulmine;
+import it.univaq.disim.oop.myclashofunivaq.domain.Furia;
 import it.univaq.disim.oop.myclashofunivaq.domain.Incantesimo;
 import it.univaq.disim.oop.myclashofunivaq.domain.MossaSpeciale;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
@@ -128,6 +130,14 @@ public class Factory implements CartaFactory {
 							CuraPersonaggio incantesimoCura = (CuraPersonaggio) incantesimo;
 							incantesimoCura.setCura(Integer.valueOf(props.getProperty(riga)));
 							break;
+						case "danno":
+							Fulmine fulmine = (Fulmine) incantesimo;
+							fulmine.setDanno(Integer.valueOf(props.getProperty(riga)));
+							break;
+						case "aumento":
+							Furia furia = (Furia) incantesimo;
+							furia.setAumento(Integer.valueOf(props.getProperty(riga)));
+							break;
 						case "immagine":
 							Image immagine = new Image(costruisciPath(props.getProperty(riga)));
 							incantesimo.setImmagineCarta(immagine);
@@ -150,22 +160,27 @@ public class Factory implements CartaFactory {
 	@Override
 	public <T extends Carta> String ricercaCategoriaEimpostaNome(T carta) {
 		Enum<?>[] nomi;
-		String categoriaCarta;
-
+		String categoriaCarta = null;
+		
 		if (carta instanceof Tank) {
 			nomi = TankNomi.values();
 			categoriaCarta = Tank.class.getSimpleName();
 
-		} else if (carta instanceof BloccaAttacco) {
+		} else if(carta instanceof Incantesimo) {
 			nomi = IncantesimiNomi.values();
-			categoriaCarta = BloccaAttacco.class.getSimpleName();
-		} else if (carta instanceof CuraPersonaggio) {
-			nomi = IncantesimiNomi.values();
-			categoriaCarta = CuraPersonaggio.class.getSimpleName();
-		} else if (carta instanceof RendiInvulnerabile) {
-			nomi = IncantesimiNomi.values();
-			categoriaCarta = RendiInvulnerabile.class.getSimpleName();
-		} else
+			if (carta instanceof BloccaAttacco) {
+				categoriaCarta = BloccaAttacco.class.getSimpleName();
+			} else if (carta instanceof CuraPersonaggio) {
+				categoriaCarta = CuraPersonaggio.class.getSimpleName();
+			} else if (carta instanceof RendiInvulnerabile) {
+				categoriaCarta = RendiInvulnerabile.class.getSimpleName();
+			} else if(carta instanceof Fulmine) {
+				categoriaCarta = Fulmine.class.getSimpleName();
+			} else if(carta instanceof Furia) {
+				categoriaCarta = Furia.class.getSimpleName();
+			} 
+		}
+		else
 			throw new CategoriaNonTrovataException("Categoria non ancora implementata");
 
 		Optional<Enum<?>> optionalName = Arrays.stream(nomi).filter(n -> n.toString().equals(carta.getNome()))
