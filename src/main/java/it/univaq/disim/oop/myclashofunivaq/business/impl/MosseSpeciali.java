@@ -26,9 +26,21 @@ public class MosseSpeciali implements Serializable {
 		
 		MossaSpeciale mossa3 = new MossaSpeciale("attaccaDueVolte");
 		mossa3.setManaRichiesto(1);
-		mossa3.setMossaImpl(new AttaccaDueVolte());
+		mossa3.setMossaImpl(new AttaccaDueVolteAzione());
 		
 		mosseSpeciali.add(mossa3);
+		
+		MossaSpeciale mossa4 = new MossaSpeciale("attaccaDiretto");
+		mossa4.setManaRichiesto(2);
+		mossa4.setMossaImpl(new AttaccaDirettamenteTorreAzione());
+		
+		mosseSpeciali.add(mossa4);
+		
+		MossaSpeciale mossa5 = new MossaSpeciale("ricaricaEnergiaStrada");
+		mossa5.setManaRichiesto(2);
+		mossa5.setMossaImpl(new RicaricaEnergiaStradaAzione());
+		
+		mosseSpeciali.add(mossa5);
 		
 	}
 	
@@ -37,23 +49,34 @@ public class MosseSpeciali implements Serializable {
 		return mosseSpeciali;
 	}
 	
+    // NON POSSO USARE LE LAMBDA PER QUESTE CLASSI perché non sono serializzabili
 	private static class RicaricaEnergiaAzione implements MossaSpecialeAzione, Serializable {
         @Override
-        public void esegui(MossaSpeciale mossa) {
-            mossa.getPersonaggioTarget().setVita( mossa.getPersonaggioTarget().getVita() + 10);
+        public void esegui(MossaSpeciale mossaSpeciale) {
+            mossaSpeciale.getPersonaggioTarget().setVita(mossaSpeciale.getPersonaggioTarget().getVita() + 10);
         }
     }
-	
+	public static class RicaricaEnergiaStradaAzione implements MossaSpecialeAzione, Serializable {
+		@Override
+		public void esegui(MossaSpeciale mossaSpeciale) {
+			mossaSpeciale.getPersonaggioTarget().setVita(mossaSpeciale.getPersonaggioTarget().getVita() + 5);
+		}
+	}
 	private static class DoppioArmorAzione implements MossaSpecialeAzione, Serializable {
         @Override
-        public void esegui(MossaSpeciale mossa) {
-            mossa.getPersonaggioTarget().setArmatura(mossa.getPersonaggioTarget().getArmatura() * 2);
+        public void esegui(MossaSpeciale mossaSpeciale) {
+            mossaSpeciale.getPersonaggioTarget().setArmatura(mossaSpeciale.getPersonaggioTarget().getArmatura() * 2);
         }
     }
-	
-	public static class AttaccaDueVolte implements MossaSpecialeAzione, Serializable {
+	public static class AttaccaDueVolteAzione implements MossaSpecialeAzione, Serializable {
 		@Override
 		public void esegui(MossaSpeciale mossaSpeciale) {
 		}
 	}
+	public static class AttaccaDirettamenteTorreAzione implements MossaSpecialeAzione, Serializable {
+		@Override
+		public void esegui(MossaSpeciale mossaSpeciale) {
+		}
+	}
+	
 }

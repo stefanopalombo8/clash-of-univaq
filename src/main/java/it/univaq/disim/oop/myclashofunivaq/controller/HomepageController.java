@@ -1,10 +1,10 @@
 package it.univaq.disim.oop.myclashofunivaq.controller;
 
 import java.net.URL;
+
 import java.util.ResourceBundle;
 
 import it.univaq.disim.oop.myclashofunivaq.business.GiocatoreUtenteService;
-import it.univaq.disim.oop.myclashofunivaq.business.MazzoService;
 import it.univaq.disim.oop.myclashofunivaq.business.PartitaService;
 import it.univaq.disim.oop.myclashofunivaq.business.ResetStaticVariables;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.GiocatoreUtenteServiceImpl;
@@ -13,12 +13,13 @@ import it.univaq.disim.oop.myclashofunivaq.business.impl.MazzoServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.NicknameNonValido;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.PartitaServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.TurnoServiceImpl;
-import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.GraphicUtility;
+import it.univaq.disim.oop.myclashofunivaq.controller.utilities.GraphicUtility;
 import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreComputer;
 import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreUtente;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
 import it.univaq.disim.oop.myclashofunivaq.view.ViewDispatcher;
 import it.univaq.disim.oop.myclashofunivaq.view.ViewException;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -50,7 +51,6 @@ public class HomepageController implements Initializable {
 	private final ResetStaticVariables utilityReset;
 	private final ResetStaticVariables incantesimiReset;
 	
-
 	private final GiocatoreUtenteService giocatoreUtenteService;
 
 	private ViewDispatcher dispatcher;
@@ -80,18 +80,13 @@ public class HomepageController implements Initializable {
 		bottone.disableProperty().bind(nickname.textProperty().isEmpty());
 	}
 
-	/*
-	 * qua mi serve il metodo perchè questo procedimento viene fatto per ogni
-	 * bottone partita quindi per non riscriverlo 3 volte
-	 */
-
 	public boolean accettaNickname(Partita partita) {
 		try {
 			GiocatoreUtente giocatore = giocatoreUtenteService.convalidaNickName(nickname.getText());
 			return partitaService.aggiungiGiocatore(giocatore, partita);
 
 		} catch (NicknameNonValido e) {
-			this.confermaNickname.setText(e.getMessage()); // gestione eccezione a livello utente
+			this.confermaNickname.setText(e.getMessage());
 			return false;
 		}
 
@@ -120,6 +115,8 @@ public class HomepageController implements Initializable {
 				dispatcher.caricaVista("sceltaMazzo", partita);
 			} catch (ViewException e) {
 				e.printStackTrace();
+			} catch (NicknameNonValido e) {
+				this.confermaNickname.setText(e.getMessage());
 			}
 	}
 

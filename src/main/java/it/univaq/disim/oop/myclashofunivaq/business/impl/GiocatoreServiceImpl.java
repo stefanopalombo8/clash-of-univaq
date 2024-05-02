@@ -1,19 +1,16 @@
 package it.univaq.disim.oop.myclashofunivaq.business.impl;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import it.univaq.disim.oop.myclashofunivaq.business.GiocatoreService;
-import it.univaq.disim.oop.myclashofunivaq.business.GiocatoreUtenteService;
 import it.univaq.disim.oop.myclashofunivaq.business.IncantesimoService;
-import it.univaq.disim.oop.myclashofunivaq.business.PartitaService;
 import it.univaq.disim.oop.myclashofunivaq.business.PersonaggioService;
 import it.univaq.disim.oop.myclashofunivaq.business.TurnoService;
-import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.GridPaneGioco;
+import it.univaq.disim.oop.myclashofunivaq.controller.utilities.GridPaneGioco;
 import it.univaq.disim.oop.myclashofunivaq.domain.Attacco;
 import it.univaq.disim.oop.myclashofunivaq.domain.CambioPosizionamentoPersonaggio;
-import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
-import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreUtente;
 import it.univaq.disim.oop.myclashofunivaq.domain.Incantesimo;
 import it.univaq.disim.oop.myclashofunivaq.domain.MossaGiocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.MossaSpeciale;
@@ -22,10 +19,10 @@ import it.univaq.disim.oop.myclashofunivaq.domain.PosizionamentoPersonaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.Schieramento;
 import it.univaq.disim.oop.myclashofunivaq.domain.Torre;
 import it.univaq.disim.oop.myclashofunivaq.domain.Turno;
+import it.univaq.disim.oop.myclashofunivaq.domain.nomicarte.IncantesimiNomi;
 
 public class GiocatoreServiceImpl implements GiocatoreService {
 	
-	private final PartitaService partitaService;
 	private final PersonaggioService personaggioService;
 	private final TurnoService turnoService;
 	private final IncantesimoService incantesimoService;
@@ -35,7 +32,6 @@ public class GiocatoreServiceImpl implements GiocatoreService {
 	private GridPaneGioco stradaAttaccante;
 	
 	public GiocatoreServiceImpl() {
-		partitaService = new PartitaServiceImpl();
 		personaggioService = new PersonaggioServiceImpl();
 		turnoService = new TurnoServiceImpl();
 		personaggiAttaccantiTurno = new ArrayList<>();
@@ -62,6 +58,19 @@ public class GiocatoreServiceImpl implements GiocatoreService {
 
 	@Override
 	public void preparaAttacco(Personaggio personaggioAttaccante, GridPaneGioco strada) throws AttaccoException{
+		List<Incantesimo> incantesimiAttivi = incantesimoService.getIncantesimiAttivi(personaggioAttaccante);
+		boolean match = incantesimiAttivi.stream().anyMatch(i -> i.getNome().equals(IncantesimiNomi.BloccaAttacco.toString()));
+		
+		if(!incantesimiAttivi.isEmpty() && match) { // se non c'è quel match gli incantesimi sono irrilevanti
+			StringBuilder builder = new StringBuilder("QUESTO PERSONAGGIO HA ATTIVO ");
+			for(Incantesimo incantesimo : incantesimiAttivi) {
+				builder.append(incantesimo.getNome());
+				builder.append(" ");
+			}
+			
+			throw new AttaccoException(builder.toString());
+		}
+		
 		if(!(personaggioAttaccante.equals(this.personaggioAttaccante))) {
 			this.personaggioAttaccante = personaggioAttaccante;
 			this.stradaAttaccante = strada;
@@ -86,8 +95,16 @@ public class GiocatoreServiceImpl implements GiocatoreService {
 		if(personaggiAttaccantiTurno.contains(personaggioAttaccante))
 			throw new AttaccoException("QUESTO PERSONAGGIO HA già ATTACCATO");
 		
-		if("RendiInvulnerabile".equals(incantesimoService.checkPersonaggioTarget(personaggioDaAttaccare))) {
-			throw new AttaccoException("QUESTO PERSONAGGIO è invulnerabile");
+		List<Incantesimo> incantesimiAttivi = incantesimoService.getIncantesimiAttivi(personaggioDaAttaccare);
+		boolean match = incantesimiAttivi.stream().anyMatch(i -> i.getNome().equals(IncantesimiNomi.RendiInvulnerabile.toString()));
+		if(!incantesimiAttivi.isEmpty() && match) { // se non c'è quel match gli incantesimi sono irrilevanti
+			StringBuilder builder = new StringBuilder("QUESTO PERSONAGGIO HA ATTIVO ");
+			for(Incantesimo incantesimo : incantesimiAttivi) {
+				builder.append(incantesimo.getNome());
+				builder.append(" ");
+			}
+			
+			throw new AttaccoException(builder.toString());
 		}
 		
 		Attacco attacco = new Attacco();
@@ -134,6 +151,20 @@ public class GiocatoreServiceImpl implements GiocatoreService {
 			throw new AttaccoException("MANCA IL PERSONAGGIO ATTACCANTE");
 		if(personaggiAttaccantiTurno.contains(personaggioAttaccante))
 			throw new AttaccoException("QUESTO PERSONAGGIO HA già ATTACCATO");
+		
+		List<Incantesimo> incantesimiAttivi = incantesimoService.getIncantesimiAttivi(personaggioAttaccante);
+		boolean match = incantesimiAttivi.stream().anyMatch(i -> i.getNome().equals(IncantesimiNomi.BloccaAttacco.toString()));
+		
+		if(!incantesimiAttivi.isEmpty() && match) {
+			StringBuilder builder = new StringBuilder("QUESTO PERSONAGGIO HA ATTIVO ");
+			for(Incantesimo incantesimo : incantesimiAttivi) {
+				builder.append(incantesimo.getNome());
+				builder.append(" ");
+			}
+			
+			throw new AttaccoException(builder.toString());
+		}
+		
 		
 		Attacco attacco = new Attacco();
 		attacco.setPersonaggioAttaccante(personaggioAttaccante);

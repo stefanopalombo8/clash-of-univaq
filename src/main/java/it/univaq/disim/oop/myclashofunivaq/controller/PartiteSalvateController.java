@@ -1,7 +1,7 @@
 package it.univaq.disim.oop.myclashofunivaq.controller;
 
 import java.net.URL;
-import java.util.Arrays;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -14,6 +14,7 @@ import it.univaq.disim.oop.myclashofunivaq.domain.Giocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
 import it.univaq.disim.oop.myclashofunivaq.view.ViewDispatcher;
 import it.univaq.disim.oop.myclashofunivaq.view.ViewException;
+
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -51,16 +52,15 @@ public class PartiteSalvateController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		gioca.disableProperty().bind(Bindings.isNull(listViewPartite.getSelectionModel().selectedItemProperty()));
-		choiceBox.setItems(FXCollections.observableArrayList("numeroMosse", "numeroCarte", "valoreCarte"));
+		choiceBox.setItems(FXCollections.observableArrayList("ID", "numeroMosse", "numeroCarte", "valoreCarte"));
 
 		List<Partita> partiteDeserializzate = partitaService.getPartiteDeserializzate();
 
 		sceltaOrdinamento = "ID";
 
 		choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-			sceltaOrdinamento = newValue; // Aggiorna il criterio di ordinamento quando l'utente cambia selezione
-			aggiornaListaPartite(partiteDeserializzate); // Riordina la lista quando l'utente cambia criterio di
-															// ordinamento
+			sceltaOrdinamento = newValue; 
+			aggiornaListaPartite(partiteDeserializzate);
 		});
 
 		this.aggiornaListaPartite(partiteDeserializzate);
@@ -128,24 +128,26 @@ public class PartiteSalvateController implements Initializable {
 		}
 	}
 
-	class PartitaComparator implements Comparator<Partita> {
-
+	private class PartitaComparator implements Comparator<Partita> {
+		
 		@Override
 		public int compare(Partita p1, Partita p2) {
 
 			switch (sceltaOrdinamento) {
+			//ordinamento decrescente
 			case "numeroMosse":
-				return Integer.compare(p1.getNumeroTotaleMosse(), p2.getNumeroTotaleMosse()); // più veloce
+				return Integer.compare(p2.getNumeroTotaleMosse(), p1.getNumeroTotaleMosse()); // più veloce
 			case "numeroCarte":
-				return Integer.compare(p1.getNumeroCarteInCampo(), p2.getNumeroCarteInCampo());
+				return Integer.compare(p2.getNumeroCarteInCampo(), p1.getNumeroCarteInCampo());
 			case "valoreCarte":
-				return Integer.compare(p1.getValoreCarteInCampo(), p2.getValoreCarteInCampo());
+				return Integer.compare(p2.getValoreCarteInCampo(), p1.getValoreCarteInCampo());
+			//ordinamento crescente
+			case "ID":
+				return Integer.compare(p1.getID(), p2.getID());	
 			default:
-				return Integer.compare(p1.getID(), p2.getID());
+				return 0;
 			}
 
 		}
-
 	}
-
 }

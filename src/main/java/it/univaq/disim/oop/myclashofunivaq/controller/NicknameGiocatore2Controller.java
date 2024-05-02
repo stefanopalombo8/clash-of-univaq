@@ -61,7 +61,7 @@ public class NicknameGiocatore2Controller implements Initializable, InizializzaD
 			if(partitaService.aggiungiGiocatore(giocatore2, partita))
 				dispatcher.caricaVista("sceltaMazzo", partita);
 		} catch (NicknameNonValido e) {
-			this.confermaNickname.setText(e.getMessage());  //gestione eccezione a livello utente
+			this.confermaNickname.setText(e.getMessage());
 		}
 		
 	}

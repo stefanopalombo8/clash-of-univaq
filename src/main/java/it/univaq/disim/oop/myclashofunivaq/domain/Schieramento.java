@@ -2,7 +2,7 @@ package it.univaq.disim.oop.myclashofunivaq.domain;
 
 import java.io.Serializable;
 
-import it.univaq.disim.oop.myclashofunivaq.controller.utilitis.GridPaneGioco;
+import it.univaq.disim.oop.myclashofunivaq.controller.utilities.GridPaneGioco;
 
 public class Schieramento implements MossaGiocatore, Serializable {
 	

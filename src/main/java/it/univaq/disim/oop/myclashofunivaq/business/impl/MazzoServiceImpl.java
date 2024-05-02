@@ -7,18 +7,19 @@ import java.util.List;
 import java.util.Set;
 
 import it.univaq.disim.oop.myclashofunivaq.business.MazzoService;
+import it.univaq.disim.oop.myclashofunivaq.business.ResetStaticVariables;
 import it.univaq.disim.oop.myclashofunivaq.configuration.CartaFactory;
 import it.univaq.disim.oop.myclashofunivaq.configuration.Factory;
 import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
 import it.univaq.disim.oop.myclashofunivaq.domain.Giocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.Mazzo;
 
-public class MazzoServiceImpl implements MazzoService {
+public class MazzoServiceImpl implements MazzoService, ResetStaticVariables {
 	
-	private int num_categorie_minime = 5;
 	private final CartaFactory cartaFactory = Factory.getInstance();
 	
 	private final int numCarteInMano = 4;
+	private final int numCategorieMinime = 5;
 	
 	private static int index = 0;
 	
@@ -26,20 +27,20 @@ public class MazzoServiceImpl implements MazzoService {
 	public Mazzo creaMazzo(List<Carta> carteScelte) {
 		Mazzo mazzo = new Mazzo();
 		
-		return inserisci_carte(mazzo, carteScelte) == true ? mazzo : null;
+		return inserisciCarte(mazzo, carteScelte) == true ? mazzo : null;
 		
 	}
 	
-	private boolean inserisci_carte(Mazzo mazzo, List<Carta> lista) {
+	private boolean inserisciCarte(Mazzo mazzo, List<Carta> lista) {
 		for(Carta carta : lista) {
-			if(!this.inserisci_carta(mazzo, carta))
+			if(!this.inserisciCarta(mazzo, carta))
 				return false;
 		}
 		
 		return true;
 	}
 	
-	private boolean inserisci_carta(Mazzo mazzo, Carta carta) {
+	private boolean inserisciCarta(Mazzo mazzo, Carta carta) {
 		if(carta == null) 
 			return false;
 		
@@ -69,12 +70,9 @@ public class MazzoServiceImpl implements MazzoService {
 			categorie.add(cartaFactory.ricercaCategoriaEimpostaNome(mazzo.getCarte()[i]));
 		}
 		
-		for(String categoria : categorie) {
-			if(!categoria.equals("Incantesimo"))
-				num_categorie_mazzo++;	
-		}
+		num_categorie_mazzo = categorie.size(); //si contano anche gli incantesimi
 		
-		if(num_categorie_mazzo >= num_categorie_minime)
+		if(num_categorie_mazzo >= numCategorieMinime)
 			return true;
 		
 		return false;
@@ -111,11 +109,4 @@ public class MazzoServiceImpl implements MazzoService {
 		index = 0;
 		
 	}
-	
-	
-	
-	
-
-	
-
 }

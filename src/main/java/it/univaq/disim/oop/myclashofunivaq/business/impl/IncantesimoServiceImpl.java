@@ -14,15 +14,17 @@ import it.univaq.disim.oop.myclashofunivaq.domain.Turno;
 public class IncantesimoServiceImpl implements IncantesimoService, ResetStaticVariables {
 
 	private static Map<Incantesimo, Integer> incantesimiAttivi = new HashMap<>();
-	private static final int durataIncantesimo = 1;
-	
+	private static final int durataIncantesimo = 1; // espressa in turni
 	
 	@Override
 	public void aggiungiIncantesimoAttivo(Turno turno, Incantesimo incantesimo, Personaggio personaggioTarget) {
 		if(personaggioTarget != null && incantesimo != null) {
+			
 			incantesimo.setPersonaggioTarget(personaggioTarget);
 			
 			incantesimiAttivi.put(incantesimo, 0);
+			
+			System.out.println("aggiunto incantesimo attivo " + incantesimo.getPersonaggioTarget().toString());
 		}
 	}
 
@@ -46,13 +48,14 @@ public class IncantesimoServiceImpl implements IncantesimoService, ResetStaticVa
 	}
 	
 	@Override
-	public String checkPersonaggioTarget(Personaggio personaggioTarget) {
+	public List<Incantesimo> getIncantesimiAttivi(Personaggio personaggioTarget) {
+		List<Incantesimo> incantesimiSulPersonaggio = new ArrayList<>();
 		for(Incantesimo incantesimo : incantesimiAttivi.keySet()) {
 			if(incantesimo.getPersonaggioTarget().equals(personaggioTarget)) 
-				return incantesimo.getNome();
+				incantesimiSulPersonaggio.add(incantesimo);
 		}
 		
-		return null;
+		return incantesimiSulPersonaggio;
 		
 	}
 

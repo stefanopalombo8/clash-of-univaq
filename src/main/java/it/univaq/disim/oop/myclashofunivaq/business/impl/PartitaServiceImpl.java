@@ -52,7 +52,7 @@ public class PartitaServiceImpl implements PartitaService {
 	}
 
 	@Override
-	public boolean aggiungiGiocatore(Giocatore giocatore, Partita partita) {
+	public boolean aggiungiGiocatore(Giocatore giocatore, Partita partita) throws NicknameNonValido {
 		if (!partita.getGiocatori().add(giocatore))
 			throw new NicknameNonValido("ERRORE NICKNAME GIÀ UTILIZZATO");
 
@@ -141,7 +141,6 @@ public class PartitaServiceImpl implements PartitaService {
 			}
 		}
 
-		System.out.println("numero partite deserializzate " + partite.size());
 		return partite;
 	}
 

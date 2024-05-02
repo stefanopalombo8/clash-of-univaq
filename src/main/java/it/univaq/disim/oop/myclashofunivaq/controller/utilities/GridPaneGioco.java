@@ -1,4 +1,4 @@
-package it.univaq.disim.oop.myclashofunivaq.controller.utilitis;
+package it.univaq.disim.oop.myclashofunivaq.controller.utilities;
 
 public enum GridPaneGioco {
 	mazzo,

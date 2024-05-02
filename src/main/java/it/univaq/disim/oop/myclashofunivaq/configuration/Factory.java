@@ -10,17 +10,21 @@ import java.util.Properties;
 import java.util.Set;
 
 import it.univaq.disim.oop.myclashofunivaq.business.impl.MosseSpeciali;
+import it.univaq.disim.oop.myclashofunivaq.domain.Assassino;
 import it.univaq.disim.oop.myclashofunivaq.domain.BloccaAttacco;
 import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
 import it.univaq.disim.oop.myclashofunivaq.domain.CuraPersonaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.Fulmine;
 import it.univaq.disim.oop.myclashofunivaq.domain.Furia;
 import it.univaq.disim.oop.myclashofunivaq.domain.Incantesimo;
+import it.univaq.disim.oop.myclashofunivaq.domain.Mago;
 import it.univaq.disim.oop.myclashofunivaq.domain.MossaSpeciale;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.RendiInvulnerabile;
 import it.univaq.disim.oop.myclashofunivaq.domain.Tank;
+import it.univaq.disim.oop.myclashofunivaq.domain.nomicarte.AssassinoNomi;
 import it.univaq.disim.oop.myclashofunivaq.domain.nomicarte.IncantesimiNomi;
+import it.univaq.disim.oop.myclashofunivaq.domain.nomicarte.MagoNomi;
 import it.univaq.disim.oop.myclashofunivaq.domain.nomicarte.TankNomi;
 import javafx.scene.image.Image;
 
@@ -165,8 +169,14 @@ public class Factory implements CartaFactory {
 		if (carta instanceof Tank) {
 			nomi = TankNomi.values();
 			categoriaCarta = Tank.class.getSimpleName();
-
-		} else if(carta instanceof Incantesimo) {
+		} else if(carta instanceof Assassino) {
+			nomi = AssassinoNomi.values();
+			categoriaCarta = Assassino.class.getSimpleName();
+		} else if(carta instanceof Mago) {
+			nomi = MagoNomi.values();
+			categoriaCarta = Mago.class.getSimpleName();
+		}
+		else if(carta instanceof Incantesimo) {
 			nomi = IncantesimiNomi.values();
 			if (carta instanceof BloccaAttacco) {
 				categoriaCarta = BloccaAttacco.class.getSimpleName();

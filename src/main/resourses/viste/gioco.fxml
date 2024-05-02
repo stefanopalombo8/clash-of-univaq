@@ -182,7 +182,7 @@
       </Label>
       <Label layoutX="198.0" layoutY="14.0" text="Prossima carta" />
       <Label layoutX="789.0" layoutY="14.0" text="ELISIR" />
-      <Label fx:id="labelErrori" alignment="CENTER" layoutX="376.0" layoutY="263.0" prefHeight="17.0" prefWidth="245.0">
+      <Label fx:id="labelErrori" alignment="CENTER" layoutX="282.0" layoutY="263.0" prefHeight="17.0" prefWidth="449.0">
          <font>
             <Font name="System Bold" size="12.0" />
          </font></Label>

@@ -7,10 +7,15 @@ import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
 import it.univaq.disim.oop.myclashofunivaq.domain.Turno;
 
 public interface IncantesimoService {
+	
 	void aggiungiIncantesimoAttivo(Turno turno, Incantesimo incantesimo, Personaggio personaggioTarget);
+	
 	List<Incantesimo> getIncantesimiAttivi();
+	
 	void eseguiIncantesimo(Incantesimo incantesimo, Personaggio personaggioTarget);
-	String checkPersonaggioTarget(Personaggio personaggio);
+	
+	List<Incantesimo> getIncantesimiAttivi(Personaggio personaggio);
+	
 	void checkAnnullaEffettoIncantesimi();
 	
 }

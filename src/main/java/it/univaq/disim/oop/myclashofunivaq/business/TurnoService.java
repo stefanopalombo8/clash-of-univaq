@@ -1,6 +1,7 @@
 package it.univaq.disim.oop.myclashofunivaq.business;
 
 import it.univaq.disim.oop.myclashofunivaq.business.impl.ElisirException;
+import it.univaq.disim.oop.myclashofunivaq.business.impl.FasiTerminateException;
 import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
 import it.univaq.disim.oop.myclashofunivaq.domain.Giocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.MossaGiocatore;
@@ -20,7 +21,7 @@ public interface TurnoService {
 	
 	boolean isFirstTurno(Turno turno);
 	
-	void cambiaFase(Turno turno);
+	void cambiaFase(Turno turno) throws FasiTerminateException;
 	
 	void controllaSchieramento(Turno turno, Carta carta) throws ElisirException;
 	

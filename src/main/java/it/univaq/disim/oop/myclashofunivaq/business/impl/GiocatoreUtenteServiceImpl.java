@@ -14,7 +14,7 @@ public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
 
 
 	@Override
-	public GiocatoreUtente convalidaNickName(String nickname) {
+	public GiocatoreUtente convalidaNickName(String nickname) throws NicknameNonValido {
 		
 		/* se viene inserito un nickname già presente nel sistema
 		 * 
@@ -24,7 +24,7 @@ public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
 		
 		if(giocatoreMemory != null)
 			return giocatoreMemory;
-		else if (nickname.equals("") || nickname.length() < 1 || !nickname.matches(".*\\d$"))
+		else if (nickname.equals("") || nickname.length() < 3 || !nickname.matches(".*\\d$"))
 			throw new NicknameNonValido("ERRORE NICKNAME NON VALIDO");
 		
 			
