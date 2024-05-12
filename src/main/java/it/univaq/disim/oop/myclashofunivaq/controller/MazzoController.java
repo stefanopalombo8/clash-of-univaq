@@ -13,6 +13,7 @@ import it.univaq.disim.oop.myclashofunivaq.business.impl.Carte;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.MazzoServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.TurnoServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.controller.utilities.GraphicUtility;
+import it.univaq.disim.oop.myclashofunivaq.controller.utilities.Posizione;
 import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
 import it.univaq.disim.oop.myclashofunivaq.domain.Giocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreComputer;
@@ -101,15 +102,32 @@ public class MazzoController implements Initializable, InizializzaDati<Partita> 
 			imageView.setOnMouseClicked(event1 -> {
 				ImageView imageViewScelta = utility.creaImpostaImageView(carta.getImmagineCarta(), dim_img, dim_img);
 				try {
-					if (carteScelte.contains(carta) || carteScelte.size() == 8) {
-						throw new RuntimeException();
+					
+					if (carteScelte.contains(carta)) {
+						throw new MazzoException("CARTA GIÀ SCELTA");
 					}
+					if(carteScelte.size() == 8) {
+						throw new MazzoException("MAZZO PIENO");
+					}
+					
 					carteScelte.add(carta);
 
 					utility.aggiungiCartaImmagineGriglia(mazzo, null, imageViewScelta);
+					
+					this.labelErrori.setText("");
+					
+					imageViewScelta.setOnMouseClicked(event2 -> {
+						mazzo.getChildren().remove(imageViewScelta);
+						carteScelte.remove(carta);
+						
+						Posizione posizione =  new Posizione(GridPane.getColumnIndex(imageViewScelta), 
+								GridPane.getRowIndex(imageViewScelta));
+						
+						utility.eliminaImmagineCarta(mazzo, posizione, imageViewScelta);
+					});
 
-				} catch (RuntimeException e) {
-					this.labelErrori.setText("hai già scelto quella carta oppure è pieno");
+				} catch (MazzoException e) {
+					this.labelErrori.setText(e.getMessage());
 				}
 			});
 
@@ -125,7 +143,12 @@ public class MazzoController implements Initializable, InizializzaDati<Partita> 
 	private void action() {
 		try {
 			i++;
+			
+			if(carteScelte.size() < 8) 
+				throw new MazzoException("TI MANCANO ANCORA " + (8 - carteScelte.size()) + " CARTE");
+			
 			Mazzo mazzo = mazzoService.creaMazzo(carteScelte);
+			
 			/* metodo superfluo perché essendo il mazzo senza duplicati non si
 			 * possono avere un numero di categorie < di 5, in ogni viene lasciata l'implementazione
 			 * nel service
@@ -139,14 +162,13 @@ public class MazzoController implements Initializable, InizializzaDati<Partita> 
 			} else {
 				System.out.println("MAZZI IMPOSTATI");
 				i = 0;
-				for(Carta c : carteScelte) {
-					System.out.println("utente " + c.getNome());
-				}
 				dispatcher.caricaVista("gioco", partita);
 			}
 
 		} catch (ViewException e) {
 			e.printStackTrace();
+		} catch (MazzoException e) {
+			this.labelErrori.setText(e.getMessage());
 		}
 	}
 
