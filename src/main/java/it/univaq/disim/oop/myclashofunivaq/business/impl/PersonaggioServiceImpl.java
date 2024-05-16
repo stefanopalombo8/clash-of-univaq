@@ -53,6 +53,9 @@ public class PersonaggioServiceImpl implements PersonaggioService, ResetStaticVa
 			
 			torreAttaccata.setVita(risultato.doubleValue());
 			
+			if(torreAttaccata.getVita() <= 0.0) 
+				torreAttaccata.setVita(0);
+			
 			System.out.println("VITA TORRE DOPO L'ATTACCO " + torreAttaccata.getVita());
 		}
 		else {
@@ -67,7 +70,7 @@ public class PersonaggioServiceImpl implements PersonaggioService, ResetStaticVa
 				int dannoVita = attaccato.getArmatura();
 				attaccato.setArmatura(0);
 				
-				attaccato.setVita(attaccato.getVita() - dannoVita);
+				attaccato.setVita(attaccato.getVita() + dannoVita);
 				
 				if(attaccato.getVita() <= 0) {
 					double dannoTorre = (double) attaccato.getVita() / 100;
@@ -82,10 +85,11 @@ public class PersonaggioServiceImpl implements PersonaggioService, ResetStaticVa
 					
 					torreAttaccata.setVita(risultato.doubleValue());
 					
+					if(torreAttaccata.getVita() <= 0.0) 
+						torreAttaccata.setVita(0);
+					
 					System.out.println("VITA TORRE DOPO L'ATTACCO " + torreAttaccata.getVita());
 					
-					if(torreAttaccata.getVita() <= 0)
-						torreAttaccata.setVita(0);
 				}
 			}
 				
