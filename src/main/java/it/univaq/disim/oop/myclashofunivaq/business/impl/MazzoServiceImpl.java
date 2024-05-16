@@ -100,8 +100,20 @@ public class MazzoServiceImpl implements MazzoService, ResetStaticVariables {
 	}
 
 	@Override
-	public Carta mostraProssimaCarta(Mazzo mazzo) {
-		return mazzo.getCarte()[index++ % mazzo.getCarte().length];
+	public Carta mostraProssimaCarta(Mazzo mazzo, List<Carta> carteManoCorrente) {
+		Carta prossimaCarta = mazzo.getCarte()[index++ % mazzo.getCarte().length];
+		boolean flag = this.contieneCarta(prossimaCarta, carteManoCorrente);
+		
+		while(flag) {
+			prossimaCarta = mazzo.getCarte()[index++ % mazzo.getCarte().length];
+			flag = this.contieneCarta(prossimaCarta, carteManoCorrente);
+		}
+		
+		return prossimaCarta;
+	}
+	
+	private boolean contieneCarta(Carta carta, List<Carta> carteManoCorrente) {
+		return carteManoCorrente.stream().anyMatch(c -> c.getNome().equals(carta.getNome()));
 	}
 
 	@Override

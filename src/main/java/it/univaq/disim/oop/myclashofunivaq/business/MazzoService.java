@@ -17,6 +17,6 @@ public interface MazzoService {
 	
 	Carta[] mostraCarteMano(Mazzo mazzo);
 	
-	Carta mostraProssimaCarta(Mazzo mazzo);
+	Carta mostraProssimaCarta(Mazzo mazzo, List<Carta> carteManoCorrente);
 	
 }
