@@ -20,6 +20,10 @@ public interface PartitaService {
 	
 	Giocatore[] findAllGiocatori(Partita partita);
 	
+	Giocatore alternaGiocatore(Partita partita);
+	
+	Giocatore trovaAltroGiocatore(Partita partita, Giocatore giocatoreCorrente);
+	
 	boolean salvaTurnoPartita(Turno turno, Partita partita);
 	
 	int calcolaNumeroMossePartita(Partita partita);	

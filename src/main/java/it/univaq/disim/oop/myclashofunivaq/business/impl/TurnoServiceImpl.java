@@ -10,7 +10,6 @@ import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
-import it.univaq.disim.oop.myclashofunivaq.business.PartitaService;
 import it.univaq.disim.oop.myclashofunivaq.business.ResetStaticVariables;
 import it.univaq.disim.oop.myclashofunivaq.domain.Turno;
 import it.univaq.disim.oop.myclashofunivaq.business.TurnoService;
@@ -28,8 +27,6 @@ import javafx.animation.Timeline;
 
 public class TurnoServiceImpl implements TurnoService, ResetStaticVariables {
 	
-	private final PartitaService partitaService;
-	private static int i = 0; // indice per i giocatori
 	private static int j = 0; // indice per l'ID dei turni
 	private static Map<Integer, Turno> turniPartita = new HashMap<>();
 	private static Map<Integer, Torre> torriPartitaCopy = new HashMap<>();
@@ -37,15 +34,6 @@ public class TurnoServiceImpl implements TurnoService, ResetStaticVariables {
 	private static final String path = "src/main/resourses/files/logsPartite/";
 	
 	private double limiteElisir = 20;
-	
-	public TurnoServiceImpl() {
-		partitaService = new PartitaServiceImpl();
-	}
-
-	@Override
-	public Giocatore alternaGiocatore(Partita partita) {
-		return partitaService.findAllGiocatori(partita)[i++ % partitaService.findAllGiocatori(partita).length];
-	}
 
 	@Override
 	public Turno avviaTurno(Timeline timeline, Giocatore giocatore) {
@@ -68,9 +56,7 @@ public class TurnoServiceImpl implements TurnoService, ResetStaticVariables {
 				newElisir = limiteElisir/10;
 			turno.setElisirGiocatore(this.formatElisir(newElisir));
 			
-			Torre torre = turniPartita.get(j - 2).getTorreGiocatore();
-			double newVitaTorre = torre.getVita();
-			torre.setVita(newVitaTorre);
+			Torre torre = this.trovaTorreGiocatore(giocatore);
 			turno.setTorreGiocatore(torre);
 		}
 			
@@ -115,15 +101,11 @@ public class TurnoServiceImpl implements TurnoService, ResetStaticVariables {
 	
 	@Override
 	public void controllaSchieramento(Turno turno, Carta carta) throws ElisirException {
-		System.out.println("elisir turno " + turno.getElisirGiocatore());
-		System.out.println("costo " + (double) carta.getCostoSchieramento() / 10);
 		if(turno.getElisirGiocatore() < (double) carta.getCostoSchieramento() / 10) {
 			if(turno.getElisirGiocatore() < 0)
 				turno.setElisirGiocatore(0);
 			throw new ElisirException("ELISIR INSUFFICIENTE");
 		}
-			
-		
 	}					
 
 	/* Si è usato l'oggetto BigDecimal per arrotondare la sottrazione tra double
@@ -177,18 +159,6 @@ public class TurnoServiceImpl implements TurnoService, ResetStaticVariables {
 	}
 
 	@Override
-	public Giocatore trovaAltroGiocatore(Partita partita) {
-		Giocatore giocatoreCorrente = this.getUltimoTurno(partita).getGiocatore();
-		
-		for(Giocatore g : partitaService.findAllGiocatori(partita)) {
-			if(!giocatoreCorrente.getNickname().equals(g.getNickname()))
-					return g;
-		}
-		
-		return null;
-	}
-
-	@Override
 	public Torre trovaTorreGiocatore(Giocatore giocatore) {
 		Torre torre = null;
 		
@@ -196,14 +166,15 @@ public class TurnoServiceImpl implements TurnoService, ResetStaticVariables {
 			Turno turno = turniPartita.get(i);
 			if(turno.getGiocatore().equals(giocatore)) {
 				torre = turno.getTorreGiocatore();
+				break;
 			}
 		}
+		
 		return torre;
 	}
 
 	@Override
 	public void reset() {
-		i = 0;
 		j = 0;
 		turniPartita.clear();
 	}
@@ -211,7 +182,6 @@ public class TurnoServiceImpl implements TurnoService, ResetStaticVariables {
 	@Override
 	public void ripopolaMappaTurni(Partita partita) {
 		if(turniPartita.isEmpty()) {
-			i++;
 			for(Turno t : partita.getTurni()) {
 				turniPartita.put(t.getNumero(), t);
 				j = t.getNumero();
@@ -222,11 +192,19 @@ public class TurnoServiceImpl implements TurnoService, ResetStaticVariables {
 
 	@Override
 	public void annullaUltimoTurno(Turno turnoCorrente) {
-		i--;
 		j--;
 		
-		if(j > 0)
-			turniPartita.get(j - 1).setTorreGiocatore(torriPartitaCopy.get(j - 1));
+		if(j > 0) {
+			Torre torreCopy = null;
+			try {
+				torreCopy = (Torre) torriPartitaCopy.get(j - 1).clone();
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+			
+			turniPartita.get(j - 1).setTorreGiocatore(torreCopy);
+		}
+			
 		
 		turniPartita.remove(turnoCorrente.getNumero());
 		
@@ -234,6 +212,9 @@ public class TurnoServiceImpl implements TurnoService, ResetStaticVariables {
 
 	@Override
 	public Turno getUltimoTurno(Partita partita) {
+		if(partita.getTurni().size() == 0)
+			return null;
+	
 		return partita.getTurni().get(partita.getTurni().size() - 1);
 	}
 

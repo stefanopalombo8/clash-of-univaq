@@ -11,15 +11,16 @@ import it.univaq.disim.oop.myclashofunivaq.domain.Turno;
 import javafx.animation.Timeline;
 
 public interface TurnoService {
-	Giocatore alternaGiocatore(Partita partita);
 	
-	Giocatore trovaAltroGiocatore(Partita partita);
-	
-	Turno getUltimoTurno(Partita partita);
+	Torre trovaTorreGiocatore(Giocatore giocatore);
 	
 	Turno avviaTurno(Timeline timeline, Giocatore giocatore);
 	
+	Turno getUltimoTurno(Partita partita);
+	
 	boolean isFirstTurno(Turno turno);
+	
+	boolean isTurnoPari(Turno turno);
 	
 	void cambiaFase(Turno turno) throws FasiTerminateException;
 	
@@ -29,11 +30,8 @@ public interface TurnoService {
 	
 	void salvaMossaGiocatore(Partita partita, Turno turno, MossaGiocatore mossa);
 	
-	Torre trovaTorreGiocatore(Giocatore giocatore);
-	
 	void ripopolaMappaTurni(Partita partita);
 	
 	void annullaUltimoTurno(Turno turnoCorrente);
 	
-	boolean isTurnoPari(Turno turno);
 }

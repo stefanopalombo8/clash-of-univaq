@@ -15,14 +15,16 @@ import java.util.Map;
 import java.util.Set;
 
 import it.univaq.disim.oop.myclashofunivaq.business.PartitaService;
+import it.univaq.disim.oop.myclashofunivaq.business.ResetStaticVariables;
 import it.univaq.disim.oop.myclashofunivaq.domain.Giocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
 import it.univaq.disim.oop.myclashofunivaq.domain.Turno;
 
-public class PartitaServiceImpl implements PartitaService {
+public class PartitaServiceImpl implements PartitaService, ResetStaticVariables {
 
 	private static Map<Integer, Partita> partite = new HashMap<>();
 	private static Integer ID = 0;
+	private static int i = 0;
 	
 	private static String path = "src/main/resourses/files/partiteSalvate/";
 
@@ -50,6 +52,7 @@ public class PartitaServiceImpl implements PartitaService {
 
 		return giocatoriPartita;
 	}
+	
 
 	@Override
 	public boolean aggiungiGiocatore(Giocatore giocatore, Partita partita) throws NicknameNonValido {
@@ -58,6 +61,25 @@ public class PartitaServiceImpl implements PartitaService {
 
 		return true;
 
+	}
+	
+	@Override
+	public Giocatore alternaGiocatore(Partita partita) {
+		return findAllGiocatori(partita)[i++ % findAllGiocatori(partita).length];
+	}
+	
+	@Override
+	public Giocatore trovaAltroGiocatore(Partita partita, Giocatore giocatoreCorrente) {
+		if(giocatoreCorrente == null) { //primo turno
+			return findAllGiocatori(partita)[0];
+		}
+		
+		for(Giocatore g : findAllGiocatori(partita)) {
+			if(!g.getNickname().equals(giocatoreCorrente.getNickname()))
+				return g;
+		}
+		
+		return null;
 	}
 
 	@Override
@@ -148,6 +170,11 @@ public class PartitaServiceImpl implements PartitaService {
 	public void mappaPartitaSerializzata(Partita partita) {
 		partite.put(partita.getID(), partita);
 		ID++;
+	}
+
+	@Override
+	public void reset() {
+		i = 0;
 	}
 
 }
