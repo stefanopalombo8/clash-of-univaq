@@ -2,11 +2,11 @@ package it.univaq.disim.oop.myclashofunivaq.controller.utilities;
 
 import java.io.FileInputStream;
 
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -34,29 +34,30 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 
-public class GraphicUtility implements ResetStaticVariables, Serializable {
-	
+public class GraphicEngine implements ResetStaticVariables {
+
 	// mappe che mi aiutano nel avere sotto controllo tutte le immagini e le carte
 	private Map<String, LinkedHashMap<Posizione, ImageView>> mappaGridpaneImmagini = new HashMap<>();
 	private Map<String, LinkedHashMap<Posizione, Carta>> mappaGridpaneCarte = new HashMap<>();
 	private Map<String, LinkedHashMap<Posizione, Carta>> mappaGridpaneCarteBackup = new HashMap<>();
-	
-	public Map<String, LinkedHashMap<Incantesimo, Posizione>> mappaGridpaneIncantesimi = new HashMap<>();
+	private Map<String, LinkedHashMap<Incantesimo, Posizione>> mappaGridpaneIncantesimi = new HashMap<>();
 
 	private Posizione[] posizioneCartaSelezionata = new Posizione[1];
 
-	private static List<GraphicUtility> stati = new ArrayList<>();
+	private static List<GraphicEngine> stati = new ArrayList<>();
 	private static int i = 0;
 
 	private List<ImageView> nuoveImmagini = new ArrayList<>();
-	
-	/* questi 2 path mi servono per serializzare le carte (personaggi) 
-	 * uso un file per ogni partita a cui associo due file (una mappa personaggi e una mappa incantesimi)
-	 * perché con un unico file ho problemi a recuperare le informazioni
+
+	/*
+	 * questi 2 path mi servono per serializzare le carte (personaggi) uso un file
+	 * per ogni partita a cui associo due file (una mappa personaggi e una mappa
+	 * incantesimi) perché con un unico file ho problemi a recuperare le
+	 * informazioni
 	 */
 	private static String path = "src/main/resourses/files/partiteSalvate/carte";
 	private static String path2 = "src/main/resourses/files/partiteSalvate/incantesimi";
-	
+
 	public Map<String, LinkedHashMap<Posizione, ImageView>> getMappaGridpaneImmagini() {
 		return mappaGridpaneImmagini;
 	}
@@ -64,13 +65,13 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 	public Map<String, LinkedHashMap<Posizione, Carta>> getMappaGridpaneCarte() {
 		return mappaGridpaneCarte;
 	}
+	
+	public Map<String, LinkedHashMap<Incantesimo, Posizione>> getMappaGridpaneIncantesimi() {
+		return mappaGridpaneIncantesimi;
+	}
 
 	public Posizione[] getPosizioneCartaSelezionata() {
 		return posizioneCartaSelezionata;
-	}
-
-	public void setMappaGridpaneImmagini(Map<String, LinkedHashMap<Posizione, ImageView>> mappaGridpaneImmagini) {
-		this.mappaGridpaneImmagini = mappaGridpaneImmagini;
 	}
 
 	public void setMappaGridpaneCarte(Map<String, LinkedHashMap<Posizione, Carta>> mappaGridpaneCarte) {
@@ -81,70 +82,80 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 		return nuoveImmagini;
 	}
 
-	public static List<GraphicUtility> getStati() {
+	public static List<GraphicEngine> getStati() {
 		return stati;
 	}
 
 	public static void serializeMappaGridpaneCarte(Map<String, LinkedHashMap<Posizione, Carta>> mappaGridpaneCarte,
 			String index) throws IOException {
-		String path = GraphicUtility.path + index + ".txt";
+		String path = GraphicEngine.path + index + ".txt";
 		try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(path))) {
 			outputStream.writeObject(mappaGridpaneCarte);
 		}
 	}
 
+	@SuppressWarnings("unchecked") //è sicuro che ritorna una mappa
 	public static Map<String, LinkedHashMap<Posizione, Carta>> deserializeMappaGridpaneCarte(String index)
 			throws IOException, ClassNotFoundException {
-		String path = GraphicUtility.path + index + ".txt";
+		String path = GraphicEngine.path + index + ".txt";
 		try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(path))) {
 			return (Map<String, LinkedHashMap<Posizione, Carta>>) inputStream.readObject();
 		}
 	}
-	
-	public static void serializeMappaGridpaneIncantesimi(Map<String, LinkedHashMap<Incantesimo, Posizione>> mappaGridpaneIncantesimi,
-			String index) throws IOException {
-		String path = GraphicUtility.path2 + index + ".txt";
+
+	public static void serializeMappaGridpaneIncantesimi(
+			Map<String, LinkedHashMap<Incantesimo, Posizione>> mappaGridpaneIncantesimi, String index)
+			throws IOException {
+		String path = GraphicEngine.path2 + index + ".txt";
 		try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(path))) {
 			outputStream.writeObject(mappaGridpaneIncantesimi);
 		}
 	}
 
+	@SuppressWarnings("unchecked") //è sicuro che ritorna una mappa
 	public static Map<String, LinkedHashMap<Incantesimo, Posizione>> deserializeMappaGridpaneIncantesimi(String index)
 			throws IOException, ClassNotFoundException {
-		String path = GraphicUtility.path2 + index + ".txt";
+		String path = GraphicEngine.path2 + index + ".txt";
 		try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(path))) {
 			return (Map<String, LinkedHashMap<Incantesimo, Posizione>>) inputStream.readObject();
 		}
 	}
-	
+
 	public void impostaRetroCarte(GridPane grid) {
 		Image image = new Image("/viste/images/retroCarte.jpg");
-		for(int i = 0; i < 4; i++) {
+		for (int i = 0; i < 4; i++) {
 			ImageView imageView = this.creaImpostaImageView(image, 60, 50);
 			grid.add(imageView, i, 0);
 			GridPane.setHalignment(imageView, HPos.CENTER); // Allineamento orizzontale al centro
-	        GridPane.setValignment(imageView, VPos.CENTER); // Allineamento verticale al centro
+			GridPane.setValignment(imageView, VPos.CENTER); // Allineamento verticale al centro
 		}
 	}
 
-
-	public void aggiungiStato(GraphicUtility stato) {
+	public void aggiungiStato(GraphicEngine stato) {
 		stati.add(stato);
 		i++;
 	}
 
-	public GraphicUtility getUltimoStatoGiocatore() {
-		return stati.get(i - 2);
+	public GraphicEngine getUltimoStatoGiocatore() {
+		if(i>1)
+			return stati.get(i - 2);
+		
+		return null;
 	}
 
-	public GraphicUtility getUltimoStato() {
-		return stati.get(i - 1);
+	public GraphicEngine getUltimoStato() {
+		if(i>0)
+			return stati.get(i - 1);
+		
+		return null;
 	}
 
-	public void sovrascriviUltimoStato(GraphicUtility stato) {
+	public void sovrascriviUltimoStato(GraphicEngine stato) {
 		int index = stati.size() - 1;
-		stati.remove(index);
-		stati.add(index, stato);
+		if(index > -1) {
+			stati.remove(index);
+			stati.add(index, stato);
+		}
 	}
 
 	public ImageView creaImpostaImageView(Image image, double height, double width) {
@@ -156,20 +167,20 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 	}
 
 	public void impostaTooltip(ImageView img, Carta carta) {
-		Tooltip tooltip = new Tooltip("NOME: " + carta.getNome() + "\n" + "COSTO: " + carta.getCostoSchieramento() + "\n");
+		Tooltip tooltip = new Tooltip(
+				"NOME: " + carta.getNome() + "\n" + "COSTO: " + carta.getCostoSchieramento() + "\n");
 		if (carta instanceof Personaggio) {
 			Personaggio p = (Personaggio) carta;
-			tooltip.setText(tooltip.getText() + "VITA " + p.getVita() + "\n" + "MANA: " + p.getMana() + "\n" + "DANNO: " + p.getDanno()
-					+ "\n" + "ARMOR: " + p.getArmatura() + "\n" + "POSIZIONE: " + p.getPosizionamento());
-		}
-		else {
+			tooltip.setText(tooltip.getText() + "VITA " + p.getVita() + "\n" + "MANA: " + p.getMana() + "\n" + "DANNO: "
+					+ p.getDanno() + "\n" + "ARMOR: " + p.getArmatura() + "\n" + "POSIZIONE: " + p.getPosizionamento());
+		} else {
 			Incantesimo i = (Incantesimo) carta;
-			switch(i.getNome()) {
-			case "Furia": 
+			switch (i.getNome()) {
+			case "Furia":
 				Furia f = (Furia) i;
 				tooltip.setText(tooltip.getText() + "AUMENTO ATTACCO: " + f.getAumento());
 				break;
-			case "Fulmine": 
+			case "Fulmine":
 				Fulmine fu = (Fulmine) i;
 				tooltip.setText(tooltip.getText() + "DANNO: " + fu.getDanno());
 				break;
@@ -183,7 +194,7 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 		Tooltip.install(img, tooltip);
 	}
 
-	public void setImageDragProperty(GridPane source, ImageView imageView) {
+	public void setImageDragProperty(ImageView imageView) {
 		imageView.setOnDragDetected(event -> {
 			Dragboard db = imageView.startDragAndDrop(TransferMode.ANY);
 			ClipboardContent content = new ClipboardContent();
@@ -197,7 +208,7 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 				posizione = new Posizione(GridPane.getColumnIndex(imageView), GridPane.getRowIndex(imageView));
 
 			posizioneCartaSelezionata[0] = posizione;
-			
+
 		});
 	}
 
@@ -205,6 +216,7 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 	 * predisposizione per ogni griglia di un numero di posizioni congruo al numero
 	 * di righe e colonne
 	 */
+
 	public void mappingGriglie(List<GridPane> grids) {
 
 		for (GridPane grid : grids) {
@@ -214,6 +226,8 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 
 			int num_colonne = grid.getColumnConstraints().size();
 			int num_righe = grid.getRowConstraints().size();
+
+			String idGrid = grid.getId();
 
 			for (int i = 0; i < num_righe; i++) {
 				for (int j = 0; j < num_colonne; j++) {
@@ -225,9 +239,9 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 
 			}
 
-			mappaGridpaneImmagini.put(grid.getId(), mappaImmagini);
-			mappaGridpaneCarte.put(grid.getId(), mappaCarte);
-			mappaGridpaneCarteBackup.put(grid.getId(), mappaCarteBackup);
+			mappaGridpaneImmagini.put(idGrid, mappaImmagini);
+			mappaGridpaneCarte.put(idGrid, mappaCarte);
+			mappaGridpaneCarteBackup.put(idGrid, mappaCarteBackup);
 		}
 
 	}
@@ -275,16 +289,18 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 					}
 
 					break;
+
 				}
 
 			}
 		}
 
 	}
+
 	// metodo per ricercare una carta data la strada e la sua posizione
 	public Carta ricercaCartaStrada(String gridPaneSource, Posizione posizione) {
 		Carta carta = null;
-		
+
 		for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : mappaGridpaneCarte.entrySet()) {
 			String gridPaneKey = entry.getKey();
 
@@ -293,7 +309,7 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 				LinkedHashMap<Posizione, Carta> innerMap = entry.getValue();
 
 				for (Posizione p : innerMap.keySet()) {
-					if (p.getRiga() == posizione.getRiga() && p.getColonna() == posizione.getColonna()) {
+					if (p.equals(posizione)) {
 						carta = innerMap.get(p);
 						break;
 					}
@@ -306,11 +322,11 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 
 		return carta;
 	}
-	
+
 	// metodo per ricercare un'immagine data la strada e la sua posizione
 	public ImageView ricercaImmagineStrada(String gridPaneSource, Posizione posizione) {
 		ImageView imageView = null;
-		
+
 		for (Map.Entry<String, LinkedHashMap<Posizione, ImageView>> entry : mappaGridpaneImmagini.entrySet()) {
 			String gridPaneKey = entry.getKey();
 
@@ -319,7 +335,7 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 				LinkedHashMap<Posizione, ImageView> innerMap = entry.getValue();
 
 				for (Posizione p : innerMap.keySet()) {
-					if (p.getRiga() == posizione.getRiga() && p.getColonna() == posizione.getColonna()) {
+					if (p.equals(posizione)) {
 						imageView = innerMap.get(p);
 						break;
 					}
@@ -381,6 +397,7 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 		}
 
 	}
+
 	// metodo per prendermi la enum associata alla grid per uno schieramento
 	public GridPaneGioco ricercaStradaSchieramento(GridPane grid) {
 		Optional<GridPaneGioco> optionalName = Arrays.stream(GridPaneGioco.values())
@@ -388,9 +405,11 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 
 		return optionalName.get();
 	}
-	
-	/* questo è uno dei metodi più importanti perché mi consente di mi portarmi dietro le carte
-	 *  ad ogni nuova istanza del controller (cioè ad ogni nuovo turno)
+
+	/*
+	 * questo è uno dei metodi più importanti perché mi consente di mi portarmi
+	 * dietro le carte ad ogni nuova istanza del controller (cioè ad ogni nuovo
+	 * turno)
 	 */
 	public void ripristinaStato(List<GridPane> grids) {
 
@@ -410,7 +429,7 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 						Carta carta = innerMap.get(p);
 						if (carta != null) {
 							LinkedHashMap<Posizione, Carta> currentInnerMap = this.mappaGridpaneCarte.get(gridPaneKey);
-							currentInnerMap.replace(this.ricercaNewPosizione(p, currentInnerMap), carta);
+							currentInnerMap.replace(p, carta);
 
 							if (carta instanceof Personaggio) {
 								Personaggio personaggio = (Personaggio) carta;
@@ -449,7 +468,7 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 							newImageView.setRotate(oldImageView.getRotate());
 							this.nuoveImmagini.add(newImageView);
 
-							currentInnerMap.replace(this.ricercaNewPosizione(p, currentInnerMap), newImageView);
+							currentInnerMap.replace(p, newImageView);
 							grid.add(newImageView, p.getColonna(), p.getRiga());
 
 							this.impostaTooltip(newImageView, this.ricercaCartaStrada(grid.getId(), p));
@@ -474,9 +493,9 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 				ImageView newImageView = this.creaImpostaImageView(oldImageView.getImage(), oldImageView.getFitHeight(),
 						oldImageView.getFitWidth());
 
-				this.setImageDragProperty(gridManoCorrente, newImageView);
+				this.setImageDragProperty(newImageView);
 
-				currentInnerMap.replace(this.ricercaNewPosizione(p, currentInnerMap), newImageView);
+				currentInnerMap.replace(p, newImageView);
 				gridManoCorrente.add(newImageView, p.getColonna(), p.getRiga());
 
 			}
@@ -489,29 +508,11 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 		for (Posizione p : oldInnerMapCarte.keySet()) {
 			Carta oldCarta = oldInnerMapCarte.get(p);
 			if (oldCarta != null) {
-				currentInnerMapCarte.replace(this.ricercaNewPosizione(p, currentInnerMapCarte), oldCarta);
+				currentInnerMapCarte.replace(p, oldCarta);
+				this.impostaTooltip(this.ricercaImmagineStrada(gridManoCorrente.getId(), p), oldCarta);
 			}
 		}
 
-	}
-
-	/* anche questo è fondamentale perché ad ogni istanza di questa classe 
-	 * gli oggetti posizione sono sempre nuovi, quindi con questo trovo sempre
-	 * la posizione corretta delle carte (si potrebbe ridefinire anche l'equals
-	 * nella classe Posizione)
-	 */
-	public Posizione ricercaNewPosizione(Posizione toSearch, LinkedHashMap<Posizione, ?> innerMap) {
-		Posizione toReturn = null;
-
-		for (Posizione p : innerMap.keySet()) {
-			// equals tra posizioni
-			if (p.getColonna() == toSearch.getColonna() && p.getRiga() == toSearch.getRiga()) {
-				toReturn = p;
-				break;
-			}
-		}
-
-		return toReturn;
 	}
 
 	public int calcolaNumeroCarteTerreno() {
@@ -562,7 +563,7 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 		i = 0;
 		stati.clear();
 	}
-	
+
 	// ripristino dello stato dopo la deserializzazione
 	public void ripristinaStato(List<GridPane> grids,
 			Map<String, LinkedHashMap<Posizione, Carta>> mappaDeserializzata) {
@@ -583,7 +584,7 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 
 							if (gridDaPopolare.getId().equals(GridPaneGioco.carteManoG1.toString())
 									|| gridDaPopolare.getId().equals(GridPaneGioco.carteManoG2.toString())) {
-								this.setImageDragProperty(gridDaPopolare, newImageView);
+								this.setImageDragProperty(newImageView);
 							} else
 								this.nuoveImmagini.add(newImageView);
 
@@ -591,7 +592,7 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 
 							LinkedHashMap<Posizione, ImageView> currentInnerMap = this.mappaGridpaneImmagini
 									.get(gridDaPopolare.getId());
-							currentInnerMap.replace(this.ricercaNewPosizione(p, currentInnerMap), newImageView);
+							currentInnerMap.replace(p, newImageView);
 
 						}
 					}
@@ -602,11 +603,8 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 		}
 
 	}
-	
-	
-	
-	public void ripristinaDopoAnnullamento(List<GridPane> grids, List<GridPane> gridsAvversario) {
 
+	public void ripristinaDopoAnnullamento(List<GridPane> gridsAvversario) {
 
 		if (stati.size() > 0) {
 			for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : this.mappaGridpaneCarteBackup.entrySet()) {
@@ -627,12 +625,11 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 								try {
 									nuovaCarta = (Carta) carta.clone();
 								} catch (CloneNotSupportedException e) {
-									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
-								LinkedHashMap<Posizione, Carta> currentInnerMap = this.mappaGridpaneCarte
+								LinkedHashMap<Posizione, Carta> currentInnerMap = this.getUltimoStato().mappaGridpaneCarte
 										.get(gridPaneKey);
-								currentInnerMap.replace(this.ricercaNewPosizione(p, currentInnerMap), nuovaCarta);
+								currentInnerMap.replace(p, nuovaCarta);
 							}
 						}
 					}
@@ -641,10 +638,10 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 		}
 
 	}
-	
+
 	// ripristino dopo aver annullato le mosse
 	public void ripristinaCarteManoDopoAnnullamento(GridPane gridManoCorrente) {
-		
+
 		LinkedHashMap<Posizione, ImageView> oldInnerMap = this.getUltimoStatoGiocatore().mappaGridpaneImmagini
 				.get(gridManoCorrente.getId());
 		LinkedHashMap<Posizione, ImageView> currentInnerMap = this.mappaGridpaneImmagini.get(gridManoCorrente.getId());
@@ -655,9 +652,9 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 				ImageView newImageView = this.creaImpostaImageView(oldImageView.getImage(), oldImageView.getFitHeight(),
 						oldImageView.getFitWidth());
 
-				this.setImageDragProperty(gridManoCorrente, newImageView);
+				this.setImageDragProperty(newImageView);
 
-				currentInnerMap.replace(this.ricercaNewPosizione(p, currentInnerMap), newImageView);
+				currentInnerMap.replace(p, newImageView);
 				gridManoCorrente.add(newImageView, p.getColonna(), p.getRiga());
 
 			}
@@ -670,12 +667,12 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 		for (Posizione p : oldInnerMapCarte.keySet()) {
 			Carta oldCarta = oldInnerMapCarte.get(p);
 			if (oldCarta != null) {
-				currentInnerMapCarte.replace(this.ricercaNewPosizione(p, currentInnerMapCarte), oldCarta);
+				currentInnerMapCarte.replace(p, oldCarta);
 			}
 		}
 
 	}
-	
+
 	// copia profonda della mappa carte
 	private void copyMappaCarta(List<GridPane> grids) {
 		for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : this.getUltimoStato().mappaGridpaneCarte
@@ -697,13 +694,12 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 							try {
 								cartaCopy = (Carta) carta.clone();
 							} catch (CloneNotSupportedException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 
 							LinkedHashMap<Posizione, Carta> currentInnerMap = this.mappaGridpaneCarteBackup
 									.get(grid.getId());
-							currentInnerMap.put(this.ricercaNewPosizione(p, currentInnerMap), cartaCopy);
+							currentInnerMap.put(p, cartaCopy);
 
 						}
 					}
@@ -712,7 +708,7 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 
 		}
 	}
-	
+
 	// controllo per vedere se ci sono personaggi davanti all'attaccante
 	public boolean checkAttaccoTorre(String stradaAttaccante) {
 		for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : this.mappaGridpaneCarte.entrySet()) {
@@ -734,31 +730,31 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 
 		return true;
 	}
-	
-	//quando un personaggio muore uso questo per eliminare l'immagine e la carta
+
+	// quando un personaggio muore uso questo per eliminare l'immagine e la carta
 	public void eliminaImmagineCarta(GridPane grid, Posizione posizione, ImageView imageViewDaEliminare) {
-		if(grid.getChildren().contains(imageViewDaEliminare))
+		if (grid.getChildren().contains(imageViewDaEliminare))
 			grid.getChildren().remove(imageViewDaEliminare);
-		
+
 		for (Map.Entry<String, LinkedHashMap<Posizione, ImageView>> entry : this.mappaGridpaneImmagini.entrySet()) {
 			String gridPaneKey = entry.getKey();
 			LinkedHashMap<Posizione, ImageView> innerMap = entry.getValue();
-			
-			if(gridPaneKey.equals(grid.getId()))
-				innerMap.replace(this.ricercaNewPosizione(posizione, innerMap), null);
+
+			if (gridPaneKey.equals(grid.getId()))
+				innerMap.replace(posizione, null);
 		}
-		
+
 		for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : this.mappaGridpaneCarte.entrySet()) {
 			String gridPaneKey = entry.getKey();
 			LinkedHashMap<Posizione, Carta> innerMap = entry.getValue();
-			
-			if(gridPaneKey.equals(grid.getId()))
-				innerMap.replace(this.ricercaNewPosizione(posizione, innerMap), null);
+
+			if (gridPaneKey.equals(grid.getId()))
+				innerMap.replace(posizione, null);
 
 		}
-		
+
 	}
-	
+
 	public Posizione getPosizionePersonaggio(Personaggio personaggio) {
 		for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : this.mappaGridpaneCarte.entrySet()) {
 
@@ -772,18 +768,16 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 			for (Posizione p : innerMap.keySet()) {
 				Personaggio personaggioMappa = (Personaggio) innerMap.get(p);
 				if (personaggioMappa != null) {
-					if(personaggioMappa.equals(personaggio))
+					if (personaggioMappa.equals(personaggio))
 						return p;
 				}
-					
 
 			}
 		}
-		
-		
+
 		return null;
 	}
-	
+
 	public String getStradaPersonaggio(Personaggio personaggio) {
 		for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : this.mappaGridpaneCarte.entrySet()) {
 
@@ -797,35 +791,34 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 			for (Posizione p : innerMap.keySet()) {
 				Personaggio personaggioMappa = (Personaggio) innerMap.get(p);
 				if (personaggioMappa != null) {
-					if(personaggioMappa.equals(personaggio))
+					if (personaggioMappa.equals(personaggio))
 						return gridPaneKey;
 				}
-					
 
 			}
 		}
-		
-		
+
 		return null;
 	}
-	
-	// prima di serializzare mi costruisco questa mappa che mi servirà dopo per recuperare gl incantesimi
+
+	// prima di serializzare mi costruisco questa mappa che mi servirà dopo per
+	// recuperare gl incantesimi
 	public void popolaMappaIncantesimi(List<Incantesimo> listIncantesimiAttivi) {
 		String stradaPersonaggio = null;
 		LinkedHashMap<Incantesimo, Posizione> innerMap = new LinkedHashMap<>();
-		for(Incantesimo incantesimo : listIncantesimiAttivi) {
+		for (Incantesimo incantesimo : listIncantesimiAttivi) {
 			stradaPersonaggio = this.getStradaPersonaggio(incantesimo.getPersonaggioTarget());
 			Posizione posizionePersonaggio = this.getPosizionePersonaggio(incantesimo.getPersonaggioTarget());
-			
-			innerMap.put(incantesimo, posizionePersonaggio);	
+
+			innerMap.put(incantesimo, posizionePersonaggio);
 		}
-		
+
 		this.mappaGridpaneIncantesimi.put(stradaPersonaggio, innerMap);
 	}
-	
-	public List<Personaggio> cercaCarteStrada(String strada, Personaggio personaggioChiamante) {
+
+	public List<Personaggio> cercaPersonaggiStrada(String strada, Personaggio personaggioChiamante) {
 		List<Personaggio> list = new ArrayList<>();
-		
+
 		for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : this.mappaGridpaneCarte.entrySet()) {
 
 			String gridPaneKey = entry.getKey();
@@ -834,21 +827,44 @@ public class GraphicUtility implements ResetStaticVariables, Serializable {
 			if (gridPaneKey.equals(GridPaneGioco.carteManoG1.toString())
 					|| gridPaneKey.equals(GridPaneGioco.carteManoG2.toString()))
 				continue;
-			
-			if(gridPaneKey.equals(strada)) {
+
+			if (gridPaneKey.equals(strada)) {
 				for (Posizione p : innerMap.keySet()) {
 					Personaggio personaggioMappa = (Personaggio) innerMap.get(p);
 					if (personaggioMappa != null && !personaggioMappa.equals(personaggioChiamante)) {
 						list.add(personaggioMappa);
 					}
-						
 
 				}
 				break;
 			}
 
 		}
-		
+
+		return list;
+	}
+
+	
+	public List<Carta> ricercaCarteMano(String carteManoKey) {
+		List<Carta> list = new ArrayList<>();
+
+		for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : this.mappaGridpaneCarte.entrySet()) {
+
+			String gridPaneKey = entry.getKey();
+			LinkedHashMap<Posizione, Carta> innerMap = entry.getValue();
+
+			if (!gridPaneKey.equals(carteManoKey))
+				continue;
+
+			for (Posizione p : innerMap.keySet()) {
+				Carta cartaMano = innerMap.get(p);
+				if (cartaMano != null) {
+					list.add(cartaMano);
+				}
+			}
+			break;
+		}
+
 		return list;
 	}
 
