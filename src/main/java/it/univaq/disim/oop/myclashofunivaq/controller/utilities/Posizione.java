@@ -1,8 +1,12 @@
 package it.univaq.disim.oop.myclashofunivaq.controller.utilities;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Posizione implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
 	private int riga;
 	private int colonna;
 	
@@ -26,6 +30,23 @@ public class Posizione implements Serializable {
 	@Override
 	public String toString() {
 		return "Posizione [riga=" + riga + ", colonna=" + colonna + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(colonna, riga);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Posizione other = (Posizione) obj;
+		return colonna == other.colonna && riga == other.riga;
 	}
 	
 }
