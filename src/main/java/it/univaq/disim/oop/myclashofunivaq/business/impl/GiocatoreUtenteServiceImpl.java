@@ -24,7 +24,7 @@ public class GiocatoreUtenteServiceImpl implements GiocatoreUtenteService {
 		
 		if(giocatoreMemory != null)
 			return giocatoreMemory;
-		else if (nickname.equals("") || nickname.length() < 3 || !nickname.matches(".*\\d$"))
+		else if (nickname.equals("") || nickname.length() < 2)
 			throw new NicknameNonValido("ERRORE NICKNAME NON VALIDO");
 		
 			
