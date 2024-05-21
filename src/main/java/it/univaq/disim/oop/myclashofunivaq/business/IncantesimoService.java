@@ -18,4 +18,6 @@ public interface IncantesimoService {
 	
 	void checkAnnullaEffettoIncantesimi();
 	
+	void annullamentoIncantesimi();
+	
 }

@@ -76,4 +76,15 @@ public class IncantesimoServiceImpl implements IncantesimoService, ResetStaticVa
 		incantesimiAttivi.clear();
 	}
 
+	@Override
+	public void annullamentoIncantesimi() {
+		for(Incantesimo incantesimo : incantesimiAttivi.keySet()) {
+			Integer numero = incantesimiAttivi.get(incantesimo);
+			if(numero == 0) { // vuol dire che l'incantesimo è stato appena schierato
+				incantesimiAttivi.remove(incantesimo);
+			}
+		}
+		
+	}
+
 }
