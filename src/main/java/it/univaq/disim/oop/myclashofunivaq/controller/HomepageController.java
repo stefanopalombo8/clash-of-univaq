@@ -13,7 +13,7 @@ import it.univaq.disim.oop.myclashofunivaq.business.impl.MazzoServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.NicknameNonValido;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.PartitaServiceImpl;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.TurnoServiceImpl;
-import it.univaq.disim.oop.myclashofunivaq.controller.utilities.GraphicUtility;
+import it.univaq.disim.oop.myclashofunivaq.controller.utilities.GraphicEngine;
 import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreComputer;
 import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreUtente;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
@@ -48,7 +48,7 @@ public class HomepageController implements Initializable {
 	
 	private final ResetStaticVariables mazzoReset;
 	private final ResetStaticVariables turniReset;
-	private final ResetStaticVariables utilityReset;
+	private final ResetStaticVariables engineReset;
 	private final ResetStaticVariables incantesimiReset;
 	
 	private final GiocatoreUtenteService giocatoreUtenteService;
@@ -61,7 +61,7 @@ public class HomepageController implements Initializable {
 		partitaService = new PartitaServiceImpl();
 		mazzoReset = new MazzoServiceImpl();
 		turniReset = new TurnoServiceImpl();
-		utilityReset = new GraphicUtility();
+		engineReset = new GraphicEngine();
 		incantesimiReset = new IncantesimoServiceImpl();
 	}
 
@@ -72,7 +72,7 @@ public class HomepageController implements Initializable {
 		
 		this.mazzoReset.reset();
 		this.turniReset.reset();
-		this.utilityReset.reset();
+		this.engineReset.reset();
 		this.incantesimiReset.reset();
 	}
 

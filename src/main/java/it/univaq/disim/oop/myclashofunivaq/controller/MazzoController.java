@@ -2,24 +2,27 @@ package it.univaq.disim.oop.myclashofunivaq.controller;
 
 import java.net.URL;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import it.univaq.disim.oop.myclashofunivaq.business.MazzoService;
+import it.univaq.disim.oop.myclashofunivaq.business.PartitaService;
 import it.univaq.disim.oop.myclashofunivaq.business.CartaService;
-import it.univaq.disim.oop.myclashofunivaq.business.TurnoService;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.Carte;
 import it.univaq.disim.oop.myclashofunivaq.business.impl.MazzoServiceImpl;
-import it.univaq.disim.oop.myclashofunivaq.business.impl.TurnoServiceImpl;
-import it.univaq.disim.oop.myclashofunivaq.controller.utilities.GraphicUtility;
+import it.univaq.disim.oop.myclashofunivaq.business.impl.PartitaServiceImpl;
+import it.univaq.disim.oop.myclashofunivaq.controller.utilities.GraphicEngine;
 import it.univaq.disim.oop.myclashofunivaq.controller.utilities.Posizione;
 import it.univaq.disim.oop.myclashofunivaq.domain.Carta;
 import it.univaq.disim.oop.myclashofunivaq.domain.Giocatore;
 import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreComputer;
-import it.univaq.disim.oop.myclashofunivaq.domain.Incantesimo;
+//import it.univaq.disim.oop.myclashofunivaq.domain.GiocatoreComputer;
+//import it.univaq.disim.oop.myclashofunivaq.domain.Incantesimo;
 import it.univaq.disim.oop.myclashofunivaq.domain.Mazzo;
 import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
+import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
 import it.univaq.disim.oop.myclashofunivaq.view.InizializzaDati;
 import it.univaq.disim.oop.myclashofunivaq.view.ViewDispatcher;
 import it.univaq.disim.oop.myclashofunivaq.view.ViewException;
@@ -52,11 +55,11 @@ public class MazzoController implements Initializable, InizializzaDati<Partita> 
 
 	private ViewDispatcher dispatcher;
 	private Partita partita;
-
-	private final TurnoService turnoService;
+	
+	private final PartitaService partitaService;
 	private final CartaService cartaService;
 	private final MazzoService mazzoService;
-	private GraphicUtility utility;
+	private GraphicEngine engine;
 
 	private Giocatore giocatoreCorrente;
 	private List<Carta> carteScelte;
@@ -68,9 +71,9 @@ public class MazzoController implements Initializable, InizializzaDati<Partita> 
 		dispatcher = ViewDispatcher.getInstance();
 		cartaService = new Carte();
 		mazzoService = new MazzoServiceImpl();
-		turnoService = new TurnoServiceImpl();
+		partitaService = new PartitaServiceImpl();
 		carteScelte = new ArrayList<>();
-		utility = new GraphicUtility();
+		engine = new GraphicEngine();
 		grids = new ArrayList<>();
 	}
 
@@ -81,7 +84,7 @@ public class MazzoController implements Initializable, InizializzaDati<Partita> 
 	@Override
 	public void inizializza(Partita partita) {
 		this.partita = partita;
-		giocatoreCorrente = turnoService.alternaGiocatore(partita);
+		giocatoreCorrente = partitaService.alternaGiocatore(partita);
 		this.nomeGiocatoreCorrente.setText(giocatoreCorrente.getNickname());
 
 		if (giocatoreCorrente instanceof GiocatoreComputer) {
@@ -90,17 +93,17 @@ public class MazzoController implements Initializable, InizializzaDati<Partita> 
 		}
 
 		grids.add(mazzo);
-		utility.mappingGriglie(grids);
+		engine.mappingGriglie(grids);
 
 		for (Carta carta : cartaService.trovaTutteCarte()) {
-			ImageView imageView = utility.creaImpostaImageView(carta.getImmagineCarta(), dim_img, dim_img);
+			ImageView imageView = engine.creaImpostaImageView(carta.getImmagineCarta(), dim_img, dim_img);
 
 			roster.getChildren().add(imageView);
 
-			utility.impostaTooltip(imageView, carta);
+			engine.impostaTooltip(imageView, carta);
 
 			imageView.setOnMouseClicked(event1 -> {
-				ImageView imageViewScelta = utility.creaImpostaImageView(carta.getImmagineCarta(), dim_img, dim_img);
+				ImageView imageViewScelta = engine.creaImpostaImageView(carta.getImmagineCarta(), dim_img, dim_img);
 				try {
 					
 					if (carteScelte.contains(carta)) {
@@ -112,7 +115,7 @@ public class MazzoController implements Initializable, InizializzaDati<Partita> 
 					
 					carteScelte.add(carta);
 
-					utility.aggiungiCartaImmagineGriglia(mazzo, null, imageViewScelta);
+					engine.aggiungiCartaImmagineGriglia(mazzo, null, imageViewScelta);
 					
 					this.labelErrori.setText("");
 					
@@ -123,7 +126,7 @@ public class MazzoController implements Initializable, InizializzaDati<Partita> 
 						Posizione posizione =  new Posizione(GridPane.getColumnIndex(imageViewScelta), 
 								GridPane.getRowIndex(imageViewScelta));
 						
-						utility.eliminaImmagineCarta(mazzo, posizione, imageViewScelta);
+						engine.eliminaImmagineCarta(mazzo, posizione, imageViewScelta);
 					});
 
 				} catch (MazzoException e) {
@@ -142,7 +145,6 @@ public class MazzoController implements Initializable, InizializzaDati<Partita> 
 
 	private void action() {
 		try {
-			i++;
 			
 			if(carteScelte.size() < 8) 
 				throw new MazzoException("TI MANCANO ANCORA " + (8 - carteScelte.size()) + " CARTE");
@@ -156,6 +158,8 @@ public class MazzoController implements Initializable, InizializzaDati<Partita> 
 			//mazzoService.controllaMazzo(mazzo);
 
 			mazzoService.aggiungiMazzo(mazzo, giocatoreCorrente);
+			
+			i++;
 
 			if (i == 1) {
 				dispatcher.caricaVista("sceltaMazzo", partita);
@@ -174,7 +178,7 @@ public class MazzoController implements Initializable, InizializzaDati<Partita> 
 
 	private void costruisciMazzoComputer() {
 		for(Carta carta : cartaService.trovaTutteCarte()) {
-			if(!(carta instanceof Incantesimo) && carteScelte.size() < 8)
+			if(carteScelte.size() < 8 && carta instanceof Personaggio)
 				this.carteScelte.add(carta);
 		}
 	}
