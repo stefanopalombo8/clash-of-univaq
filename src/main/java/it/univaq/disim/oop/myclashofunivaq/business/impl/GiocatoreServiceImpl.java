@@ -172,7 +172,15 @@ public class GiocatoreServiceImpl implements GiocatoreService {
 		
 		this.personaggioService.attacca(attacco);
 		
-		this.personaggiAttaccantiTurno.add(personaggioAttaccante);
+		if(personaggioService.getPersonaggiConMosseAttive().contains(personaggioAttaccante)) {
+			MossaSpeciale mossaSpecialeAttaccante = personaggioAttaccante.getMossaSpeciale();
+			if(mossaSpecialeAttaccante.getNome().equals("attaccaDueVolte")) {
+				this.personaggioService.rimuoviPersonaggioConMossaAttivo(personaggioAttaccante);
+			}
+			
+		}
+		else 
+			this.personaggiAttaccantiTurno.add(personaggioAttaccante);
 		
 		return attacco;
 	}
