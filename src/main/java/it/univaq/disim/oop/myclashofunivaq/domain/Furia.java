@@ -2,6 +2,8 @@ package it.univaq.disim.oop.myclashofunivaq.domain;
 
 public class Furia extends Incantesimo {
 
+	private static final long serialVersionUID = 1L;
+	
 	private int aumento;
 	
 	public Furia(String nome) {

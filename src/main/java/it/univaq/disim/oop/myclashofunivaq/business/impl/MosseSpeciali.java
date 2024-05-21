@@ -8,6 +8,9 @@ import it.univaq.disim.oop.myclashofunivaq.domain.MossaSpeciale;
 import it.univaq.disim.oop.myclashofunivaq.domain.MossaSpecialeAzione;
 
 public class MosseSpeciali implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
 	private static Set<MossaSpeciale> mosseSpeciali = new HashSet<>();
 	
 	static {
@@ -51,29 +54,44 @@ public class MosseSpeciali implements Serializable {
 	
     // NON POSSO USARE LE LAMBDA PER QUESTE CLASSI perché non sono serializzabili
 	private static class RicaricaEnergiaAzione implements MossaSpecialeAzione, Serializable {
-        @Override
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
         public void esegui(MossaSpeciale mossaSpeciale) {
             mossaSpeciale.getPersonaggioTarget().setVita(mossaSpeciale.getPersonaggioTarget().getVita() + 10);
         }
     }
 	public static class RicaricaEnergiaStradaAzione implements MossaSpecialeAzione, Serializable {
+
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public void esegui(MossaSpeciale mossaSpeciale) {
 			mossaSpeciale.getPersonaggioTarget().setVita(mossaSpeciale.getPersonaggioTarget().getVita() + 5);
 		}
 	}
 	private static class DoppioArmorAzione implements MossaSpecialeAzione, Serializable {
-        @Override
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
         public void esegui(MossaSpeciale mossaSpeciale) {
             mossaSpeciale.getPersonaggioTarget().setArmatura(mossaSpeciale.getPersonaggioTarget().getArmatura() * 2);
         }
     }
 	public static class AttaccaDueVolteAzione implements MossaSpecialeAzione, Serializable {
+
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public void esegui(MossaSpeciale mossaSpeciale) {
 		}
 	}
 	public static class AttaccaDirettamenteTorreAzione implements MossaSpecialeAzione, Serializable {
+
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public void esegui(MossaSpeciale mossaSpeciale) {
 		}

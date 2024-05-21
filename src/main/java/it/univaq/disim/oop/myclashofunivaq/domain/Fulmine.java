@@ -1,7 +1,9 @@
 package it.univaq.disim.oop.myclashofunivaq.domain;
 
 public class Fulmine extends Incantesimo {
-
+	
+	private static final long serialVersionUID = 1L;
+	
 	private int danno;
 	
 	public Fulmine(String nome) {

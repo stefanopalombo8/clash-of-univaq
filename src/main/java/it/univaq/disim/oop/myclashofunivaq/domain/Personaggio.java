@@ -3,6 +3,9 @@ package it.univaq.disim.oop.myclashofunivaq.domain;
 import java.io.Serializable;
 
 public abstract class Personaggio extends Carta implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
 	private int vita;
 	private int armatura;
 	private int danno;

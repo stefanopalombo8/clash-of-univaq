@@ -1,6 +1,9 @@
 package it.univaq.disim.oop.myclashofunivaq.domain;
 
 public class CuraPersonaggio extends Incantesimo {
+
+	private static final long serialVersionUID = 1L;
+	
 	private int cura;
 
 	public CuraPersonaggio(String nome) {

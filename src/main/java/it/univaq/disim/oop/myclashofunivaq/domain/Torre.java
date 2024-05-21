@@ -3,6 +3,9 @@ package it.univaq.disim.oop.myclashofunivaq.domain;
 import java.io.Serializable;
 
 public class Torre implements Serializable, Cloneable{
+
+	private static final long serialVersionUID = 1L;
+	
 	private double vita;
 	
 	public double getVita() {

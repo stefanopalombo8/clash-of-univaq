@@ -5,6 +5,8 @@ import java.util.Objects;
 
 public abstract class Giocatore implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private String nickname;
 	private Mazzo mazzo;
 

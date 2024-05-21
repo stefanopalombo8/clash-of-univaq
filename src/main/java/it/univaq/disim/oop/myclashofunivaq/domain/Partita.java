@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Set;
 
 public class Partita implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
 	private Integer ID;
 	private Set<Giocatore> giocatori = new HashSet<>();
 	private List<Turno> turni = new ArrayList<>();

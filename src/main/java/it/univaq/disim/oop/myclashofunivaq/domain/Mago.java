@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class Mago extends Personaggio implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+	
 	public Mago() {
 		super("");
 	}

@@ -3,6 +3,9 @@ package it.univaq.disim.oop.myclashofunivaq.domain;
 import java.io.Serializable;
 
 public class MossaSpeciale implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
 	private String nome;
 	private MossaSpecialeAzione mossaImpl;
 	private Personaggio personaggioTarget;

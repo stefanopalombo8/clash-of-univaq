@@ -3,6 +3,9 @@ package it.univaq.disim.oop.myclashofunivaq.domain;
 import java.io.Serializable;
 
 public class CambioPosizionamentoPersonaggio implements MossaGiocatore, Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
 	private Personaggio personaggio;
 	private PosizionamentoPersonaggio nuovaPosizione;
 	

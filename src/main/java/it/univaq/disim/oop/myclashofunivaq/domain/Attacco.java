@@ -3,6 +3,9 @@ package it.univaq.disim.oop.myclashofunivaq.domain;
 import java.io.Serializable;
 
 public class Attacco implements MossaGiocatore, Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
 	private Personaggio personaggioAttaccante;
 	private Personaggio personaggioDaAttaccare;
 	private Torre torreAttaccata;

@@ -5,6 +5,8 @@ import java.io.Serializable;
 import it.univaq.disim.oop.myclashofunivaq.controller.utilities.GridPaneGioco;
 
 public class Schieramento implements MossaGiocatore, Serializable {
+
+	private static final long serialVersionUID = 1L;
 	
 	private Carta cartaSchierata;
 	private GridPaneGioco strada;	

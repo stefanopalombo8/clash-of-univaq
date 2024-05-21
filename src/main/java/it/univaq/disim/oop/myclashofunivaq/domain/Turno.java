@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Turno implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
 	private Integer numero;
 	private FaseTurno fase;
 	private Giocatore giocatore;
