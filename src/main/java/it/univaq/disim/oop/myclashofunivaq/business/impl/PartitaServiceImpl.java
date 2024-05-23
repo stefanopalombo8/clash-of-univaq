@@ -70,11 +70,13 @@ public class PartitaServiceImpl implements PartitaService, ResetStaticVariables 
 	
 	@Override
 	public Giocatore trovaAltroGiocatore(Partita partita, Giocatore giocatoreCorrente) {
+		Giocatore[] giocatori = this.findAllGiocatori(partita);
+		
 		if(giocatoreCorrente == null) { //primo turno
-			return findAllGiocatori(partita)[0];
+			return giocatori[0];
 		}
 		
-		for(Giocatore g : findAllGiocatori(partita)) {
+		for(Giocatore g : giocatori) {
 			if(!g.getNickname().equals(giocatoreCorrente.getNickname()))
 				return g;
 		}
