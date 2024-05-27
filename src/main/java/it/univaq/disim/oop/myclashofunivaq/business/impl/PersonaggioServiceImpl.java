@@ -26,13 +26,20 @@ public class PersonaggioServiceImpl implements PersonaggioService, ResetStaticVa
 		else if(personaggio.getPosizionamento().equals(PosizionamentoPersonaggio.DIFESA) &&
 				posizionamento.equals(PosizionamentoPersonaggio.DIFESA)) 
 			throw new PosizionamentoException("Il personaggio è già in posizione di difesa");
-		
-		
+				
 		if(posizionamento.equals(PosizionamentoPersonaggio.DIFESA))
-			personaggio.setArmatura(personaggio.getArmatura() * 2);
+			personaggio.setArmatura(personaggio.getArmatura() * 2); // doppio armor
 		
-		personaggio.setPosizionamento(posizionamento);
+		// se il posizionamento è attacco viene messo in attacco a prescindere
+		personaggio.setPosizionamento(posizionamento); 
 		
+	}
+	
+	private double sottrazioneArrotondata(double a, double b) {
+		BigDecimal x = new BigDecimal(Double.toString(a));
+		BigDecimal y = new BigDecimal(Double.toString(b));
+		
+		return (x.subtract(y)).doubleValue();
 	}
 
 	@Override
@@ -42,58 +49,60 @@ public class PersonaggioServiceImpl implements PersonaggioService, ResetStaticVa
 		
 		if(attacco.getPersonaggioDaAttaccare() == null) { //ATTACCARE DIRETTAMENTE LA TORRE
 			double danno = (double) attaccante.getDanno() / 100;
-			BigDecimal uno = new BigDecimal(Double.toString(danno));
 			
 			Torre torreAttaccata = attacco.getTorreAttaccata();
-			System.out.println("VITA TORRE PRIMA DELL'ATTACCO " + torreAttaccata.getVita());
+			double vitaTorreAttaccata = torreAttaccata.getVita();
 			
-			BigDecimal due = new BigDecimal(Double.toString(torreAttaccata.getVita()));
+			System.out.println("VITA TORRE PRIMA DELL'ATTACCO " + vitaTorreAttaccata);
 			
-			BigDecimal risultato = due.subtract(uno);
+			torreAttaccata.setVita(this.sottrazioneArrotondata(vitaTorreAttaccata, danno));
 			
-			torreAttaccata.setVita(risultato.doubleValue());
+			vitaTorreAttaccata = torreAttaccata.getVita();
 			
-			if(torreAttaccata.getVita() <= 0.0) 
+			if(vitaTorreAttaccata <= 0.0) 
 				torreAttaccata.setVita(0);
 			
-			System.out.println("VITA TORRE DOPO L'ATTACCO " + torreAttaccata.getVita());
+			System.out.println("VITA TORRE DOPO L'ATTACCO " + vitaTorreAttaccata);
 		}
 		else {
-			System.out.println("VITA ATTACCANTE " + attaccante.getVita() + " ARMATURA ATTACCATO " 
-					+ attaccato.getArmatura() + " VITA ATTACCATO " + attaccato.getVita());
+			int armaturaAttaccato = attaccato.getArmatura();
+			int vitaAttaccato = attaccato.getVita();
+			System.out.println("NOME ATTACCANTE " + attaccante.getNome() + " ARMATURA ATTACCATO " 
+					+ armaturaAttaccato + " VITA ATTACCATO " + vitaAttaccato);
 			
-			attaccato.setArmatura(attaccato.getArmatura() - attaccante.getDanno());
+			attaccato.setArmatura(armaturaAttaccato - attaccante.getDanno());
 			
-			System.out.println("ARMATURA ATTACCATO " + attaccato.getArmatura());
+			armaturaAttaccato = attaccato.getArmatura();
+			System.out.println("ARMATURA ATTACCATO " + armaturaAttaccato);
 			
-			if(attaccato.getArmatura() <= 0) {
-				int dannoVita = attaccato.getArmatura();
+			if(armaturaAttaccato <= 0) {
+				int dannoVita = armaturaAttaccato;
 				attaccato.setArmatura(0);
 				
-				attaccato.setVita(attaccato.getVita() + dannoVita);
+				attaccato.setVita(vitaAttaccato + dannoVita); // danno negativo
 				
-				if(attaccato.getVita() <= 0) {
-					double dannoTorre = (double) attaccato.getVita() / 100;
-					BigDecimal uno = new BigDecimal(Double.toString(dannoTorre));
+				vitaAttaccato = attaccato.getVita();
+				
+				if(vitaAttaccato <= 0) {
+					double dannoTorre = (double) vitaAttaccato / 100;
+					
 					Torre torreAttaccata = attacco.getTorreAttaccata();
+					double vitaTorreAttaccata = torreAttaccata.getVita();
 					
-					System.out.println("VITA TORRE PRIMA DELL'ATTACCO " + torreAttaccata.getVita());
+					System.out.println("VITA TORRE PRIMA DELL'ATTACCO " + vitaTorreAttaccata);
 					
-					BigDecimal due = new BigDecimal(Double.toString(torreAttaccata.getVita()));
+					torreAttaccata.setVita(this.sottrazioneArrotondata(vitaTorreAttaccata, -dannoTorre));
 					
-					BigDecimal risultato = uno.add(due);
+					vitaTorreAttaccata = torreAttaccata.getVita();
 					
-					torreAttaccata.setVita(risultato.doubleValue());
-					
-					if(torreAttaccata.getVita() <= 0.0) 
+					if(vitaTorreAttaccata <= 0.0) 
 						torreAttaccata.setVita(0);
 					
-					System.out.println("VITA TORRE DOPO L'ATTACCO " + torreAttaccata.getVita());
+					System.out.println("VITA TORRE DOPO L'ATTACCO " + vitaTorreAttaccata);
 					
 				}
 			}
 				
-			
 			System.out.println("VITA ATTACCATO " + attacco.getPersonaggioDaAttaccare().getVita());
 		}
 			

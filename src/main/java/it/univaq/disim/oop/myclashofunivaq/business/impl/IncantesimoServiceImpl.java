@@ -2,6 +2,7 @@ package it.univaq.disim.oop.myclashofunivaq.business.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -61,13 +62,17 @@ public class IncantesimoServiceImpl implements IncantesimoService, ResetStaticVa
 
 	@Override
 	public void checkAnnullaEffettoIncantesimi() {
-		for(Incantesimo incantesimo : incantesimiAttivi.keySet()) {
-			Integer numero = incantesimiAttivi.get(incantesimo);
-			if(numero == durataIncantesimo) {
-				incantesimiAttivi.remove(incantesimo);
-			}
-			else
-				incantesimiAttivi.replace(incantesimo, numero += 1);
+		Iterator<Map.Entry<Incantesimo, Integer>> iterator = incantesimiAttivi.entrySet().iterator();
+		while (iterator.hasNext()) {
+		    Map.Entry<Incantesimo, Integer> entry = iterator.next();
+		    Incantesimo incantesimo = entry.getKey();
+		    Integer numero = entry.getValue();
+		    
+		    if (numero.equals(durataIncantesimo)) {
+		        iterator.remove();
+		    } else {
+		        incantesimiAttivi.put(incantesimo, numero + 1);
+		    }
 		}
 	}
 
