@@ -43,32 +43,31 @@ public class HomepageController implements Initializable {
 
 	@FXML
 	private Button giocaControCPU;
-
-	private final PartitaService partitaService;
 	
 	private final ResetStaticVariables mazzoReset;
 	private final ResetStaticVariables turniReset;
 	private final ResetStaticVariables engineReset;
 	private final ResetStaticVariables incantesimiReset;
 	
+	private final PartitaService partitaService;
 	private final GiocatoreUtenteService giocatoreUtenteService;
 
-	private ViewDispatcher dispatcher;
+	private final ViewDispatcher dispatcher;
 
 	public HomepageController() {
-		giocatoreUtenteService = new GiocatoreUtenteServiceImpl();
-		dispatcher = ViewDispatcher.getInstance();
-		partitaService = new PartitaServiceImpl();
-		mazzoReset = new MazzoServiceImpl();
-		turniReset = new TurnoServiceImpl();
-		engineReset = new GraphicEngine();
-		incantesimiReset = new IncantesimoServiceImpl();
+		this.giocatoreUtenteService = new GiocatoreUtenteServiceImpl();
+		this.dispatcher = ViewDispatcher.getInstance();
+		this.partitaService = new PartitaServiceImpl();
+		this.mazzoReset = new MazzoServiceImpl();
+		this.turniReset = new TurnoServiceImpl();
+		this.engineReset = new GraphicEngine();
+		this.incantesimiReset = new IncantesimoServiceImpl();
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		disabilitaGamemod(giocaControGiocatore);
-		disabilitaGamemod(giocaControCPU);
+		disabilitaGamemod(this.giocaControGiocatore);
+		disabilitaGamemod(this.giocaControCPU);
 		
 		this.mazzoReset.reset();
 		this.turniReset.reset();
@@ -77,13 +76,13 @@ public class HomepageController implements Initializable {
 	}
 
 	private void disabilitaGamemod(Button bottone) {
-		bottone.disableProperty().bind(nickname.textProperty().isEmpty());
+		bottone.disableProperty().bind(this.nickname.textProperty().isEmpty());
 	}
 
 	public boolean accettaNickname(Partita partita) {
 		try {
-			GiocatoreUtente giocatore = giocatoreUtenteService.convalidaNickName(nickname.getText());
-			return partitaService.aggiungiGiocatore(giocatore, partita);
+			GiocatoreUtente giocatore = this.giocatoreUtenteService.convalidaNickName(this.nickname.getText());
+			return this.partitaService.aggiungiGiocatore(giocatore, partita);
 
 		} catch (NicknameNonValido e) {
 			this.confermaNickname.setText(e.getMessage());
@@ -94,11 +93,11 @@ public class HomepageController implements Initializable {
 
 	@FXML
 	public void giocaControGiocatoreAction(ActionEvent event) {
-		Partita partita = partitaService.creaPartita();
+		Partita partita = this.partitaService.creaPartita();
 		
 		if (this.accettaNickname(partita))
 			try {
-				dispatcher.caricaVista("NicknameGiocatore2", partita);
+				this.dispatcher.caricaVista("NicknameGiocatore2", partita);
 			} catch (ViewException e) {
 				e.printStackTrace();
 			}
@@ -106,13 +105,13 @@ public class HomepageController implements Initializable {
 	
 	@FXML
 	public void giocaControCPUAction(ActionEvent event) {
-		Partita partita = partitaService.creaPartita();
+		Partita partita = this.partitaService.creaPartita();
 		GiocatoreComputer giocatoreComputer = new GiocatoreComputer("CPU");;
 		
 		if (this.accettaNickname(partita))
 			try {
-				partitaService.aggiungiGiocatore(giocatoreComputer, partita);
-				dispatcher.caricaVista("sceltaMazzo", partita);
+				this.partitaService.aggiungiGiocatore(giocatoreComputer, partita);
+				this.dispatcher.caricaVista("sceltaMazzo", partita);
 			} catch (ViewException e) {
 				e.printStackTrace();
 			} catch (NicknameNonValido e) {
@@ -123,7 +122,7 @@ public class HomepageController implements Initializable {
 	@FXML
 	public void recuperaPartiteSalvateAction(ActionEvent event) {
 		try {
-			dispatcher.caricaVista("listaPartiteSalvate");
+			this.dispatcher.caricaVista("listaPartiteSalvate");
 		} catch (ViewException e) {
 			e.printStackTrace();
 		}

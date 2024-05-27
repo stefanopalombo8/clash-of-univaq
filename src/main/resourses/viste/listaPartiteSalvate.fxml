@@ -14,5 +14,6 @@
       <Button fx:id="buttonHome" layoutX="489.0" layoutY="70.0" mnemonicParsing="false" onAction="#ritornaHomeAction" text="HOME" />
       <Label layoutX="250.0" layoutY="14.0" prefHeight="17.0" prefWidth="99.0" text="PARTITE SALVATE " textAlignment="CENTER" />
       <Label layoutX="59.0" layoutY="39.0" prefHeight="17.0" prefWidth="481.0" text="PUOI ORDINARLE CON IL CHOISE BOX, DOPO CLICCA SU UNA RIGA E PREMI GIOCA" textAlignment="CENTER" />
+      <Button fx:id="eliminaPartita" layoutX="356.0" layoutY="70.0" mnemonicParsing="false" onAction="#eliminaPartitaAction" text="ELIMINA" />
    </children>
 </AnchorPane>

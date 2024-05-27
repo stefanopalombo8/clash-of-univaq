@@ -14,6 +14,7 @@ import it.univaq.disim.oop.myclashofunivaq.domain.Partita;
 import it.univaq.disim.oop.myclashofunivaq.view.InizializzaDati;
 import it.univaq.disim.oop.myclashofunivaq.view.ViewDispatcher;
 import it.univaq.disim.oop.myclashofunivaq.view.ViewException;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -34,19 +35,20 @@ public class NicknameGiocatore2Controller implements Initializable, InizializzaD
 	
 	private final PartitaService partitaService;
 	private final GiocatoreUtenteService giocatoreUtenteService;
-	private ViewDispatcher dispatcher;
+	
+	private final ViewDispatcher dispatcher;
 	
 	private Partita partita;
 	
 	public NicknameGiocatore2Controller() {
-		giocatoreUtenteService = new GiocatoreUtenteServiceImpl();
-		dispatcher = ViewDispatcher.getInstance();
-		partitaService = new PartitaServiceImpl();
+		this.giocatoreUtenteService = new GiocatoreUtenteServiceImpl();
+		this.dispatcher = ViewDispatcher.getInstance();
+		this.partitaService = new PartitaServiceImpl();
 	}
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		avanti.disableProperty().bind(nickname.textProperty().isEmpty());
+		this.avanti.disableProperty().bind(this.nickname.textProperty().isEmpty());
 	}
 	
 	@Override
@@ -57,12 +59,11 @@ public class NicknameGiocatore2Controller implements Initializable, InizializzaD
 	@FXML
 	public void avantiAction(ActionEvent event) throws ViewException {
 		try {
-			GiocatoreUtente giocatore2 = giocatoreUtenteService.convalidaNickName(nickname.getText());
-			if(partitaService.aggiungiGiocatore(giocatore2, partita))
-				dispatcher.caricaVista("sceltaMazzo", partita);
+			GiocatoreUtente giocatore2 = this.giocatoreUtenteService.convalidaNickName(nickname.getText());
+			if(this.partitaService.aggiungiGiocatore(giocatore2, this.partita))
+				this.dispatcher.caricaVista("sceltaMazzo", this.partita);
 		} catch (NicknameNonValido e) {
 			this.confermaNickname.setText(e.getMessage());
 		}
-		
 	}
 }

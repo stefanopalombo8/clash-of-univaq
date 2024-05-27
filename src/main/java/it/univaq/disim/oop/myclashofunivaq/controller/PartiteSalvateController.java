@@ -39,6 +39,9 @@ public class PartiteSalvateController implements Initializable {
 	@FXML
 	private Button buttonHome;
 
+	@FXML
+	private Button eliminaPartita;
+
 	private final PartitaService partitaService;
 
 	private ViewDispatcher dispatcher;
@@ -51,16 +54,21 @@ public class PartiteSalvateController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		gioca.disableProperty().bind(Bindings.isNull(listViewPartite.getSelectionModel().selectedItemProperty()));
-		choiceBox.setItems(FXCollections.observableArrayList("ID", "numeroMosse", "numeroCarte", "valoreCarte"));
+		this.gioca.disableProperty()
+				.bind(Bindings.isNull(this.listViewPartite.getSelectionModel().selectedItemProperty()));
+		this.eliminaPartita.disableProperty()
+				.bind(Bindings.isNull(this.listViewPartite.getSelectionModel().selectedItemProperty()));
+		
+		this.choiceBox.setItems(FXCollections.observableArrayList("ID", "numeroMosse", "numeroCarte", "valoreCarte"));
 
-		List<Partita> partiteDeserializzate = partitaService.getPartiteDeserializzate();
+		List<Partita> partiteDeserializzate = this.partitaService.getPartiteDeserializzate();
 
-		sceltaOrdinamento = "ID";
+		this.sceltaOrdinamento = "ID";
+		this.choiceBox.setValue(sceltaOrdinamento);
 
-		choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-			sceltaOrdinamento = newValue; 
-			aggiornaListaPartite(partiteDeserializzate);
+		this.choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			this.sceltaOrdinamento = newValue;
+			this.aggiornaListaPartite(partiteDeserializzate);
 		});
 
 		this.aggiornaListaPartite(partiteDeserializzate);
@@ -92,14 +100,14 @@ public class PartiteSalvateController implements Initializable {
 
 	@FXML
 	public void giocaAction(ActionEvent event) {
-		String selectedItem = listViewPartite.getSelectionModel().getSelectedItem();
+		String selectedItem = this.listViewPartite.getSelectionModel().getSelectedItem();
 		if (selectedItem != null) {
 			String[] parts = selectedItem.split(" ");
 			Integer partitaID = Integer.parseInt(parts[1]);
 
 			Partita partitaDaGiocare = null;
 
-			for (Partita p : partitaService.getPartiteDeserializzate()) {
+			for (Partita p : this.partitaService.getPartiteDeserializzate()) {
 				if (p.getID().equals(partitaID)) {
 					partitaDaGiocare = p;
 					break;
@@ -121,29 +129,47 @@ public class PartiteSalvateController implements Initializable {
 	@FXML
 	public void ritornaHomeAction(ActionEvent event) {
 		try {
-			dispatcher.caricaVista("applicationLayout");
-			dispatcher.caricaVista("homepage");
+			this.dispatcher.caricaVista("applicationLayout");
+			this.dispatcher.caricaVista("homepage");
 		} catch (ViewException e) {
 			e.printStackTrace();
 		}
 	}
 
+	@FXML
+	public void eliminaPartitaAction(ActionEvent event) {
+		String selectedItem = this.listViewPartite.getSelectionModel().getSelectedItem();
+		if (selectedItem != null) {
+			String[] parts = selectedItem.split(" ");
+			Integer partitaID = Integer.parseInt(parts[1]);
+
+			this.partitaService.eliminaPartitaSalvata(partitaID);
+		}
+
+		ObservableList<String> items = this.listViewPartite.getItems();
+		int selectedIndex = this.listViewPartite.getSelectionModel().getSelectedIndex();
+		if (selectedIndex >= 0) {
+			items.remove(selectedIndex);
+		}
+
+	}
+
 	private class PartitaComparator implements Comparator<Partita> {
-		
+
 		@Override
 		public int compare(Partita p1, Partita p2) {
 
 			switch (sceltaOrdinamento) {
-			//ordinamento decrescente
+			// ordinamento decrescente
 			case "numeroMosse":
 				return Integer.compare(p2.getNumeroTotaleMosse(), p1.getNumeroTotaleMosse()); // più veloce
 			case "numeroCarte":
 				return Integer.compare(p2.getNumeroCarteInCampo(), p1.getNumeroCarteInCampo());
 			case "valoreCarte":
 				return Integer.compare(p2.getValoreCarteInCampo(), p1.getValoreCarteInCampo());
-			//ordinamento crescente
+			// ordinamento crescente
 			case "ID":
-				return Integer.compare(p1.getID(), p2.getID());	
+				return Integer.compare(p1.getID(), p2.getID());
 			default:
 				return 0;
 			}
