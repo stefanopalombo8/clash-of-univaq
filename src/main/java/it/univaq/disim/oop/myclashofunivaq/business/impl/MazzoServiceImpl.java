@@ -24,6 +24,20 @@ public class MazzoServiceImpl implements MazzoService, ResetStaticVariables {
 	private static int index = 0;
 	
 	@Override
+	public void checkCartaScelta(Carta carta, List<Carta> carteScelte) throws MazzoException {
+		if(carteScelte.size() == 8)
+			throw new MazzoException("MAZZO PIENO");
+		else if (carteScelte.contains(carta)) 
+			throw new MazzoException("CARTA GIÀ SCELTA");
+	}
+	
+	@Override
+	public void checkSizeCarteScelte(List<Carta> carteScelte) throws MazzoException {
+		if (carteScelte.size() < 8)
+			throw new MazzoException("TI MANCANO ANCORA " + (8 - carteScelte.size()) + " CARTE");	
+	}
+	
+	@Override
 	public Mazzo creaMazzo(List<Carta> carteScelte) {
 		Mazzo mazzo = new Mazzo();
 		
@@ -62,20 +76,20 @@ public class MazzoServiceImpl implements MazzoService, ResetStaticVariables {
 	}
 
 	@Override
-	public boolean controllaMazzo(Mazzo mazzo) {
+	public void controllaMazzo(Mazzo mazzo) throws MazzoException {
 		Set<String> categorie = new HashSet<>();
-		int num_categorie_mazzo = 0;
+		int categorieMazzo = 0;
 		
 		for(int i = 0; i < mazzo.getCarte().length; i++) {
-			categorie.add(cartaFactory.ricercaCategoriaEimpostaNome(mazzo.getCarte()[i]));
+			categorie.add(this.cartaFactory.ricercaCategoriaEimpostaNome(mazzo.getCarte()[i]));
 		}
 		
-		num_categorie_mazzo = categorie.size(); //si contano anche gli incantesimi
+		categorieMazzo = categorie.size(); //si contano anche gli incantesimi
 		
-		if(num_categorie_mazzo >= numCategorieMinime)
-			return true;
-		
-		return false;
+		if(categorieMazzo < this.numCategorieMinime)
+			throw new MazzoException("NUMERO DI CATEGORIE INSUFFICIENTE, MINIMO " + this.numCategorieMinime 
+					+ " COMPRESO INCANTESIMI");
+			
 	}
 
 	@Override
@@ -85,16 +99,13 @@ public class MazzoServiceImpl implements MazzoService, ResetStaticVariables {
 
 	@Override
 	public Carta[] mostraCarteMano(Mazzo mazzo) {
-		Carta[] carteMano = new Carta[numCarteInMano];
-		
-		index = 0;
-		
+		Carta[] carteMano = new Carta[this.numCarteInMano];
+
 		Collections.shuffle(Arrays.asList(mazzo.getCarte())); // mischia le carte a caso
 		
-		for(; index < numCarteInMano; index++) {
+		for(index = 0; index < this.numCarteInMano; index++) {
 			carteMano[index] = mazzo.getCarte()[index];
 		}
-		
 		
 		return carteMano;
 	}
@@ -119,6 +130,6 @@ public class MazzoServiceImpl implements MazzoService, ResetStaticVariables {
 	@Override
 	public void reset() {
 		index = 0;
-		
 	}
+
 }

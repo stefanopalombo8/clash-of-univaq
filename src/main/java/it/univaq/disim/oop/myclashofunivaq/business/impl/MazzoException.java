@@ -1,4 +1,4 @@
-package it.univaq.disim.oop.myclashofunivaq.controller;
+package it.univaq.disim.oop.myclashofunivaq.business.impl;
 
 public class MazzoException extends Exception {
 
