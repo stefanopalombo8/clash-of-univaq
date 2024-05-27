@@ -101,7 +101,7 @@
             <AnchorPane prefHeight="300.0" prefWidth="166.0" style="-fx-background-color: white;">
                <children>
                   <Separator layoutY="3.0" orientation="VERTICAL" prefHeight="543.0" prefWidth="6.0" style="-fx-background-color: black;" />
-                  <Label layoutX="14.0" layoutY="4.0" prefHeight="20.0" prefWidth="152.0" text="INFORMAZIONI PARTITA">
+                  <Label layoutX="14.0" layoutY="4.0" prefHeight="20.0" prefWidth="152.0" text="OPZIONI PARTITA">
                      <font>
                         <Font name="System Bold" size="12.5" />
                      </font>

@@ -187,7 +187,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		this.partitaService = new PartitaServiceImpl();
 		this.turnoService = new TurnoServiceImpl();
 		this.mazzoService = new MazzoServiceImpl();
-		this.secondiTrascorsi = timerDurantion;
+		this.secondiTrascorsi = this.timerDurantion;
 		this.engine = new GraphicEngine();
 		this.gridsListGiocatore = new ArrayList<>();
 		this.gridsListAvversario = new ArrayList<>();
@@ -210,87 +210,87 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 		if (partita.isRecuperata()) {
 			System.out.println("PARTITA DESERIALIZZATA");
-			annullaMossa.setDisable(true);
+			this.annullaMossa.setDisable(true);
 
-			partitaService.mappaPartitaSerializzata(partita);
-			turnoService.ripopolaMappaTurni(partita);
+			this.partitaService.mappaPartitaSerializzata(partita);
+			this.turnoService.ripopolaMappaTurni(partita);
 
-			turnoCorrente = turnoService.getUltimoTurno(partita);
+			this.turnoCorrente = this.turnoService.getUltimoTurno(partita);
 
-			giocatoreCorrente = turnoCorrente.getGiocatore();
+			this.giocatoreCorrente = this.turnoCorrente.getGiocatore();
 
-			nomeGiocatore.setText(giocatoreCorrente.getNickname());
+			this.nomeGiocatore.setText(this.giocatoreCorrente.getNickname());
 
-			faseCorrente.setText(turnoCorrente.getFase().toString());
+			this.faseCorrente.setText(this.turnoCorrente.getFase().toString());
 
-			mostraElisir();
+			this.mostraElisir();
 
-			Mazzo mazzo = mazzoService.trovaMazzo(giocatoreCorrente);
+			Mazzo mazzo = this.mazzoService.trovaMazzo(this.giocatoreCorrente);
 
-			mappaElementiTurno();
+			this.mappaElementiTurno();
 
-			mappaGriglie();
+			this.mappaGriglie();
 
-			recuperaCarte();
+			this.recuperaCarte();
 
-			setProprietaNuoveImmagini();
+			this.setProprietaNuoveImmagini();
 
-			if (giocatoreCorrente instanceof GiocatoreUtente)
-				trascinamentoImmagini(mazzo);
+			if (this.giocatoreCorrente instanceof GiocatoreUtente)
+				this.trascinamentoImmagini(mazzo);
 			else
-				faiMosseComputer(mazzo);
+				this.faiMosseComputer(mazzo);
 
 		} else {
 
-			Turno ultimoTurno = turnoService.getUltimoTurno(partita);
+			Turno ultimoTurno = this.turnoService.getUltimoTurno(partita);
 
 			if (ultimoTurno == null)
-				giocatoreCorrente = partitaService.trovaAltroGiocatore(partita, null);
+				this.giocatoreCorrente = this.partitaService.trovaAltroGiocatore(partita, null);
 			else
-				giocatoreCorrente = partitaService.trovaAltroGiocatore(partita,
-						turnoService.getUltimoTurno(partita).getGiocatore());
+				this.giocatoreCorrente = this.partitaService.trovaAltroGiocatore(partita,
+						this.turnoService.getUltimoTurno(partita).getGiocatore());
 
-			timerImpl();
+			this.timerImpl();
 
-			turnoCorrente = turnoService.avviaTurno(timeline, giocatoreCorrente);
+			this.turnoCorrente = this.turnoService.avviaTurno(timeline, this.giocatoreCorrente);
 
-			nomeGiocatore.setText(giocatoreCorrente.getNickname());
+			this.nomeGiocatore.setText(this.giocatoreCorrente.getNickname());
 
-			faseCorrente.setText(turnoCorrente.getFase().toString());
+			this.faseCorrente.setText(this.turnoCorrente.getFase().toString());
 
-			mostraElisir();
+			this.mostraElisir();
 
-			Mazzo mazzo = mazzoService.trovaMazzo(giocatoreCorrente);
+			Mazzo mazzo = this.mazzoService.trovaMazzo(this.giocatoreCorrente);
 
-			mappaElementiTurno();
+			this.mappaElementiTurno();
 
-			mappaGriglie();
+			this.mappaGriglie();
 
-			List<GridPane> tutte = getAllGrids();
+			List<GridPane> tutte = this.getAllGrids();
 
-			if (turnoCorrente.getNumero() > 0) {
+			if (this.turnoCorrente.getNumero() > 0) {
 
-				engine.ripristinaStato(tutte);
+				this.engine.ripristinaStato(tutte);
 
-				setProprietaNuoveImmagini();
+				this.setProprietaNuoveImmagini();
 			}
 
-			if (turnoService.isFirstTurno(turnoCorrente) || GraphicEngine.getStati().size() <= 1) {
+			if (this.turnoService.isFirstTurno(this.turnoCorrente) || GraphicEngine.getStati().size() <= 1) {
 
-				for (Carta carta : mazzoService.mostraCarteMano(mazzo)) {
-					ImageView imageView = engine.creaImpostaImageView(carta.getImmagineCarta(), dim_img, dim_img);
-					engine.impostaTooltip(imageView, carta);
+				for (Carta carta : this.mazzoService.mostraCarteMano(mazzo)) {
+					ImageView imageView = this.engine.creaImpostaImageView(carta.getImmagineCarta(), dim_img, dim_img);
+					this.engine.impostaTooltip(imageView, carta);
 					// Mapping immagini e carte in mano
-					engine.aggiungiCartaImmagineGriglia(carteMano, carta, imageView);
-					engine.setImageDragProperty(imageView);
+					this.engine.aggiungiCartaImmagineGriglia(this.carteMano, carta, imageView);
+					this.engine.setImageDragProperty(imageView);
 				}
 			} else
-				engine.ripristinaCarteMano(carteMano);
+				this.engine.ripristinaCarteMano(this.carteMano);
 
-			if (giocatoreCorrente instanceof GiocatoreUtente)
-				trascinamentoImmagini(mazzo);
+			if (this.giocatoreCorrente instanceof GiocatoreUtente)
+				this.trascinamentoImmagini(mazzo);
 			else
-				faiMosseComputer(mazzo);
+				this.faiMosseComputer(mazzo);
 
 		}
 
@@ -301,15 +301,14 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 	 * mossa randomica al primo turno effettua solo uno schieramento
 	 */
 	private void faiMosseComputer(Mazzo mazzo) {
-
-		annullaMossa.setDisable(true);
-		cambiaFase.setDisable(true);
+		this.annullaMossa.setDisable(true);
+		this.cambiaFase.setDisable(true);
 
 		List<GridPane> gridsListCopy = new ArrayList<>(this.gridsList);
 		List<GridPane> gridsListAvversarioCopy = new ArrayList<>(this.gridsListAvversario);
 
-		gridsListCopy.remove(carteMano);
-		gridsListAvversarioCopy.remove(carteMano);
+		gridsListCopy.remove(this.carteMano);
+		gridsListAvversarioCopy.remove(this.carteMano);
 
 		// FASE SCHIERAMENTO
 		ObservableList<Node> carteInMano = this.carteMano.getChildren();
@@ -332,12 +331,14 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		Posizione posizioneToSearch = new Posizione(GridPane.getColumnIndex(randomImageViewMano),
 				GridPane.getRowIndex(randomImageViewMano));
 
-		ImageView imageViewDaSchierare = engine.creaImpostaImageView(randomImageViewMano.getImage(), dim_img, dim_img);
-		Carta cartaDaSchierare = engine.ricercaCartaStrada(carteMano.getId(), posizioneToSearch);
+		ImageView imageViewDaSchierare = this.engine.creaImpostaImageView(randomImageViewMano.getImage(), dim_img,
+				dim_img);
+		Carta cartaDaSchierare = this.engine.ricercaCartaStrada(this.carteMano.getId(), posizioneToSearch);
+		
 		try {
-			turnoService.controllaSchieramento(turnoCorrente, cartaDaSchierare);
-			cartaSchierata[0] = (Carta) cartaDaSchierare.clone();
-			engine.impostaTooltip(imageViewDaSchierare, cartaSchierata[0]);
+			this.turnoService.controllaSchieramento(this.turnoCorrente, cartaDaSchierare);
+			this.cartaSchierata[0] = (Carta) cartaDaSchierare.clone();
+			this.engine.impostaTooltip(imageViewDaSchierare, this.cartaSchierata[0]);
 
 		} catch (ElisirException e) {
 			System.err.println(e.getMessage());
@@ -346,43 +347,44 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 			e.printStackTrace();
 		}
 
-		engine.aggiungiCartaImmagineGriglia(gridSchieramento, cartaSchierata[0], null); // aggiunta nella
+		this.engine.aggiungiCartaImmagineGriglia(gridSchieramento, this.cartaSchierata[0], imageViewDaSchierare); // aggiunta nella
 		// strada
 
-		engine.aggiungiCartaImmagineGriglia(gridSchieramento, null, imageViewDaSchierare);
-
 		Carta[] prossimaCartaMazzo = new Carta[1]; // WRAPPER
-		prossimaCartaMazzo[0] = mazzoService.mostraProssimaCarta(mazzo, engine.ricercaCarteMano(carteMano.getId()));
-		prossimaCarta.setImage(prossimaCartaMazzo[0].getImmagineCarta());
+		prossimaCartaMazzo[0] = this.mazzoService.mostraProssimaCarta(mazzo,
+				this.engine.ricercaCarteMano(this.carteMano.getId()));
+		this.prossimaCarta.setImage(prossimaCartaMazzo[0].getImmagineCarta());
 
-		ImageView imageViewProssimaCarta = engine.creaImpostaImageView(prossimaCarta.getImage(), dim_img, dim_img);
+		ImageView imageViewProssimaCarta = this.engine.creaImpostaImageView(prossimaCarta.getImage(), dim_img, dim_img);
 
-		carteMano.getChildren().remove(engine.ricercaImmagineStrada(carteMano.getId(), posizioneToSearch));
+		this.carteMano.getChildren()
+				.remove(this.engine.ricercaImmagineStrada(this.carteMano.getId(), posizioneToSearch));
 
-		engine.aggiungiCartaImmagineGriglia(carteMano, prossimaCartaMazzo[0], imageViewProssimaCarta,
+		this.engine.aggiungiCartaImmagineGriglia(this.carteMano, prossimaCartaMazzo[0], imageViewProssimaCarta,
 				posizioneToSearch);
-		engine.impostaTooltip(imageViewProssimaCarta, prossimaCartaMazzo[0]);
-		prossimaCartaMazzo[0] = mazzoService.mostraProssimaCarta(mazzo, engine.ricercaCarteMano(carteMano.getId()));
-		prossimaCarta.setImage(prossimaCartaMazzo[0].getImmagineCarta());
+		this.engine.impostaTooltip(imageViewProssimaCarta, prossimaCartaMazzo[0]);
+		prossimaCartaMazzo[0] = this.mazzoService.mostraProssimaCarta(mazzo,
+				this.engine.ricercaCarteMano(this.carteMano.getId()));
+		this.prossimaCarta.setImage(prossimaCartaMazzo[0].getImmagineCarta());
 
-		Personaggio personaggioSchierato = (Personaggio) cartaSchierata[0];
+		Personaggio personaggioSchierato = (Personaggio) this.cartaSchierata[0];
 
-		MossaGiocatore mossaGiocatore = giocatoreService.effettuaSchieramentoPersonaggio(turnoCorrente,
-				personaggioSchierato, engine.ricercaStradaSchieramento(gridSchieramento),
+		MossaGiocatore mossaGiocatore = this.giocatoreService.effettuaSchieramento(this.turnoCorrente,
+				personaggioSchierato, this.engine.ricercaStradaSchieramento(gridSchieramento),
 				PosizionamentoPersonaggio.ATTACCO);
 
-		turnoService.salvaMossaGiocatore(partita, turnoCorrente, mossaGiocatore);
+		this.turnoService.salvaMossaGiocatore(this.partita, this.turnoCorrente, mossaGiocatore);
 
 		this.mostraElisir();
 
-		if (!turnoService.isFirstTurno(turnoCorrente)) {
+		if (!this.turnoService.isFirstTurno(this.turnoCorrente)) {
 			try {
-				turnoService.cambiaFase(turnoCorrente);
+				this.turnoService.cambiaFase(this.turnoCorrente);
 			} catch (FasiTerminateException e) {
 				System.err.println(e.getMessage());
 				this.labelErrori.setText(e.getMessage());
 			}
-			faseCorrente.setText(turnoCorrente.getFase().toString());
+			this.faseCorrente.setText(this.turnoCorrente.getFase().toString());
 
 			// DIFESA
 			ImageView imageViewStrada = this.scegliImageViewRandomica(gridsListCopy);
@@ -394,25 +396,25 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 			posizioneToSearch = new Posizione(GridPane.getColumnIndex(imageViewStrada),
 					GridPane.getRowIndex(imageViewStrada));
-			Personaggio personaggioStrada = (Personaggio) engine.ricercaCartaStrada(gridPaneParent.getId(),
+			Personaggio personaggioStrada = (Personaggio) this.engine.ricercaCartaStrada(gridPaneParent.getId(),
 					posizioneToSearch);
 
 			try {
-				MossaGiocatore mossaGiocatore2 = giocatoreService.cambiaPosizionePersonaggio(turnoCorrente,
+				MossaGiocatore mossaGiocatore2 = giocatoreService.cambiaPosizionePersonaggio(this.turnoCorrente,
 						personaggioStrada, PosizionamentoPersonaggio.DIFESA);
-				turnoService.salvaMossaGiocatore(partita, turnoCorrente, mossaGiocatore2);
+				this.turnoService.salvaMossaGiocatore(this.partita, this.turnoCorrente, mossaGiocatore2);
 				imageViewStrada.setRotate(270);
 			} catch (PosizionamentoException e) {
 				System.err.println(e.getMessage());
 			}
 
 			try {
-				turnoService.cambiaFase(turnoCorrente);
+				this.turnoService.cambiaFase(this.turnoCorrente);
 			} catch (FasiTerminateException e) {
 				System.err.println(e.getMessage());
 				this.labelErrori.setText(e.getMessage());
 			}
-			faseCorrente.setText(turnoCorrente.getFase().toString());
+			this.faseCorrente.setText(this.turnoCorrente.getFase().toString());
 
 			// ATTACCO
 			// PERSONAGGIO ATTACCANTE
@@ -423,30 +425,29 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 			}
 
 			gridPaneParent = (GridPane) imageViewStrada.getParent();
-			GridPaneGioco gridPersonaggio = engine.ricercaStradaSchieramento(gridPaneParent);
+			GridPaneGioco gridPersonaggio = this.engine.ricercaStradaSchieramento(gridPaneParent);
 
 			posizioneToSearch = new Posizione(GridPane.getColumnIndex(imageViewStrada),
 					GridPane.getRowIndex(imageViewStrada));
-			personaggioStrada = (Personaggio) engine.ricercaCartaStrada(gridPaneParent.getId(), posizioneToSearch);
+			personaggioStrada = (Personaggio) this.engine.ricercaCartaStrada(gridPaneParent.getId(), posizioneToSearch);
 
-			System.out.println("gridPaneParent " + gridPaneParent.getId());
-			System.out.println("gridPersonaggio " + gridPersonaggio);
 			try {
 
-				if (engine.checkAttaccoTorre(gridPersonaggio.toString())) {
+				if (this.engine.checkAttaccoTorre(gridPersonaggio.toString())) {
 
-					Giocatore avversario = partitaService.trovaAltroGiocatore(partita, giocatoreCorrente);
-					Torre torreAvversaria = turnoService.trovaTorreGiocatore(avversario);
+					Giocatore avversario = this.partitaService.trovaAltroGiocatore(partita, this.giocatoreCorrente);
+					Torre torreAvversaria = this.turnoService.trovaTorreGiocatore(avversario);
 
-					giocatoreService.attaccaTorre(turnoCorrente, personaggioStrada, gridPersonaggio, torreAvversaria);
+					this.giocatoreService.attaccaTorre(this.turnoCorrente, personaggioStrada, gridPersonaggio,
+							torreAvversaria);
 
-					if (vitaTorreAvversaria.getId().equals("vitaTorre1"))
-						this.mostraVitaTorre(avversario, vitaTorreAvversaria, vitaTorre1Indicator);
+					if (this.vitaTorreAvversaria.getId().equals("vitaTorre1"))
+						this.mostraVitaTorre(avversario, this.vitaTorreAvversaria, this.vitaTorre1Indicator);
 					else
-						this.mostraVitaTorre(avversario, vitaTorreAvversaria, vitaTorre2Indicator);
+						this.mostraVitaTorre(avversario, this.vitaTorreAvversaria, this.vitaTorre2Indicator);
 
 				} else {
-					giocatoreService.preparaAttacco(personaggioStrada, gridPersonaggio);
+					this.giocatoreService.preparaAttacco(personaggioStrada, gridPersonaggio);
 					// PERSONAGGIO ATTACCANTE
 					ImageView imageViewStradaAvversaria = this.scegliImageViewRandomica(gridsListAvversarioCopy);
 					if (imageViewStradaAvversaria == null) {
@@ -456,24 +457,26 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 					Posizione posizioneAvversaria = new Posizione(GridPane.getColumnIndex(imageViewStrada),
 							GridPane.getRowIndex(imageViewStrada));
 					GridPane gridPaneParentAvversaria = (GridPane) imageViewStradaAvversaria.getParent();
-					Personaggio personaggioStradaAvversaria = (Personaggio) engine
+					Personaggio personaggioStradaAvversaria = (Personaggio) this.engine
 							.ricercaCartaStrada(gridPaneParentAvversaria.getId(), posizioneAvversaria);
 
-					Giocatore avversario = partitaService.trovaAltroGiocatore(partita, giocatoreCorrente);
-					giocatoreService.effettuaAttacco(turnoCorrente, personaggioStradaAvversaria,
-							engine.ricercaStradaSchieramento(gridPaneParentAvversaria),
-							turnoService.trovaTorreGiocatore(avversario));
+					Giocatore avversario = this.partitaService.trovaAltroGiocatore(this.partita,
+							this.giocatoreCorrente);
+
+					this.giocatoreService.effettuaAttacco(this.turnoCorrente, personaggioStradaAvversaria,
+							this.engine.ricercaStradaSchieramento(gridPaneParentAvversaria),
+							this.turnoService.trovaTorreGiocatore(avversario));
 
 					if (personaggioStradaAvversaria.getVita() <= 0) {
-						engine.eliminaImmagineCarta(gridPaneParent, posizioneToSearch, imageViewStradaAvversaria);
+						this.engine.eliminaImmagineCarta(gridPaneParent, posizioneToSearch, imageViewStradaAvversaria);
 
-						if (vitaTorreAvversaria.getId().equals("vitaTorre1"))
-							this.mostraVitaTorre(avversario, vitaTorreAvversaria, vitaTorre1Indicator);
+						if (this.vitaTorreAvversaria.getId().equals("vitaTorre1"))
+							this.mostraVitaTorre(avversario, this.vitaTorreAvversaria, this.vitaTorre1Indicator);
 						else
-							this.mostraVitaTorre(avversario, vitaTorreAvversaria, vitaTorre2Indicator);
+							this.mostraVitaTorre(avversario, this.vitaTorreAvversaria, this.vitaTorre2Indicator);
 
 					} else
-						engine.impostaTooltip(imageViewStradaAvversaria, personaggioStradaAvversaria);
+						this.engine.impostaTooltip(imageViewStradaAvversaria, personaggioStradaAvversaria);
 
 				}
 
@@ -513,10 +516,11 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 	// metodo per trascinare le immagini dalla mano alle strade
 	private void trascinamentoImmagini(Mazzo mazzo) {
-		prossimaCartaMazzo[0] = mazzoService.mostraProssimaCarta(mazzo, engine.ricercaCarteMano(carteMano.getId()));
-		prossimaCarta.setImage(prossimaCartaMazzo[0].getImmagineCarta());
+		this.prossimaCartaMazzo[0] = this.mazzoService.mostraProssimaCarta(mazzo,
+				this.engine.ricercaCarteMano(this.carteMano.getId()));
+		this.prossimaCarta.setImage(this.prossimaCartaMazzo[0].getImmagineCarta());
 
-		for (GridPane grid : gridsList) {
+		for (GridPane grid : this.gridsList) {
 
 			grid.setOnDragOver(event -> {
 				if (event.getGestureSource() != grid && event.getDragboard().hasImage()) {
@@ -529,7 +533,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 			grid.setOnDragDropped(event -> {
 
 				// uso le RuntimeException per uscire
-				if (grid.equals(carteMano)) {
+				if (grid.equals(this.carteMano)) {
 					labelErrori.setText("NON PUOI AGGIUNGERE CARTE IN MANO");
 					throw new RuntimeException();
 				}
@@ -541,7 +545,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 				 * valida)
 				 */
 				if (grid.getChildren().size() == 4) {
-					this.labelErrori.setText(grid.getId() + " PIENA");
+					labelErrori.setText(grid.getId() + " PIENA");
 					return;
 				}
 
@@ -553,36 +557,37 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 				ImageView imageViewProssimaCarta = null;
 
 				if (db.hasImage()) {
-					newImageView = engine.creaImpostaImageView(db.getImage(), dim_img, dim_img);
+					newImageView = this.engine.creaImpostaImageView(db.getImage(), dim_img, dim_img);
 
-					imageViewProssimaCarta = engine.creaImpostaImageView(prossimaCarta.getImage(), dim_img, dim_img);
+					imageViewProssimaCarta = this.engine.creaImpostaImageView(prossimaCarta.getImage(), dim_img,
+							dim_img);
 
-					posizioneDaRimpiazzare = engine.getPosizioneCartaSelezionata()[0];
+					posizioneDaRimpiazzare = this.engine.getPosizioneCartaSelezionata()[0];
 
 					try {
 						// Mapping carta schierata
-						Carta cartaDaSchierare = engine.ricercaCartaStrada(this.carteMano.getId(),
+						Carta cartaDaSchierare = this.engine.ricercaCartaStrada(this.carteMano.getId(),
 								posizioneDaRimpiazzare);
-						turnoService.controllaSchieramento(turnoCorrente, cartaDaSchierare);
+						this.turnoService.controllaSchieramento(this.turnoCorrente, cartaDaSchierare);
 						cartaSchierata[0] = (Carta) cartaDaSchierare.clone();
-						engine.impostaTooltip(newImageView, cartaSchierata[0]);
+						this.engine.impostaTooltip(newImageView, cartaSchierata[0]);
 
 						if (cartaSchierata[0] instanceof Incantesimo) {
-							this.labelErrori.setText("stai schierando un incatesimo in strada");
+							labelErrori.setText("stai schierando un incatesimo in strada");
 							throw new RuntimeException();
 						}
 
-						engine.aggiungiCartaImmagineGriglia(grid, cartaSchierata[0], null); // aggiunta carta nella
-																							// strada
+						this.engine.aggiungiCartaImmagineGriglia(grid, cartaSchierata[0], null); // aggiunta carta nella
+						// strada
 
 					} catch (ElisirException e) {
-						this.labelErrori.setText(e.getMessage());
+						labelErrori.setText(e.getMessage());
 						throw new RuntimeException();
 					} catch (CloneNotSupportedException e) {
 						e.printStackTrace();
 					}
 					// aggiunta dell'immagine nella strada
-					engine.aggiungiCartaImmagineGriglia(grid, null, newImageView);
+					this.engine.aggiungiCartaImmagineGriglia(grid, null, newImageView);
 
 					// implementazione del click
 					newImageView.setOnMouseClicked(this::proprietaClickImageViewGiocatore);
@@ -591,8 +596,8 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 					// implementazione del drag and drop
 					this.dragAndDropIncantesimo(newImageView);
 
-					carteMano.getChildren()
-							.remove(engine.ricercaImmagineStrada(carteMano.getId(), posizioneDaRimpiazzare));
+					this.carteMano.getChildren()
+							.remove(this.engine.ricercaImmagineStrada(this.carteMano.getId(), posizioneDaRimpiazzare));
 
 					Personaggio personaggioSchierato = null;
 
@@ -625,24 +630,25 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 						} else
 							posizionamentoScelto = PosizionamentoPersonaggio.ATTACCO;
 
-						MossaGiocatore mossaGiocatore = giocatoreService.effettuaSchieramentoPersonaggio(turnoCorrente,
-								personaggioSchierato, engine.ricercaStradaSchieramento(grid), posizionamentoScelto);
+						MossaGiocatore mossaGiocatore = giocatoreService.effettuaSchieramento(this.turnoCorrente,
+								personaggioSchierato, this.engine.ricercaStradaSchieramento(grid),
+								posizionamentoScelto);
 
-						turnoService.salvaMossaGiocatore(partita, turnoCorrente, mossaGiocatore);
+						this.turnoService.salvaMossaGiocatore(this.partita, this.turnoCorrente, mossaGiocatore);
 
 						this.mostraElisir();
 
-						engine.impostaTooltip(newImageView, personaggioSchierato);
+						this.engine.impostaTooltip(newImageView, personaggioSchierato);
 
 					}
 
 					// Mapping immagine/carta da prossima carta a mano
-					engine.aggiungiCartaImmagineGriglia(carteMano, prossimaCartaMazzo[0], imageViewProssimaCarta,
-							posizioneDaRimpiazzare);
-					engine.impostaTooltip(imageViewProssimaCarta, prossimaCartaMazzo[0]);
-					engine.setImageDragProperty(imageViewProssimaCarta);
-					prossimaCartaMazzo[0] = mazzoService.mostraProssimaCarta(mazzo,
-							engine.ricercaCarteMano(carteMano.getId()));
+					this.engine.aggiungiCartaImmagineGriglia(this.carteMano, prossimaCartaMazzo[0],
+							imageViewProssimaCarta, posizioneDaRimpiazzare);
+					this.engine.impostaTooltip(imageViewProssimaCarta, prossimaCartaMazzo[0]);
+					this.engine.setImageDragProperty(imageViewProssimaCarta);
+					prossimaCartaMazzo[0] = this.mazzoService.mostraProssimaCarta(mazzo,
+							this.engine.ricercaCarteMano(this.carteMano.getId()));
 					prossimaCarta.setImage(prossimaCartaMazzo[0].getImmagineCarta());
 
 					success = true;
@@ -659,80 +665,81 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 	// per ogni turno si impostano i vari elementi al giocatore corrente
 	private void mappaElementiTurno() {
-		if (turnoService.isTurnoPari(turnoCorrente)) {
-			this.carteMano = carteManoG1;
+		if (this.turnoService.isTurnoPari(this.turnoCorrente)) {
+			this.carteMano = this.carteManoG1;
 			this.spostaElementiGiocatore2();
-			this.engine.impostaRetroCarte(carteManoG2);
-			this.gridsList = gridsListGiocatore;
-			this.mostraVitaTorre(giocatoreCorrente, vitaTorre1, vitaTorre1Indicator);
+			this.engine.impostaRetroCarte(this.carteManoG2);
+			this.gridsList = this.gridsListGiocatore;
+			this.mostraVitaTorre(this.giocatoreCorrente, this.vitaTorre1, this.vitaTorre1Indicator);
 
 			// questo perché al primo turno non ho ancora istanziato la torre avversaria
-			if (turnoCorrente.getNumero() != 0) {
-				this.mostraVitaTorre(this.partitaService.trovaAltroGiocatore(partita, giocatoreCorrente), vitaTorre2,
-						vitaTorre2Indicator);
-				this.vitaTorreAvversaria = vitaTorre2;
+			if (this.turnoCorrente.getNumero() != 0) {
+				this.mostraVitaTorre(this.partitaService.trovaAltroGiocatore(this.partita, this.giocatoreCorrente),
+						this.vitaTorre2, this.vitaTorre2Indicator);
+				this.vitaTorreAvversaria = this.vitaTorre2;
 			}
 
 		} else {
-			this.carteMano = carteManoG2;
+			this.carteMano = this.carteManoG2;
 			this.spostaElementiGiocatore();
-			this.engine.impostaRetroCarte(carteManoG1);
-			this.gridsList = gridsListAvversario;
-			this.mostraVitaTorre(giocatoreCorrente, vitaTorre2, vitaTorre2Indicator);
-			this.mostraVitaTorre(this.partitaService.trovaAltroGiocatore(partita, giocatoreCorrente), vitaTorre1,
-					vitaTorre1Indicator);
-			this.vitaTorreAvversaria = vitaTorre1;
+			this.engine.impostaRetroCarte(this.carteManoG1);
+			gridsList = this.gridsListAvversario;
+			this.mostraVitaTorre(this.giocatoreCorrente, this.vitaTorre2, this.vitaTorre2Indicator);
+			this.mostraVitaTorre(this.partitaService.trovaAltroGiocatore(this.partita, this.giocatoreCorrente),
+					this.vitaTorre1, this.vitaTorre1Indicator);
+			this.vitaTorreAvversaria = this.vitaTorre1;
 		}
 
 	}
 
-	// mappo le griglie che mi servono nell'engine
+	// mappo le griglie che mi servono nell'this.engine
 	private void mappaGriglie() {
-		gridsListGiocatore.add(stradaSX);
-		gridsListGiocatore.add(stradaDX);
-		gridsListGiocatore.add(stradaC);
-		gridsListGiocatore.add(carteMano);
-		engine.mappingGriglie(gridsListGiocatore);
+		this.gridsListGiocatore.add(stradaSX);
+		this.gridsListGiocatore.add(stradaDX);
+		this.gridsListGiocatore.add(stradaC);
+		this.gridsListGiocatore.add(carteMano);
+		this.engine.mappingGriglie(this.gridsListGiocatore);
 
-		gridsListAvversario.add(stradaSXavversario);
-		gridsListAvversario.add(stradaDXavversario);
-		gridsListAvversario.add(stradaCavversario);
-		gridsListAvversario.add(carteMano);
-		engine.mappingGriglie(gridsListAvversario);
+		this.gridsListAvversario.add(stradaSXavversario);
+		this.gridsListAvversario.add(stradaDXavversario);
+		this.gridsListAvversario.add(stradaCavversario);
+		this.gridsListAvversario.add(carteMano);
+		this.engine.mappingGriglie(this.gridsListAvversario);
 	}
 
 	@FXML
 	public void cambiaFaseAction(ActionEvent event) {
 		try {
-			turnoService.cambiaFase(turnoCorrente);
+			this.turnoService.cambiaFase(this.turnoCorrente);
 		} catch (FasiTerminateException e) {
 			System.err.println(e.getMessage());
-			this.labelErrori.setText(e.getMessage());
+			labelErrori.setText(e.getMessage());
 		}
-		faseCorrente.setText(turnoCorrente.getFase().toString());
+		this.faseCorrente.setText(this.turnoCorrente.getFase().toString());
 
-		if (turnoCorrente.getFase().equals(FaseTurno.Attacco) || turnoCorrente.getFase().equals(FaseTurno.Difesa)) {
-			this.carteMano.setDisable(true); // Non si può schierare
+		if (this.turnoCorrente.getFase().equals(FaseTurno.Attacco)
+				|| this.turnoCorrente.getFase().equals(FaseTurno.Difesa)) {
+			carteMano.setDisable(true); // Non si può schierare
 		}
 	}
 
 	@FXML
 	public void passaTurnoAction(ActionEvent event) {
 		try {
-			partitaService.salvaTurnoPartita(turnoCorrente, partita);
+			this.partitaService.salvaTurnoPartita(this.turnoCorrente, this.partita);
 
-			if (partita.isRecuperata() && !GraphicEngine.getStati().isEmpty()) {
-				engine.sovrascriviUltimoStato(engine);
+			if (this.partita.isRecuperata() && !GraphicEngine.getStati().isEmpty()) {
+				this.engine.sovrascriviUltimoStato(this.engine);
 			} else {
-				engine.aggiungiStato(engine);
+				this.engine.aggiungiStato(this.engine);
 			}
 
-			partita.setRecuperata(false);
+			this.partita.setRecuperata(false);
 
 			this.incantesimoService.checkAnnullaEffettoIncantesimi();
 			this.personaggioService.resetMosseSpecialiAttive();
 
-			dispatcher.caricaVista("gioco", partita);
+			this.dispatcher.caricaVista("gioco", this.partita);
 		} catch (ViewException e) {
 			e.printStackTrace();
 		}
@@ -742,11 +749,11 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		// implementazione del timer
 		timeline = new Timeline(new KeyFrame(Duration.seconds(1), (event) -> {
 			secondiTrascorsi--;
-			updateTimerLabel();
+			this.updateTimerLabel();
 			if (secondiTrascorsi == 0) { // quando scade
-				this.annullaMossa.setDisable(true);
+				annullaMossa.setDisable(true);
 				this.cambiaFase.setDisable(true);
-				this.gridsList.stream().forEach(grid -> grid.setDisable(true));
+				gridsList.stream().forEach(grid -> grid.setDisable(true));
 				this.gridsListAvversario.stream().forEach(grid -> grid.setDisable(true));
 			}
 		}));
@@ -767,9 +774,9 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		 * un max di 100, il set progress dovrebbe essere dimezzato ma si hanno sempre
 		 * problemi con la rappresentazione numerica decimale quindi si lascia così
 		 */
-		double progress = turnoCorrente.getElisirGiocatore();
-		elisir.setProgress((double) progress/2);
-		elisirIndicator.setText(this.formatElisir(progress));
+		double progress = this.turnoCorrente.getElisirGiocatore();
+		this.elisir.setProgress((double) progress / 2);
+		this.elisirIndicator.setText(this.formatElisir(progress));
 	}
 
 	// formattiamo in casi di errori di precisione
@@ -779,14 +786,14 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 	}
 
 	private void mostraVitaTorre(Giocatore giocatore, ProgressBar torre, Label indicator) {
-		double vita = turnoService.trovaTorreGiocatore(giocatore).getVita();
+		double vita = this.turnoService.trovaTorreGiocatore(giocatore).getVita();
 		torre.setProgress(vita);
 		indicator.setText(this.formatVitaTorre(vita));
 
 		if (vita == 0) {
 			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 			alert.setTitle("VITTORIA!!!");
-			alert.setHeaderText("HA VINTO IL GIOCATORE " + giocatoreCorrente.getNickname());
+			alert.setHeaderText("HA VINTO IL GIOCATORE " + this.giocatoreCorrente.getNickname());
 			alert.setContentText("PREMI ESCI per tornare alla HOMEPAGE");
 
 			ButtonType esci = new ButtonType("ESCI");
@@ -796,8 +803,8 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 			alert.showAndWait().ifPresent(response -> {
 				if (response == esci) {
 					try {
-						dispatcher.caricaVista("applicationLayout");
-						dispatcher.caricaVista("homepage");
+						this.dispatcher.caricaVista("applicationLayout");
+						this.dispatcher.caricaVista("homepage");
 					} catch (ViewException e) {
 						e.printStackTrace();
 					}
@@ -818,17 +825,16 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 		Posizione posizioneToSearch = new Posizione(GridPane.getColumnIndex(imageViewCorrente),
 				GridPane.getRowIndex(imageViewCorrente));
-		// riuso l'array ma si poteva creare anche una nuova Carta
-		cartaSchierata[0] = engine.ricercaCartaStrada(gridPaneParent.getId(), posizioneToSearch);
 
-		Personaggio personaggioCliccato = (Personaggio) cartaSchierata[0];
+		Personaggio personaggioCliccato = (Personaggio) this.engine.ricercaCartaStrada(gridPaneParent.getId(),
+				posizioneToSearch);
 
 		try {
-			if (turnoCorrente.getFase().equals(FaseTurno.Difesa)) {
+			if (this.turnoCorrente.getFase().equals(FaseTurno.Difesa)) {
 				// se è la fase di difesa posiziono il personaggio in difesa
-				MossaGiocatore mossaGiocatore = giocatoreService.cambiaPosizionePersonaggio(turnoCorrente,
+				MossaGiocatore mossaGiocatore = giocatoreService.cambiaPosizionePersonaggio(this.turnoCorrente,
 						personaggioCliccato, PosizionamentoPersonaggio.DIFESA);
-				turnoService.salvaMossaGiocatore(partita, turnoCorrente, mossaGiocatore);
+				this.turnoService.salvaMossaGiocatore(this.partita, turnoCorrente, mossaGiocatore);
 				imageViewCorrente.setRotate(270);
 				System.out.println("PERSONAGGIO POSIZIONATO IN DIFESA");
 
@@ -836,9 +842,9 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 			} else if (turnoCorrente.getFase().equals(FaseTurno.Attacco)) {
 				// posiziono il personaggio in attacco
-				MossaGiocatore mossaGiocatore = giocatoreService.cambiaPosizionePersonaggio(turnoCorrente,
+				MossaGiocatore mossaGiocatore = giocatoreService.cambiaPosizionePersonaggio(this.turnoCorrente,
 						personaggioCliccato, PosizionamentoPersonaggio.ATTACCO);
-				turnoService.salvaMossaGiocatore(partita, turnoCorrente, mossaGiocatore);
+				this.turnoService.salvaMossaGiocatore(this.partita, this.turnoCorrente, mossaGiocatore);
 				imageViewCorrente.setRotate(360);
 
 				System.out.println("SONO " + personaggioCliccato.getNome() + " E SONO STATO SCELTO PER L'ATTACCO");
@@ -847,44 +853,49 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 				System.out.println("VITA " + personaggioCliccato.getVita());
 				try {
-					if (turnoCorrente.getNumero() > 0) {
-						GridPaneGioco gridPersonaggio = engine.ricercaStradaSchieramento(gridPaneParent);
+					if (this.turnoCorrente.getNumero() > 0) {
+						GridPaneGioco gridPersonaggio = this.engine.ricercaStradaSchieramento(gridPaneParent);
+						MossaSpeciale mossaSpecialeAttaccante = personaggioCliccato.getMossaSpeciale();
 
-						if (personaggioService.getPersonaggiConMosseAttive().contains(personaggioCliccato)) {
-							MossaSpeciale mossaSpecialeAttaccante = personaggioCliccato.getMossaSpeciale();
-							if (mossaSpecialeAttaccante.getNome().equals("attaccaDiretto")) {
-								System.out.println("STO PER ATTACCARE LA TORRE DIRETTAMENTE");
+						if (this.personaggioService.getPersonaggiConMosseAttive().contains(personaggioCliccato)
+								&& mossaSpecialeAttaccante.getNome().equals("attaccaDiretto")) {
 
-								Giocatore avversario = partitaService.trovaAltroGiocatore(partita, giocatoreCorrente);
-								Torre torreAvversaria = turnoService.trovaTorreGiocatore(avversario);
+							System.out.println("STO PER ATTACCARE LA TORRE DIRETTAMENTE");
 
-								giocatoreService.attaccaTorre(turnoCorrente, personaggioCliccato, gridPersonaggio,
-										torreAvversaria);
+							Giocatore avversario = this.partitaService.trovaAltroGiocatore(this.partita,
+									this.giocatoreCorrente);
+							Torre torreAvversaria = this.turnoService.trovaTorreGiocatore(avversario);
 
-								if (vitaTorreAvversaria.getId().equals("vitaTorre1"))
-									this.mostraVitaTorre(avversario, vitaTorreAvversaria, vitaTorre1Indicator);
-								else
-									this.mostraVitaTorre(avversario, vitaTorreAvversaria, vitaTorre2Indicator);
-
-								this.personaggioService.rimuoviPersonaggioConMossaAttivo(personaggioCliccato);
-							}
-
-						}
-						if (engine.checkAttaccoTorre(gridPersonaggio.toString())) {
-
-							Giocatore avversario = partitaService.trovaAltroGiocatore(partita, giocatoreCorrente);
-							Torre torreAvversaria = turnoService.trovaTorreGiocatore(avversario);
-
-							giocatoreService.attaccaTorre(turnoCorrente, personaggioCliccato, gridPersonaggio,
+							this.giocatoreService.attaccaTorre(this.turnoCorrente, personaggioCliccato, gridPersonaggio,
 									torreAvversaria);
 
-							if (vitaTorreAvversaria.getId().equals("vitaTorre1"))
-								this.mostraVitaTorre(avversario, vitaTorreAvversaria, vitaTorre1Indicator);
+							if (this.vitaTorreAvversaria.getId().equals("vitaTorre1"))
+								this.mostraVitaTorre(avversario, this.vitaTorreAvversaria, this.vitaTorre1Indicator);
 							else
-								this.mostraVitaTorre(avversario, vitaTorreAvversaria, vitaTorre2Indicator);
+								this.mostraVitaTorre(avversario, this.vitaTorreAvversaria, this.vitaTorre2Indicator);
 
-						} else // altrimenti hai un personaggio che davanti e non puoi attaccare la torre
-							giocatoreService.preparaAttacco(personaggioCliccato, gridPersonaggio);
+							this.personaggioService.rimuoviPersonaggioConMossaAttivo(personaggioCliccato);
+
+						} else {
+							if (this.engine.checkAttaccoTorre(gridPersonaggio.toString())) {
+
+								Giocatore avversario = this.partitaService.trovaAltroGiocatore(this.partita,
+										this.giocatoreCorrente);
+								Torre torreAvversaria = this.turnoService.trovaTorreGiocatore(avversario);
+
+								this.giocatoreService.attaccaTorre(this.turnoCorrente, personaggioCliccato,
+										gridPersonaggio, torreAvversaria);
+
+								if (this.vitaTorreAvversaria.getId().equals("vitaTorre1"))
+									this.mostraVitaTorre(avversario, this.vitaTorreAvversaria,
+											this.vitaTorre1Indicator);
+								else
+									this.mostraVitaTorre(avversario, this.vitaTorreAvversaria,
+											this.vitaTorre2Indicator);
+
+							} else // altrimenti hai un personaggio che davanti e non puoi attaccare la torre
+								giocatoreService.preparaAttacco(personaggioCliccato, gridPersonaggio);
+						}
 					} else
 						throw new AttaccoException("NON SI può ATTACCARE è IL PRIMO TURNO");
 				} catch (AttaccoException e) {
@@ -896,7 +907,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 		} catch (PosizionamentoException e) {
 			System.err.println(e.getMessage());
-			this.labelErrori.setText(e.getMessage());
+			labelErrori.setText(e.getMessage());
 		}
 
 	}
@@ -907,7 +918,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		 * interruzione bruta del click perché con il metodo presente
 		 * nell'implementazione del timer le gridPane avversarie non si disattivano
 		 */
-		if (this.secondiTrascorsi == 0) {
+		if (secondiTrascorsi == 0) {
 			return;
 		}
 
@@ -915,35 +926,36 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		final GridPane gridPaneParent = (GridPane) imageViewCorrente.getParent();
 
 		try {
-			if (turnoCorrente.getFase().equals(FaseTurno.Attacco)) {
+			if (this.turnoCorrente.getFase().equals(FaseTurno.Attacco)) {
 
 				Posizione posizioneToSearch = new Posizione(GridPane.getColumnIndex(imageViewCorrente),
 						GridPane.getRowIndex(imageViewCorrente));
 
-				Carta cartaCliccata = engine.ricercaCartaStrada(gridPaneParent.getId(), posizioneToSearch);
+				Carta cartaCliccata = this.engine.ricercaCartaStrada(gridPaneParent.getId(), posizioneToSearch);
 
 				Personaggio personaggioAttaccato = (Personaggio) cartaCliccata;
 
 				// reimposto il tooltip per sicurezza
-				engine.impostaTooltip(imageViewCorrente, cartaCliccata);
+				this.engine.impostaTooltip(imageViewCorrente, cartaCliccata);
 
-				Giocatore avversario = partitaService.trovaAltroGiocatore(partita, giocatoreCorrente);
+				Giocatore avversario = this.partitaService.trovaAltroGiocatore(this.partita, this.giocatoreCorrente);
 
-				giocatoreService.effettuaAttacco(turnoCorrente, personaggioAttaccato,
-						engine.ricercaStradaSchieramento(gridPaneParent), turnoService.trovaTorreGiocatore(avversario));
+				giocatoreService.effettuaAttacco(this.turnoCorrente, personaggioAttaccato,
+						this.engine.ricercaStradaSchieramento(gridPaneParent),
+						this.turnoService.trovaTorreGiocatore(avversario));
 
 				if (personaggioAttaccato.getVita() <= 0) {
-					engine.eliminaImmagineCarta(gridPaneParent, posizioneToSearch, imageViewCorrente);
+					this.engine.eliminaImmagineCarta(gridPaneParent, posizioneToSearch, imageViewCorrente);
 
 					System.out.println("PERSONAGGIO ATTACCO MORTO");
 
-					if (vitaTorreAvversaria.getId().equals("vitaTorre1"))
-						this.mostraVitaTorre(avversario, vitaTorreAvversaria, vitaTorre1Indicator);
+					if (this.vitaTorreAvversaria.getId().equals("vitaTorre1"))
+						this.mostraVitaTorre(avversario, this.vitaTorreAvversaria, this.vitaTorre1Indicator);
 					else
-						this.mostraVitaTorre(avversario, vitaTorreAvversaria, vitaTorre2Indicator);
+						this.mostraVitaTorre(avversario, this.vitaTorreAvversaria, this.vitaTorre2Indicator);
 
 				} else
-					engine.impostaTooltip(imageViewCorrente, cartaCliccata);
+					this.engine.impostaTooltip(imageViewCorrente, cartaCliccata);
 
 			} else
 				throw new AttaccoException("Non puoi selezionarla non è la fase di attacco");
@@ -975,8 +987,8 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 			if (db.hasImage()) {
 
-				Posizione posizioneCartaMano = engine.getPosizioneCartaSelezionata()[0];
-				Carta cartaMano = engine.ricercaCartaStrada(this.carteMano.getId(), posizioneCartaMano);
+				Posizione posizioneCartaMano = this.engine.getPosizioneCartaSelezionata()[0];
+				Carta cartaMano = this.engine.ricercaCartaStrada(this.carteMano.getId(), posizioneCartaMano);
 
 				if (cartaMano instanceof Personaggio) {
 					this.labelErrori.setText("STAI TRASCINADO UN PERSONAGGIO SOPRA UN ALTRO");
@@ -990,7 +1002,7 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 				Posizione posizionePersonaggioTarget = new Posizione(GridPane.getColumnIndex(imageViewCorrente),
 						GridPane.getRowIndex(imageViewCorrente));
 
-				Personaggio personaggioTarget = (Personaggio) engine.ricercaCartaStrada(gridPaneParent.getId(),
+				Personaggio personaggioTarget = (Personaggio) this.engine.ricercaCartaStrada(gridPaneParent.getId(),
 						posizionePersonaggioTarget);
 
 				// clono l'incantesimo della mano
@@ -1003,30 +1015,31 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 				// ricontrollo lo schieramento quando l'incantesimo è "droppato" sull'immagine
 				try {
-					turnoService.controllaSchieramento(turnoCorrente, incancantesimoDaSchierareClone);
+					this.turnoService.controllaSchieramento(this.turnoCorrente, incancantesimoDaSchierareClone);
 				} catch (ElisirException e) {
 					System.err.println(e.getMessage());
 					return;
 				}
 
 				// metto la prossima carta del mazzo in mano
-				ImageView imageViewProssimaCarta = engine.creaImpostaImageView(prossimaCarta.getImage(), dim_img,
-						dim_img);
-				Posizione posizioneDaRimpiazzare = engine.getPosizioneCartaSelezionata()[0];
-				carteMano.getChildren().remove(engine.ricercaImmagineStrada(carteMano.getId(), posizioneDaRimpiazzare));
-				engine.aggiungiCartaImmagineGriglia(carteMano, prossimaCartaMazzo[0], imageViewProssimaCarta,
-						posizioneDaRimpiazzare);
-				engine.impostaTooltip(imageViewProssimaCarta, prossimaCartaMazzo[0]);
-				engine.setImageDragProperty(imageViewProssimaCarta);
-				prossimaCartaMazzo[0] = mazzoService.mostraProssimaCarta(this.giocatoreCorrente.getMazzo(),
-						engine.ricercaCarteMano(carteMano.getId()));
-				prossimaCarta.setImage(prossimaCartaMazzo[0].getImmagineCarta());
+				ImageView imageViewProssimaCarta = this.engine.creaImpostaImageView(this.prossimaCarta.getImage(),
+						dim_img, dim_img);
+				Posizione posizioneDaRimpiazzare = this.engine.getPosizioneCartaSelezionata()[0];
+				this.carteMano.getChildren()
+						.remove(this.engine.ricercaImmagineStrada(this.carteMano.getId(), posizioneDaRimpiazzare));
+				this.engine.aggiungiCartaImmagineGriglia(this.carteMano, this.prossimaCartaMazzo[0],
+						imageViewProssimaCarta, posizioneDaRimpiazzare);
+				this.engine.impostaTooltip(imageViewProssimaCarta, this.prossimaCartaMazzo[0]);
+				this.engine.setImageDragProperty(imageViewProssimaCarta);
+//				this.prossimaCartaMazzo[0] = this.mazzoService.mostraProssimaCarta(this.giocatoreCorrente.getMazzo(),
+//						this.engine.ricercaCarteMano(this.carteMano.getId()));
+				this.prossimaCarta.setImage(this.prossimaCartaMazzo[0].getImmagineCarta());
 
 				// creo e salvo la mossa di schieramento dell'incantesimo
-				MossaGiocatore mossa = this.giocatoreService.effettuaSchieramentoIncantesimo(turnoCorrente,
+				MossaGiocatore mossa = this.giocatoreService.effettuaSchieramento(this.turnoCorrente,
 						incantesimoDaSchierare);
 
-				turnoService.salvaMossaGiocatore(partita, turnoCorrente, mossa);
+				this.turnoService.salvaMossaGiocatore(this.partita, this.turnoCorrente, mossa);
 
 				// aggiorno l'elisir
 				this.mostraElisir();
@@ -1035,19 +1048,21 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 				// lo eseguo
 				if (incantesimoDaSchierare.getNome().equals(IncantesimiNomi.RendiInvulnerabile.toString())
 						|| incantesimoDaSchierare.getNome().equals(IncantesimiNomi.BloccaAttacco.toString()))
-					this.incantesimoService.aggiungiIncantesimoAttivo(turnoCorrente, incancantesimoDaSchierareClone,
-							personaggioTarget);
+					this.incantesimoService.aggiungiIncantesimoAttivo(this.turnoCorrente,
+							incancantesimoDaSchierareClone, personaggioTarget);
 				else {
 					this.incantesimoService.eseguiIncantesimo(incantesimoDaSchierare, personaggioTarget);
 
 					if (personaggioTarget.getVita() <= 0) // nel caso il personaggio sia morto
-						engine.eliminaImmagineCarta(gridPaneParent, posizionePersonaggioTarget, imageViewCorrente);
+						this.engine.eliminaImmagineCarta(gridPaneParent, posizionePersonaggioTarget, imageViewCorrente);
 					else
-						engine.impostaTooltip(imageViewCorrente, personaggioTarget);
+						this.engine.impostaTooltip(imageViewCorrente, personaggioTarget);
 
 				}
 
 				success = true;
+
+				this.labelErrori.setText("");
 			}
 
 			event.setDropCompleted(success);
@@ -1059,12 +1074,12 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		// MOSSE SPECIALI
 		Posizione posizioneToSearch = new Posizione(GridPane.getColumnIndex(img), GridPane.getRowIndex(img));
 
-		Personaggio personaggio = (Personaggio) engine.ricercaCartaStrada(idParent, posizioneToSearch);
-		engine.impostaTooltip(img, personaggio);
+		Personaggio personaggio = (Personaggio) this.engine.ricercaCartaStrada(idParent, posizioneToSearch);
+		this.engine.impostaTooltip(img, personaggio);
 		try {
 			if (personaggio.getMossaSpeciale().getNome().equals("ricaricaEnergiaStrada")) {
 				this.personaggioService.eseguiMossaSpeciale(personaggio,
-						engine.cercaPersonaggiStrada(idParent, personaggio));
+						this.engine.cercaPersonaggiStrada(idParent, personaggio));
 			} else
 				this.personaggioService.eseguiMossaSpeciale(personaggio);
 		} catch (ManaException e) {
@@ -1072,34 +1087,35 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 			System.err.println(message);
 			this.labelErrori.setText(message);
 		}
-		engine.impostaTooltip(img, personaggio);
+		this.engine.impostaTooltip(img, personaggio);
 
 	}
 
 	@FXML
 	public void salvaPartitaAction(ActionEvent event) {
 		// per prima cosa salviamo il turno e lo stato delle carte corrente
-		partitaService.salvaTurnoPartita(turnoCorrente, partita);
-		engine.aggiungiStato(engine);
+		this.partitaService.salvaTurnoPartita(this.turnoCorrente, this.partita);
+		this.engine.aggiungiStato(this.engine);
 
 		// calcolo i criteri richiesti per l'ordinamento della partita
-		int numeroMosse = partitaService.calcolaNumeroMossePartita(partita);
-		int numeroCarteInCampo = engine.calcolaNumeroCarteTerreno();
-		int valoreCarteInCampo = engine.calcolaValoreCarteTerreno();
+		int numeroMosse = this.partitaService.calcolaNumeroMossePartita(this.partita);
+		int numeroCarteInCampo = this.engine.calcolaNumeroCarteTerreno();
+		int valoreCarteInCampo = this.engine.calcolaValoreCarteTerreno();
 
-		partitaService.impostaParamentriSalvataggio(partita, numeroMosse, numeroCarteInCampo, valoreCarteInCampo);
+		this.partitaService.impostaParamentriSalvataggio(this.partita, numeroMosse, numeroCarteInCampo,
+				valoreCarteInCampo);
 
-		partitaService.salvaPartita(partita);
+		this.partitaService.salvaPartita(this.partita);
 
 		// mi preparo la mappa da serializzare
-		engine.popolaMappaIncantesimi(incantesimoService.getIncantesimiAttivi());
+		this.engine.popolaMappaIncantesimi(this.incantesimoService.getIncantesimiAttivi());
 
 		// serializzo
 		try {
-			GraphicEngine.serializeMappaGridpaneCarte(engine.getMappaGridpaneCarte(),
+			GraphicEngine.serializeMappaGridpaneCarte(this.engine.getMappaGridpaneCarte(),
 					String.valueOf(this.partita.getID()));
 
-			GraphicEngine.serializeMappaGridpaneIncantesimi(engine.getMappaGridpaneIncantesimi(),
+			GraphicEngine.serializeMappaGridpaneIncantesimi(this.engine.getMappaGridpaneIncantesimi(),
 					String.valueOf(this.partita.getID()));
 
 		} catch (IOException e) {
@@ -1107,8 +1123,8 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		}
 
 		try {
-			dispatcher.caricaVista("applicationLayout");
-			dispatcher.caricaVista("homepage");
+			this.dispatcher.caricaVista("applicationLayout");
+			this.dispatcher.caricaVista("homepage");
 		} catch (ViewException e) {
 			e.printStackTrace();
 		}
@@ -1118,8 +1134,8 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 	public void esciAction(ActionEvent event) {
 		// esci senza salvare la partita
 		try {
-			dispatcher.caricaVista("applicationLayout");
-			dispatcher.caricaVista("homepage");
+			this.dispatcher.caricaVista("applicationLayout");
+			this.dispatcher.caricaVista("homepage");
 		} catch (ViewException e) {
 			e.printStackTrace();
 		}
@@ -1127,21 +1143,21 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 
 	@FXML
 	public void annullaMossaAction(ActionEvent event) {
-		
-		engine.ripristinaDopoAnnullamento(getAllGrids());
-		
-		incantesimoService.annullamentoIncantesimi(); 
 
-		turnoService.annullaUltimoTurno(turnoCorrente);
+		this.engine.ripristinaDopoAnnullamento(this.getAllGrids());
+
+		this.incantesimoService.annullamentoIncantesimi();
+
+		this.turnoService.annullaUltimoTurno(this.turnoCorrente);
 		try {
-			dispatcher.caricaVista("gioco", partita);
+			this.dispatcher.caricaVista("gioco", this.partita);
 		} catch (ViewException e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void setProprietaNuoveImmagini() {
-		for (ImageView img : engine.getNuoveImmagini()) {
+		for (ImageView img : this.engine.getNuoveImmagini()) {
 			GridPane parent = (GridPane) img.getParent();
 			String idParent = parent.getId();
 
@@ -1151,8 +1167,8 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 				img.setOnMouseClicked(this::proprietaClickImageViewAvversario);
 			else
 				img.setOnMouseClicked(this::proprietaClickImageViewGiocatore);
-			
-			labelErrori.setText("");
+
+			this.labelErrori.setText("");
 
 			this.dragAndDropIncantesimo(img);
 
@@ -1193,14 +1209,14 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 		this.cartaFactory.reimpostaImmagine(carteCampoDeserializzate);
 
 		for (Giocatore g : this.partita.getGiocatori()) {
-			Mazzo mazzo = mazzoService.trovaMazzo(g);
+			Mazzo mazzo = this.mazzoService.trovaMazzo(g);
 			this.cartaFactory.reimpostaImmagine(Arrays.asList(mazzo.getCarte()));
 		}
 
 		List<GridPane> tutte = this.getAllGrids();
 
 		// ripristino delle carte sul terreno
-		engine.ripristinaStato(tutte, mappaDeserializzata);
+		this.engine.ripristinaStato(tutte, mappaDeserializzata);
 
 		// ripristino degli incantesimi attivi
 		for (Map.Entry<String, LinkedHashMap<Incantesimo, Posizione>> entry : mappaIncantesimiDeserializzati
@@ -1211,18 +1227,18 @@ public class GiocoController implements Initializable, InizializzaDati<Partita> 
 			for (Incantesimo incantesimo : innerMap.keySet()) {
 				Posizione p = innerMap.get(incantesimo);
 				if (p != null) {
-					Personaggio personaggio = (Personaggio) engine.ricercaCartaStrada(gridPaneKey, p);
-					incantesimoService.aggiungiIncantesimoAttivo(turnoCorrente, incantesimo, personaggio);
+					Personaggio personaggio = (Personaggio) this.engine.ricercaCartaStrada(gridPaneKey, p);
+					this.incantesimoService.aggiungiIncantesimoAttivo(this.turnoCorrente, incantesimo, personaggio);
 				}
 			}
 		}
 
 	}
-	
+
 	private List<GridPane> getAllGrids() {
 		List<GridPane> allGrids = new ArrayList<>();
 		allGrids.addAll(this.gridsListGiocatore);
-		allGrids.addAll(gridsListAvversario);
+		allGrids.addAll(this.gridsListAvversario);
 		return allGrids;
 	}
 
