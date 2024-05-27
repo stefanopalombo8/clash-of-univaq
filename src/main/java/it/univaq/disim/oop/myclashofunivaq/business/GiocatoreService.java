@@ -12,8 +12,10 @@ import it.univaq.disim.oop.myclashofunivaq.domain.Turno;
 
 public interface GiocatoreService {
 	
-	MossaGiocatore effettuaSchieramentoPersonaggio(Turno turno, Personaggio personaggio, GridPaneGioco strada, 
+	MossaGiocatore effettuaSchieramento(Turno turno, Personaggio personaggio, GridPaneGioco strada, 
 			PosizionamentoPersonaggio posizionamento);
+	
+	MossaGiocatore effettuaSchieramento(Turno turno, Incantesimo incantesimo);
 	
 	MossaGiocatore cambiaPosizionePersonaggio(Turno turno, Personaggio personaggio, PosizionamentoPersonaggio posizionamento)
 			throws PosizionamentoException;
@@ -26,6 +28,4 @@ public interface GiocatoreService {
 	MossaGiocatore attaccaTorre(Turno turno, Personaggio personaggioAttaccante,GridPaneGioco strada, Torre torreAvversaria)
 			throws AttaccoException;
 	
-	MossaGiocatore effettuaSchieramentoIncantesimo(Turno turno, Incantesimo incantesimo);
-
 }

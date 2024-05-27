@@ -1,7 +1,6 @@
 package it.univaq.disim.oop.myclashofunivaq.business.impl;
 
 import java.util.ArrayList;
-
 import java.util.List;
 
 import it.univaq.disim.oop.myclashofunivaq.business.GiocatoreService;
@@ -32,36 +31,45 @@ public class GiocatoreServiceImpl implements GiocatoreService {
 	private GridPaneGioco stradaAttaccante;
 	
 	public GiocatoreServiceImpl() {
-		personaggioService = new PersonaggioServiceImpl();
-		turnoService = new TurnoServiceImpl();
-		personaggiAttaccantiTurno = new ArrayList<>();
-		incantesimoService = new IncantesimoServiceImpl();
+		this.personaggioService = new PersonaggioServiceImpl();
+		this.turnoService = new TurnoServiceImpl();
+		this.personaggiAttaccantiTurno = new ArrayList<>();
+		this.incantesimoService = new IncantesimoServiceImpl();
 	}
 
 
 	@Override
-	public MossaGiocatore effettuaSchieramentoPersonaggio(Turno turno, Personaggio personaggio, GridPaneGioco strada, PosizionamentoPersonaggio posizionamento) {
+	public MossaGiocatore effettuaSchieramento(Turno turno, Personaggio personaggio, GridPaneGioco strada, PosizionamentoPersonaggio posizionamento) {
 		Schieramento schieramento = new Schieramento();
 		schieramento.setCartaSchierata(personaggio);
 		schieramento.setStrada(strada);
 		
 		try {
-			personaggioService.sceltaPosizionamento(personaggio, posizionamento);
+			this.personaggioService.sceltaPosizionamento(personaggio, posizionamento);
 		} catch (PosizionamentoException e) {
-			e.printStackTrace();
 		}
 		
-		turnoService.aggiornaElisir(turno, personaggio.getCostoSchieramento());
+		this.turnoService.aggiornaElisir(turno, personaggio.getCostoSchieramento());
+		
+		return schieramento;
+	}
+	
+	@Override
+	public MossaGiocatore effettuaSchieramento(Turno turno, Incantesimo incantesimo) {
+		Schieramento schieramento = new Schieramento();
+		schieramento.setCartaSchierata(incantesimo);
+		
+		this.turnoService.aggiornaElisir(turno, incantesimo.getCostoSchieramento());
 		
 		return schieramento;
 	}
 
 	@Override
-	public void preparaAttacco(Personaggio personaggioAttaccante, GridPaneGioco strada) throws AttaccoException{
-		List<Incantesimo> incantesimiAttivi = incantesimoService.getIncantesimiAttivi(personaggioAttaccante);
+	public void preparaAttacco(Personaggio personaggioAttaccante, GridPaneGioco stradaAttaccante) throws AttaccoException{
+		List<Incantesimo> incantesimiAttivi = this.incantesimoService.getIncantesimiAttivi(personaggioAttaccante);
 		boolean match = incantesimiAttivi.stream().anyMatch(i -> i.getNome().equals(IncantesimiNomi.BloccaAttacco.toString()));
 		
-		if(!incantesimiAttivi.isEmpty() && match) { // se non c'è quel match gli incantesimi sono irrilevanti
+		if(match) { // se non c'è quel match gli incantesimi sono irrilevanti
 			StringBuilder builder = new StringBuilder("QUESTO PERSONAGGIO HA ATTIVO ");
 			for(Incantesimo incantesimo : incantesimiAttivi) {
 				builder.append(incantesimo.getNome());
@@ -73,9 +81,8 @@ public class GiocatoreServiceImpl implements GiocatoreService {
 		
 		if(!(personaggioAttaccante.equals(this.personaggioAttaccante))) {
 			this.personaggioAttaccante = personaggioAttaccante;
-			this.stradaAttaccante = strada;
+			this.stradaAttaccante = stradaAttaccante;
 		}
-			
 		else
 			throw new AttaccoException("NON PUOI ATTACCARE TE STESSO");
 		
@@ -83,21 +90,22 @@ public class GiocatoreServiceImpl implements GiocatoreService {
 
 	@Override
 	public MossaGiocatore effettuaAttacco(Turno turno, Personaggio personaggioDaAttaccare, GridPaneGioco stradaAttaccato, Torre torreAvversaria) throws AttaccoException {
-		if(personaggioAttaccante == null)
+		if(this.personaggioAttaccante == null)
 			throw new AttaccoException("MANCA IL PERSONAGGIO ATTACCANTE");
 		if(personaggioDaAttaccare == null)
 			throw new AttaccoException("MANCA IL PERSONAGGIO DA ATTACCARE");
 		
-		if( !((stradaAttaccante.toString() + "avversario").equals(stradaAttaccato.toString())  
-				|| (stradaAttaccato.toString() + "avversario").equals(stradaAttaccante.toString()))  )
+		if( !((this.stradaAttaccante.toString() + "avversario").equals(stradaAttaccato.toString())  
+				|| (stradaAttaccato.toString() + "avversario").equals(this.stradaAttaccante.toString()))  )
 			throw new AttaccoException("I PERSONAGGIO SONO SU DUE STRADE DIVERSE");
 		
-		if(personaggiAttaccantiTurno.contains(personaggioAttaccante))
+		if(this.personaggiAttaccantiTurno.contains(personaggioAttaccante))
 			throw new AttaccoException("QUESTO PERSONAGGIO HA già ATTACCATO");
 		
-		List<Incantesimo> incantesimiAttivi = incantesimoService.getIncantesimiAttivi(personaggioDaAttaccare);
+		List<Incantesimo> incantesimiAttivi = this.incantesimoService.getIncantesimiAttivi(personaggioDaAttaccare);
 		boolean match = incantesimiAttivi.stream().anyMatch(i -> i.getNome().equals(IncantesimiNomi.RendiInvulnerabile.toString()));
-		if(!incantesimiAttivi.isEmpty() && match) { // se non c'è quel match gli incantesimi sono irrilevanti
+		
+		if(match) { // se non c'è quel match gli incantesimi sono irrilevanti
 			StringBuilder builder = new StringBuilder("QUESTO PERSONAGGIO HA ATTIVO ");
 			for(Incantesimo incantesimo : incantesimiAttivi) {
 				builder.append(incantesimo.getNome());
@@ -108,22 +116,22 @@ public class GiocatoreServiceImpl implements GiocatoreService {
 		}
 		
 		Attacco attacco = new Attacco();
-		attacco.setPersonaggioAttaccante(personaggioAttaccante);
+		attacco.setPersonaggioAttaccante(this.personaggioAttaccante);
 		attacco.setPersonaggioDaAttaccare(personaggioDaAttaccare);
 		attacco.setTorreAttaccata(torreAvversaria);
 		
-		personaggioService.attacca(attacco);
-		
-		
-		if(personaggioService.getPersonaggiConMosseAttive().contains(personaggioAttaccante)) {
-			MossaSpeciale mossaSpecialeAttaccante = personaggioAttaccante.getMossaSpeciale();
-			if(mossaSpecialeAttaccante.getNome().equals("attaccaDueVolte")) {
-				this.personaggioService.rimuoviPersonaggioConMossaAttivo(personaggioAttaccante);
-			}
+		this.personaggioService.attacca(attacco);
 			
+		if(this.personaggioService.getPersonaggiConMosseAttive().contains(this.personaggioAttaccante)) {
+			MossaSpeciale mossaSpecialeAttaccante = this.personaggioAttaccante.getMossaSpeciale();
+			if(mossaSpecialeAttaccante.getNome().equals("attaccaDueVolte")) {
+				this.personaggioService.rimuoviPersonaggioConMossaAttivo(this.personaggioAttaccante);
+			}
+			else
+				this.personaggiAttaccantiTurno.add(personaggioAttaccante);	
 		}
 		else 
-			this.personaggiAttaccantiTurno.add(personaggioAttaccante);
+			this.personaggiAttaccantiTurno.add(this.personaggioAttaccante);
 		
 		
 			
@@ -149,13 +157,13 @@ public class GiocatoreServiceImpl implements GiocatoreService {
 		
 		if(personaggioAttaccante == null)
 			throw new AttaccoException("MANCA IL PERSONAGGIO ATTACCANTE");
-		if(personaggiAttaccantiTurno.contains(personaggioAttaccante))
+		if(this.personaggiAttaccantiTurno.contains(personaggioAttaccante))
 			throw new AttaccoException("QUESTO PERSONAGGIO HA già ATTACCATO");
 		
-		List<Incantesimo> incantesimiAttivi = incantesimoService.getIncantesimiAttivi(personaggioAttaccante);
+		List<Incantesimo> incantesimiAttivi = this.incantesimoService.getIncantesimiAttivi(personaggioAttaccante);
 		boolean match = incantesimiAttivi.stream().anyMatch(i -> i.getNome().equals(IncantesimiNomi.BloccaAttacco.toString()));
 		
-		if(!incantesimiAttivi.isEmpty() && match) {
+		if(match) {
 			StringBuilder builder = new StringBuilder("QUESTO PERSONAGGIO HA ATTIVO ");
 			for(Incantesimo incantesimo : incantesimiAttivi) {
 				builder.append(incantesimo.getNome());
@@ -177,22 +185,13 @@ public class GiocatoreServiceImpl implements GiocatoreService {
 			if(mossaSpecialeAttaccante.getNome().equals("attaccaDueVolte")) {
 				this.personaggioService.rimuoviPersonaggioConMossaAttivo(personaggioAttaccante);
 			}
-			
+			else
+				this.personaggiAttaccantiTurno.add(personaggioAttaccante);
 		}
 		else 
 			this.personaggiAttaccantiTurno.add(personaggioAttaccante);
 		
 		return attacco;
-	}
-
-	@Override
-	public MossaGiocatore effettuaSchieramentoIncantesimo(Turno turno, Incantesimo incantesimo) {
-		Schieramento schieramento = new Schieramento();
-		schieramento.setCartaSchierata(incantesimo);
-		
-		turnoService.aggiornaElisir(turno, incantesimo.getCostoSchieramento());
-		
-		return schieramento;
 	}
 	
 }
