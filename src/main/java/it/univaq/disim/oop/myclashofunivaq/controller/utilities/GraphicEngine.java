@@ -1,15 +1,13 @@
 package it.univaq.disim.oop.myclashofunivaq.controller.utilities;
 
 import java.io.FileInputStream;
-
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,6 +21,7 @@ import it.univaq.disim.oop.myclashofunivaq.domain.Fulmine;
 import it.univaq.disim.oop.myclashofunivaq.domain.Furia;
 import it.univaq.disim.oop.myclashofunivaq.domain.Incantesimo;
 import it.univaq.disim.oop.myclashofunivaq.domain.Personaggio;
+
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Parent;
@@ -84,6 +83,12 @@ public class GraphicEngine implements ResetStaticVariables {
 
 	public static List<GraphicEngine> getStati() {
 		return stati;
+	}
+	
+	@Override
+	public void reset() {
+		i = 0;
+		stati.clear();
 	}
 
 	public static void serializeMappaGridpaneCarte(Map<String, LinkedHashMap<Posizione, Carta>> mappaGridpaneCarte,
@@ -167,12 +172,13 @@ public class GraphicEngine implements ResetStaticVariables {
 	}
 
 	public void impostaTooltip(ImageView img, Carta carta) {
-		Tooltip tooltip = new Tooltip(
+		Tooltip tooltip = new Tooltip( "CATEGORIA: " + carta.getClass().getSimpleName() + "\n" + 
 				"NOME: " + carta.getNome() + "\n" + "COSTO: " + carta.getCostoSchieramento() + "\n");
 		if (carta instanceof Personaggio) {
 			Personaggio p = (Personaggio) carta;
 			tooltip.setText(tooltip.getText() + "VITA " + p.getVita() + "\n" + "MANA: " + p.getMana() + "\n" + "DANNO: "
-					+ p.getDanno() + "\n" + "ARMOR: " + p.getArmatura() + "\n" + "POSIZIONE: " + p.getPosizionamento());
+					+ p.getDanno() + "\n" + "ARMOR: " + p.getArmatura() + "\n" + "MOSSA: " + p.getMossaSpeciale().getNome() 
+					+ "\n" + "POSIZIONE: " + p.getPosizionamento() );
 		} else {
 			Incantesimo i = (Incantesimo) carta;
 			switch (i.getNome()) {
@@ -207,7 +213,7 @@ public class GraphicEngine implements ResetStaticVariables {
 			if (parent instanceof GridPane)
 				posizione = new Posizione(GridPane.getColumnIndex(imageView), GridPane.getRowIndex(imageView));
 
-			posizioneCartaSelezionata[0] = posizione;
+			this.posizioneCartaSelezionata[0] = posizione;
 
 		});
 	}
@@ -239,9 +245,9 @@ public class GraphicEngine implements ResetStaticVariables {
 
 			}
 
-			mappaGridpaneImmagini.put(idGrid, mappaImmagini);
-			mappaGridpaneCarte.put(idGrid, mappaCarte);
-			mappaGridpaneCarteBackup.put(idGrid, mappaCarteBackup);
+			this.mappaGridpaneImmagini.put(idGrid, mappaImmagini);
+			this.mappaGridpaneCarte.put(idGrid, mappaCarte);
+			this.mappaGridpaneCarteBackup.put(idGrid, mappaCarteBackup);
 		}
 
 	}
@@ -254,7 +260,7 @@ public class GraphicEngine implements ResetStaticVariables {
 	public void aggiungiCartaImmagineGriglia(GridPane grid, Carta carta, ImageView imageView) {
 
 		if (carta != null) {
-			for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : mappaGridpaneCarte.entrySet()) {
+			for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : this.mappaGridpaneCarte.entrySet()) {
 				String gridPaneKey = entry.getKey();
 
 				if (gridPaneKey.equals(grid.getId())) {
@@ -274,7 +280,7 @@ public class GraphicEngine implements ResetStaticVariables {
 		}
 
 		if (imageView != null) {
-			for (Map.Entry<String, LinkedHashMap<Posizione, ImageView>> entry : mappaGridpaneImmagini.entrySet()) {
+			for (Map.Entry<String, LinkedHashMap<Posizione, ImageView>> entry : this.mappaGridpaneImmagini.entrySet()) {
 				String gridPaneKey = entry.getKey();
 
 				if (gridPaneKey.equals(grid.getId())) {
@@ -301,7 +307,7 @@ public class GraphicEngine implements ResetStaticVariables {
 	public Carta ricercaCartaStrada(String gridPaneSource, Posizione posizione) {
 		Carta carta = null;
 
-		for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : mappaGridpaneCarte.entrySet()) {
+		for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : this.mappaGridpaneCarte.entrySet()) {
 			String gridPaneKey = entry.getKey();
 
 			if (gridPaneKey.equals(gridPaneSource)) {
@@ -327,7 +333,7 @@ public class GraphicEngine implements ResetStaticVariables {
 	public ImageView ricercaImmagineStrada(String gridPaneSource, Posizione posizione) {
 		ImageView imageView = null;
 
-		for (Map.Entry<String, LinkedHashMap<Posizione, ImageView>> entry : mappaGridpaneImmagini.entrySet()) {
+		for (Map.Entry<String, LinkedHashMap<Posizione, ImageView>> entry : this.mappaGridpaneImmagini.entrySet()) {
 			String gridPaneKey = entry.getKey();
 
 			if (gridPaneKey.equals(gridPaneSource)) {
@@ -356,7 +362,7 @@ public class GraphicEngine implements ResetStaticVariables {
 
 	public void aggiungiCartaImmagineGriglia(GridPane grid, Carta carta, ImageView imageView, Posizione posizione) {
 		if (carta != null) {
-			for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : mappaGridpaneCarte.entrySet()) {
+			for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : this.mappaGridpaneCarte.entrySet()) {
 				String gridPaneKey = entry.getKey();
 
 				if (gridPaneKey.equals(grid.getId())) {
@@ -376,7 +382,7 @@ public class GraphicEngine implements ResetStaticVariables {
 		}
 
 		if (imageView != null) {
-			for (Map.Entry<String, LinkedHashMap<Posizione, ImageView>> entry : mappaGridpaneImmagini.entrySet()) {
+			for (Map.Entry<String, LinkedHashMap<Posizione, ImageView>> entry : this.mappaGridpaneImmagini.entrySet()) {
 				String gridPaneKey = entry.getKey();
 
 				if (gridPaneKey.equals(grid.getId())) {
@@ -558,12 +564,6 @@ public class GraphicEngine implements ResetStaticVariables {
 		return valore;
 	}
 
-	@Override
-	public void reset() {
-		i = 0;
-		stati.clear();
-	}
-
 	// ripristino dello stato dopo la deserializzazione
 	public void ripristinaStato(List<GridPane> grids,
 			Map<String, LinkedHashMap<Posizione, Carta>> mappaDeserializzata) {
@@ -722,8 +722,10 @@ public class GraphicEngine implements ResetStaticVariables {
 
 			for (Posizione p : innerMap.keySet()) {
 				Carta carta = innerMap.get(p);
-				if (carta != null)
+				if (carta != null) {
 					return false;
+				}
+					
 			}
 
 		}
@@ -742,15 +744,6 @@ public class GraphicEngine implements ResetStaticVariables {
 
 			if (gridPaneKey.equals(grid.getId()))
 				innerMap.replace(posizione, null);
-		}
-
-		for (Map.Entry<String, LinkedHashMap<Posizione, Carta>> entry : this.mappaGridpaneCarte.entrySet()) {
-			String gridPaneKey = entry.getKey();
-			LinkedHashMap<Posizione, Carta> innerMap = entry.getValue();
-
-			if (gridPaneKey.equals(grid.getId()))
-				innerMap.replace(posizione, null);
-
 		}
 
 	}
