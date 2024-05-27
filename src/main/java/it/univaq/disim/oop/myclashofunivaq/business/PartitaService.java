@@ -30,6 +30,8 @@ public interface PartitaService {
 	
 	void salvaPartita(Partita partita);
 	
+	void eliminaPartitaSalvata(Integer ID);
+	
 	void impostaParamentriSalvataggio(Partita partita, int numeroMosse, int numeroCarte, int valoreCarte);
 	
 	List<Partita> getPartiteDeserializzate();

@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,6 +28,7 @@ public class PartitaServiceImpl implements PartitaService, ResetStaticVariables 
 	private static int i = 0;
 	
 	private static String path = "src/main/resourses/files/partiteSalvate/";
+	private static String path2 = "src/main/resourses/files/logsPartite/";
 
 	@Override
 	public Set<Giocatore> findAllGiocatori() {
@@ -134,7 +136,7 @@ public class PartitaServiceImpl implements PartitaService, ResetStaticVariables 
 
 	@Override
 	public void impostaParamentriSalvataggio(Partita partita, int numeroMosse, int numeroCarte, int valoreCarte) {
-		partita.setNumeroTotaleMosse(numeroMosse);
+		partita.setNumeroTotaleMosse(numeroMosse - partita.getNumeroTotaleMosse());
 		partita.setNumeroCarteInCampo(numeroCarte);
 		partita.setValoreCarteInCampo(valoreCarte);
 	}
@@ -177,6 +179,38 @@ public class PartitaServiceImpl implements PartitaService, ResetStaticVariables 
 	@Override
 	public void reset() {
 		i = 0;
+	}
+
+	@Override
+	public void eliminaPartitaSalvata(Integer ID) {
+		File directory = new File(PartitaServiceImpl.path);
+		File[] elencoFile = directory.listFiles();
+
+		this.eliminaFiles(elencoFile);
+		
+		directory = new File(PartitaServiceImpl.path2);
+		elencoFile = directory.listFiles();
+		
+		this.eliminaFiles(elencoFile);
+	}
+	
+	private void eliminaFiles(File[] files) {
+		if (files != null) {
+			for (File file : files) {
+				if (file.isFile() && 
+						(  file.getName().startsWith("partitaSerializzata" + ID)
+						|| file.getName().startsWith("partita" + ID)
+						|| file.getName().startsWith("carte" + ID) 
+						|| file.getName().startsWith("incantesimi" + ID)) ) {
+					try {
+						Files.delete(file.toPath());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				
+			}
+		}
 	}
 
 }
