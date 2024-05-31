@@ -62,7 +62,7 @@ public class MosseSpeciali implements Serializable {
             mossaSpeciale.getPersonaggioTarget().setVita(mossaSpeciale.getPersonaggioTarget().getVita() + 10);
         }
     }
-	public static class RicaricaEnergiaStradaAzione implements MossaSpecialeAzione, Serializable {
+	private static class RicaricaEnergiaStradaAzione implements MossaSpecialeAzione, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
@@ -80,7 +80,7 @@ public class MosseSpeciali implements Serializable {
             mossaSpeciale.getPersonaggioTarget().setArmatura(mossaSpeciale.getPersonaggioTarget().getArmatura() * 2);
         }
     }
-	public static class AttaccaDueVolteAzione implements MossaSpecialeAzione, Serializable {
+	private static class AttaccaDueVolteAzione implements MossaSpecialeAzione, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
@@ -88,7 +88,7 @@ public class MosseSpeciali implements Serializable {
 		public void esegui(MossaSpeciale mossaSpeciale) {
 		}
 	}
-	public static class AttaccaDirettamenteTorreAzione implements MossaSpecialeAzione, Serializable {
+	private static class AttaccaDirettamenteTorreAzione implements MossaSpecialeAzione, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
